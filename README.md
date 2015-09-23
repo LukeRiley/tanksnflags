@@ -1,2 +1,0 @@
-# tanksnflags
-Tanks and Flagsd
