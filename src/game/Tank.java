@@ -1,9 +1,14 @@
 package game;
 
 import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 /**
  * A tank in the game. Assigned a unique id to link it to a player in the game with the same id.
@@ -21,8 +26,13 @@ public class Tank extends Item {
 	
 	@Override
 	public void draw(Graphics2D g2) {
-		// TODO Auto-generated method stub
-		
+		BufferedImage johnCena = null;
+		try {
+		    johnCena = ImageIO.read(new File("johncena1.png"));
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
+		g2.drawImage(johnCena, 200, 200, 200, 200, null);
 	}
 
 	@Override

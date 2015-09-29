@@ -3,8 +3,11 @@ package uitest;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import javax.swing.*;
+
+import game.Tank;
 import helpers.IsoLogic;
 
 public class Window extends JFrame {
@@ -14,10 +17,13 @@ public class Window extends JFrame {
 	IsoLogic isoLogic = new IsoLogic(Math.toRadians(150), Math.toRadians(30), 500, 900);
 
 	public Window() {
+		final Tank test = new Tank(50,50,1);
 		canvas = new JPanel() {
 			@Override
 			protected void paintComponent(Graphics g) {
+				Graphics2D g2 = (Graphics2D) g;
 				drawAxis(g);
+				test.draw(g2);
 			}
 		};
 		this.setContentPane(canvas);
@@ -28,6 +34,7 @@ public class Window extends JFrame {
 
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setVisible(true);
+		
 	}
 
 	public void drawAxis(Graphics g) {
