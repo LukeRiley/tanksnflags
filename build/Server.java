@@ -27,17 +27,19 @@ public class Server {
 	
 	public void run() throws IOException{
 		System.out.println("Server running");
-		String number = "";
+		String recievedStr = "";
+		int recievedInt = 0;
 		ServerSocket servSocket = new ServerSocket(9090);
 		while(true){
 			Socket socket = servSocket.accept();
 			Scanner scan = new Scanner(socket.getInputStream());
 			if(scan.hasNext()){
-				number = scan.next();
-				System.out.println("Recieved message \"" + number +"\"\n" );
+				recievedStr = scan.next();
+				recievedInt = scan.nextInt();
+				System.out.println("Recieved message \"" + recievedStr+ " "+ recievedInt +"\"\n" );
 				//number = number*2;
 				PrintStream pstream = new PrintStream(socket.getOutputStream());
-				pstream.println(number);
+				pstream.println(recievedInt + " " + recievedStr);
 			}
 		}
 	}
