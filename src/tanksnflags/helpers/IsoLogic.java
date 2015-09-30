@@ -1,4 +1,4 @@
-package helpers;
+package tanksnflags.helpers;
 
 import java.awt.Point;
 
@@ -24,11 +24,21 @@ public class IsoLogic {
 	private double originX;
 	private double originY;
 
+	private Vector origin;
+
+	private Vector uVector;// u unit vector in terms of x/y axis
+	private Vector vVector;// v unit vector in terms of x/y axis
+
 	public IsoLogic(double uAngle, double vAngle, double originX, double originY) {
 		this.uAngle = uAngle;
 		this.vAngle = vAngle;
 		this.originX = originX;
 		this.originY = originY;
+
+		uVector = new Vector(Math.sin(uAngle), -Math.cos(uAngle));
+		vVector = new Vector(Math.sin(vAngle), Math.cos(vAngle));
+
+		origin = new Vector(originX, originY);
 	}
 
 	/**
@@ -41,10 +51,14 @@ public class IsoLogic {
 	 * @param v
 	 *            The component along the v unit vector of the isometric axis
 	 * @return an array of double. The first element is the x coordinate and the
-	 *         second is the y coordinate.
+	 *         second is the y coor dinate.
 	 */
-	public double[] isoToScreen(double u, double v) {
-		return new double[] { Math.cos(uAngle) * (u) + Math.cos(vAngle)*(v) + originX,originY - Math.sin(uAngle) * u - Math.sin(vAngle) * v };
+	public Vector isoToScreen(double u, double v) {
+		return origin.add((vVector.scale(v)).add(uVector.scale(u)));
+	}
+
+	public Vector screenToIso(double x, double y) {
+		return new Vector(500 + x * Math.tan(uAngle / 2) - y, x * Math.tan(uAngle / 2) + y - 500);
 	}
 
 }

@@ -1,4 +1,5 @@
-/control/
-/game/
+/tests/
 /helpers/
-/uitest/
+/images/
+/game/
+/tanksnflags/

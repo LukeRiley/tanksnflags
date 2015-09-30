@@ -1,4 +1,4 @@
-package game;
+package tanksnflags.game;
 
 import java.awt.Graphics2D;
 import java.io.DataInputStream;
@@ -16,8 +16,8 @@ import java.io.IOException;
  */
 public abstract class Item {
 
-	private double isoX;
-	private double isoY;
+	protected double isoX;
+	protected double isoY;
 
 	public Item(double isoX, double isoY) {
 		this.isoX=isoX;
