@@ -14,7 +14,7 @@ public class Wall extends Item {
 
 	private int vertical = 0;
 
-	private int height = 1;
+	private int height = 4;
 
 	public Dimension size = new Dimension(48, 48);
 
@@ -30,7 +30,7 @@ public class Wall extends Item {
 	@Override
 	public void draw(Graphics2D g2) {
 		for (int i = 0; i < height; i++) {
-			g2.drawImage(RED, (int) iL.isoToScreen(pos.getQ(), pos.getT()).getQ(), (int) iL.isoToScreen(pos.getQ(), pos.getT()).getT() - 52 - vertical- i*100, null);
+			g2.drawImage(RED, (int) iL.isoToScreen(pos.getQ(), pos.getT()).getQ(), (int) iL.isoToScreen(pos.getQ(), pos.getT()).getT() - 52 - vertical- i*32, null);
 		}
 	}
 
