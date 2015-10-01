@@ -22,9 +22,13 @@ import tanksnflags.helpers.Vector;
 public class Window extends JFrame implements MouseListener {
 
 	JPanel canvas;
-	Point AXIS_INT = new Point(0, 500);
+	Dimension canvasSize = new Dimension(700,700);
+	Point AXIS_INT = new Point(40, 500);
+	
 	IsoLogic isoLogic = new IsoLogic(Math.toRadians(60), Math.toRadians(60), AXIS_INT.getX(), AXIS_INT.getY());
+	
 	List<Wall> walls = new ArrayList<Wall>();
+	Item[][] items;
 
 	public Window() {
 		initializeItems();
@@ -32,12 +36,14 @@ public class Window extends JFrame implements MouseListener {
 		canvas = new JPanel() {
 			@Override
 			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+
 				drawAxis(g);
 			}
 		};
 		this.setContentPane(canvas);
 		this.setSize(new Dimension(1000, 1000));
-
+		canvas.setBackground(Color.darkGray);
 		canvas.setSize(new Dimension(100, 1000));
 		canvas.setVisible(true);
 
@@ -45,29 +51,47 @@ public class Window extends JFrame implements MouseListener {
 
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setVisible(true);
+	}
 
-		System.out.println("origin: " + isoLogic.isoToScreen(0, 0));
+	public void renderFromArray(Graphics2D g2) {
+		for (int gridX = items[0].length; gridX >= 0; gridX--) {
+			int currentX = gridX;
+			for (int gridY = 0; gridY < items.length; gridY++) {
+				if (currentX < items[0].length) {
+					items[currentX][gridY].draw(g2);
+					currentX++;
+				}
+			}
+		}
 
+		for (int gridY = 0; gridY < items[0].length; gridY++) {
+			int currentY = gridY;
+			for (int gridX = 0; gridX < items.length; gridX++) {
+				if (currentY < items.length) {
+					items[gridX][currentY].draw(g2);
+					currentY++;
+				}
+			}
+		}
 	}
 
 	private void initializeItems() {
-		for (int i = 0; i < 10; i++) {
-			walls.add(new Wall(new Vector(i * 48, 0), isoLogic));
+		items = new Item[10][10];
+		for (int u = 0; u < items[0].length; u++) {
+			for (int v = 0; v < items.length; v++) {
+				Wall wall = new Wall(new Vector(u * 46, v * 46), isoLogic);
+				items[u][v] = wall;
+				walls.add(wall);
+			}
 		}
 	}
 
 	public void drawAxis(Graphics g) {
-		System.out.println(isoLogic.isoToScreen(10, 10));
-
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
 		g2.drawLine(AXIS_INT.x, AXIS_INT.y, (int) isoLogic.isoToScreen(0, 300).getQ(), (int) isoLogic.isoToScreen(0, 300).getT());
 		g2.drawLine(AXIS_INT.x, AXIS_INT.y, (int) isoLogic.isoToScreen(300, 0).getQ(), (int) isoLogic.isoToScreen(300, 0).getT());
-
-		for (int i = walls.size() - 1; i >= 0; i--) {
-			walls.get(i).draw(g2);
-		}
+		renderFromArray(g2);
 	}
 
 	public static void main(String[] args) {
@@ -94,7 +118,6 @@ public class Window extends JFrame implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		System.out.println(isoLogic.screenToIso(arg0.getX(), arg0.getY()));
 		Vector iso = isoLogic.screenToIso(arg0.getX(), arg0.getY());
 		for (Wall wall : walls) {
 			if (wall.contains(iso.getQ(), iso.getT())) {
@@ -104,6 +127,7 @@ public class Window extends JFrame implements MouseListener {
 					wall.setBlue();
 				}
 				this.repaint();
+				break;
 			}
 		}
 	}
