@@ -12,7 +12,7 @@ import tanksnflags.ui.ImageLoader;
 
 public class Wall extends Item {
 
-	IsoLogic iL = new IsoLogic(Math.toRadians(60), Math.toRadians(60), 0, 500);
+	private int vertical = 0;
 
 	public enum TILECOLOR {
 		RED, BLUE
@@ -22,27 +22,31 @@ public class Wall extends Item {
 
 	private TILECOLOR color = TILECOLOR.BLUE;
 
-	public Wall(double isoX, double isoY) {
-		super(isoX, isoY);
+	public Wall(Vector pos, IsoLogic iL) {
+		super(pos, iL);
 		// TODO Auto-generated constructor stub
+	}
+
+	public void moveVertical(int delta) {
+		vertical += delta;
 	}
 
 	@Override
 	public void draw(Graphics2D g2) {
 		if (color == TILECOLOR.RED) {
-			g2.drawImage(RED, (int) iL.isoToScreen(isoX, isoY).getQ(), (int) iL.isoToScreen(isoX, isoY).getT(), null);
+			g2.drawImage(RED, (int) iL.isoToScreen(pos.getQ(), pos.getT()).getQ(), (int) iL.isoToScreen(pos.getQ(), pos.getT()).getT() - 23 - vertical, null);
 
 		} else {
-			g2.drawImage(BLUE, (int) iL.isoToScreen(isoX, isoY).getQ(), (int) iL.isoToScreen(isoX, isoY).getT() - 23, null);
+			g2.drawImage(BLUE, (int) iL.isoToScreen(pos.getQ(), pos.getT()).getQ(), (int) iL.isoToScreen(pos.getQ(), pos.getT()).getT() - 23 - vertical, null);
 		}
 	}
 
 	public boolean contains(double x, double y) {
-		if (x < isoX || x > isoX + size.getWidth()) {
+		if (x < pos.getQ() || x > pos.getQ() + size.getWidth()) {
 			return false;
 		}
 
-		if (y < isoY || y > isoY + size.getHeight()) {
+		if (y < pos.getT() || y > pos.getT() + size.getHeight()) {
 			return false;
 		}
 
@@ -67,6 +71,10 @@ public class Wall extends Item {
 
 	public void setRed() {
 		color = TILECOLOR.RED;
+	}
+
+	public TILECOLOR getColor() {
+		return color;
 	}
 
 	private static final Image RED = ImageLoader.loadImage("tileRed.png");

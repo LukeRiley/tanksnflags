@@ -4,6 +4,8 @@ import java.awt.Graphics2D;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import tanksnflags.helpers.IsoLogic;
+import tanksnflags.helpers.Vector;
 
 /**
  * Represents an item in the game. This encapsulates anything which is drawable
@@ -16,12 +18,13 @@ import java.io.IOException;
  */
 public abstract class Item {
 
-	protected double isoX;
-	protected double isoY;
+	protected Vector pos;
 
-	public Item(double isoX, double isoY) {
-		this.isoX=isoX;
-		this.isoY=isoY;
+	protected IsoLogic iL;
+
+	public Item(Vector pos, IsoLogic iL) {
+		this.pos = pos;
+		this.iL = iL;
 	}
 
 	public abstract void draw(Graphics2D g2);

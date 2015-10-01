@@ -22,8 +22,8 @@ import tanksnflags.helpers.Vector;
 public class Window extends JFrame implements MouseListener {
 
 	JPanel canvas;
-	Point AXIS_INT = new Point(500, 900);
-	IsoLogic isoLogic = new IsoLogic(Math.toRadians(60), Math.toRadians(60), 0, 500);
+	Point AXIS_INT = new Point(0, 500);
+	IsoLogic isoLogic = new IsoLogic(Math.toRadians(60), Math.toRadians(60), AXIS_INT.getX(), AXIS_INT.getY());
 	List<Wall> walls = new ArrayList<Wall>();
 
 	public Window() {
@@ -46,11 +46,13 @@ public class Window extends JFrame implements MouseListener {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setVisible(true);
 
+		System.out.println("origin: " + isoLogic.isoToScreen(0, 0));
+
 	}
 
 	private void initializeItems() {
 		for (int i = 0; i < 10; i++) {
-			walls.add(new Wall(i * 48, 0));
+			walls.add(new Wall(new Vector(i * 48, 0), isoLogic));
 		}
 	}
 
@@ -60,8 +62,8 @@ public class Window extends JFrame implements MouseListener {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-		g2.drawLine(0, 500, (int) isoLogic.isoToScreen(0, 300).getQ(), (int) isoLogic.isoToScreen(0, 300).getT());
-		g2.drawLine(0, 500, (int) isoLogic.isoToScreen(300, 0).getQ(), (int) isoLogic.isoToScreen(300, 0).getT());
+		g2.drawLine(AXIS_INT.x, AXIS_INT.y, (int) isoLogic.isoToScreen(0, 300).getQ(), (int) isoLogic.isoToScreen(0, 300).getT());
+		g2.drawLine(AXIS_INT.x, AXIS_INT.y, (int) isoLogic.isoToScreen(300, 0).getQ(), (int) isoLogic.isoToScreen(300, 0).getT());
 
 		for (int i = walls.size() - 1; i >= 0; i--) {
 			walls.get(i).draw(g2);
@@ -94,9 +96,13 @@ public class Window extends JFrame implements MouseListener {
 	public void mousePressed(MouseEvent arg0) {
 		System.out.println(isoLogic.screenToIso(arg0.getX(), arg0.getY()));
 		Vector iso = isoLogic.screenToIso(arg0.getX(), arg0.getY());
-		for(Wall wall: walls){
-			if(wall.contains(iso.getQ(), iso.getT())){
-				wall.setRed();
+		for (Wall wall : walls) {
+			if (wall.contains(iso.getQ(), iso.getT())) {
+				if (wall.getColor() == Wall.TILECOLOR.BLUE) {
+					wall.setRed();
+				} else {
+					wall.setBlue();
+				}
 				this.repaint();
 			}
 		}

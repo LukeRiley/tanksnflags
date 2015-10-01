@@ -4,6 +4,8 @@ import java.awt.Graphics2D;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import tanksnflags.helpers.IsoLogic;
+import tanksnflags.helpers.Vector;
 
 /**
  * A tank in the game. Assigned a unique id to link it to a player in the game with the same id.
@@ -14,8 +16,8 @@ public class Tank extends Item {
 
 	private int uid;
 	
-	public Tank(double isoX, double isoY, int uid){
-		super(isoX,isoY);
+	public Tank(Vector pos, IsoLogic iL, int uid){
+		super(pos, iL);
 		this.uid=uid;
 	}
 	

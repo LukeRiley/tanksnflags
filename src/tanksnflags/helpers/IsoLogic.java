@@ -51,14 +51,15 @@ public class IsoLogic {
 	 * @param v
 	 *            The component along the v unit vector of the isometric axis
 	 * @return an array of double. The first element is the x coordinate and the
-	 *         second is the y coor dinate.
+	 *         second is the y coordinate.
 	 */
 	public Vector isoToScreen(double u, double v) {
-		return origin.add((vVector.scale(v)).add(uVector.scale(u)));
+		Vector screen = origin.add((vVector.scale(v)).add(uVector.scale(u)));
+		return screen;
 	}
 
 	public Vector screenToIso(double x, double y) {
-		return new Vector(500 + x * Math.tan(uAngle / 2) - y, x * Math.tan(uAngle / 2) + y - 500);
+		return new Vector(originY + (x - originX) * Math.tan(uAngle / 2) - y, (x - originX) * Math.tan(uAngle / 2) + y - originY);
 	}
 
 }
