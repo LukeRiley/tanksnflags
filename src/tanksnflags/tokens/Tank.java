@@ -8,7 +8,8 @@ import java.io.IOException;
 
 import tanksnflags.helpers.IsoLogic;
 import tanksnflags.helpers.Vector;
-import tanksnflags.tokens.Wall.TILECOLOR;
+import tanksnflags.tests.Window;
+import tanksnflags.tests.Window.TILECOLOR;
 import tanksnflags.ui.ImageLoader;
 
 /**
@@ -22,10 +23,6 @@ public class Tank extends Item {
 	
 	private int vertical = 28;
 
-	public enum TILECOLOR {
-		RED, BLUE
-	}
-	
 	TILECOLOR color = TILECOLOR.BLUE;
 	
 	public Tank(Vector pos, IsoLogic iL, int uid){

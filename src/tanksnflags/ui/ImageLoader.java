@@ -17,7 +17,6 @@ public class ImageLoader {
 		// in a jar or expanded into individual files.
 		java.net.URL imageURL = ImageLoader.class.getResource("images/"
 				+ filename);
-System.out.println(ImageLoader.class);		
 		try {
 			Image img = ImageIO.read(imageURL);
 			return img;

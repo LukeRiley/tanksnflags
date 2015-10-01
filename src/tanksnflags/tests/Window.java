@@ -12,6 +12,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.*;
@@ -20,10 +21,14 @@ import tanksnflags.helpers.IsoLogic;
 import tanksnflags.helpers.Vector;
 import tanksnflags.tokens.Item;
 import tanksnflags.tokens.Tank;
+import tanksnflags.tokens.Tile;
 import tanksnflags.tokens.Wall;
-import tanksnflags.tokens.Tank.TILECOLOR;
 
 public class Window extends JFrame implements MouseListener, KeyListener {
+
+	public enum TILECOLOR {
+		RED, BLUE
+	}
 
 	JPanel canvas;
 	Dimension canvasSize = new Dimension(700, 700);
@@ -31,8 +36,9 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 
 	IsoLogic isoLogic = new IsoLogic(Math.toRadians(60), Math.toRadians(60), AXIS_INT.getX(), AXIS_INT.getY());
 
+	List<Tile> tiles = new ArrayList<Tile>();
 	List<Wall> walls = new ArrayList<Wall>();
-	Item[][] items;
+	AList[][] items;
 	Tank tank = new Tank(new Vector(0, 0), isoLogic, 50);
 
 	public Window() {
@@ -57,12 +63,16 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 		this.setVisible(true);
 	}
 
-	public void renderFromArray(Graphics2D g2) {
+	public <T> void renderFromArray(Graphics2D g2, Item c) {
 		for (int gridX = items[0].length; gridX >= 0; gridX--) {
 			int currentX = gridX;
 			for (int gridY = 0; gridY < items.length; gridY++) {
 				if (currentX < items[0].length) {
-					items[currentX][gridY].draw(g2);
+					for (Item item : items[currentX][gridY]) {
+						if (item.getClass().equals(c.getClass())) {
+							item.draw(g2);
+						}
+					}
 					currentX++;
 				}
 			}
@@ -72,7 +82,11 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 			int currentY = gridY;
 			for (int gridX = 0; gridX < items.length; gridX++) {
 				if (currentY < items.length) {
-					items[gridX][currentY].draw(g2);
+					for (Item item : items[gridX][currentY]) {
+						if (item.getClass().equals(c.getClass())) {
+							item.draw(g2);
+						}
+					}
 					currentY++;
 				}
 			}
@@ -80,14 +94,24 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 	}
 
 	private void initializeItems() {
-		items = new Item[10][10];
+		items = new AList[10][10];
 		for (int u = 0; u < items[0].length; u++) {
 			for (int v = 0; v < items.length; v++) {
-				Wall wall = new Wall(new Vector(u * 46, v * 46), isoLogic);
-				items[u][v] = wall;
-				walls.add(wall);
+				List<Item> bucket = new ArrayList<Item>();
+				if (u == items[0].length - 1 || v == items.length - 1) {
+					Wall wall = new Wall(new Vector(u * 46, v * 46), isoLogic);
+					bucket.add(wall);
+					walls.add(wall);
+
+				}
+				Tile tile = new Tile(new Vector(u * 46, v * 46), isoLogic);
+				bucket.add(tile);
+				tiles.add(tile);
+				items[u][v] = new AList(bucket);
+
 			}
 		}
+		items[4][1].add(tank);
 	}
 
 	public void drawAxis(Graphics g) {
@@ -95,8 +119,10 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.drawLine(AXIS_INT.x, AXIS_INT.y, (int) isoLogic.isoToScreen(0, 300).getQ(), (int) isoLogic.isoToScreen(0, 300).getT());
 		g2.drawLine(AXIS_INT.x, AXIS_INT.y, (int) isoLogic.isoToScreen(300, 0).getQ(), (int) isoLogic.isoToScreen(300, 0).getT());
-		renderFromArray(g2);
-		tank.draw(g2);
+		renderFromArray(g2, new Tile(new Vector(0, 0), null));
+		renderFromArray(g2, tank);
+		renderFromArray(g2, new Wall(new Vector(0, 0), null));
+
 	}
 
 	public static void main(String[] args) {
@@ -124,12 +150,12 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 	@Override
 	public void mousePressed(MouseEvent arg0) {
 		Vector iso = isoLogic.screenToIso(arg0.getX(), arg0.getY());
-		for (Wall wall : walls) {
-			if (wall.contains(iso.getQ(), iso.getT())) {
-				if (wall.getColor() == Wall.TILECOLOR.BLUE) {
-					wall.setRed();
+		for (Tile Tile : tiles) {
+			if (Tile.contains(iso.getQ(), iso.getT())) {
+				if (Tile.getColor() == TILECOLOR.BLUE) {
+					Tile.setRed();
 				} else {
-					wall.setBlue();
+					Tile.setBlue();
 				}
 				this.repaint();
 				break;
@@ -145,25 +171,27 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+		Vector move = new Vector(0, 0);
 		if (e.getKeyCode() == (e.VK_UP)) {
 			tank.move(new Vector(46, 0));
-		} 
+		}
 		if (e.getKeyCode() == (e.VK_DOWN)) {
 			tank.move(new Vector(-46, 0));
-		} 
+		}
 		if (e.getKeyCode() == (e.VK_RIGHT)) {
 			tank.move(new Vector(0, 46));
-		} 
+		}
 		if (e.getKeyCode() == (e.VK_LEFT)) {
 			tank.move(new Vector(0, -46));
-		} 
+		}
+
 		if (e.getKeyCode() == (e.VK_SPACE)) {
-			if(tank.getColor()==TILECOLOR.BLUE){
+			if (tank.getColor() == TILECOLOR.BLUE) {
 				tank.setRed();
 			} else {
 				tank.setBlue();
 			}
-		} 
+		}
 		this.repaint();
 	}
 
@@ -177,4 +205,25 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 
 	}
 
+}
+
+class AList implements Iterable<Item> {
+	public List<Item> list;
+
+	public AList(List<Item> l) {
+		list = l;
+	}
+
+	public void add(Item toAdd) {
+		list.add(toAdd);
+	}
+
+	public Item get(int index) {
+		return list.get(index);
+	}
+
+	@Override
+	public Iterator<Item> iterator() {
+		return list.iterator();
+	}
 }

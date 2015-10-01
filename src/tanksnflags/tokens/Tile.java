@@ -8,17 +8,20 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import tanksnflags.helpers.*;
+import tanksnflags.tests.Window.TILECOLOR;
 import tanksnflags.ui.ImageLoader;
 
-public class Wall extends Item {
+public class Tile extends Wall {
 
 	private int vertical = 0;
 
-	private int height = 3;
+
 
 	public Dimension size = new Dimension(48, 48);
 
-	public Wall(Vector pos, IsoLogic iL) {
+	private TILECOLOR color = TILECOLOR.BLUE;
+
+	public Tile(Vector pos, IsoLogic iL) {
 		super(pos, iL);
 		// TODO Auto-generated constructor stub
 	}
@@ -29,9 +32,24 @@ public class Wall extends Item {
 
 	@Override
 	public void draw(Graphics2D g2) {
-		for (int i = 0; i < height; i++) {
-			g2.drawImage(RED, (int) iL.isoToScreen(pos.getQ(), pos.getT()).getQ(), (int) iL.isoToScreen(pos.getQ(), pos.getT()).getT() - 52 - vertical- i*35, null);
+		if (color == TILECOLOR.RED) {
+			g2.drawImage(RED, (int) iL.isoToScreen(pos.getQ(), pos.getT()).getQ(), (int) iL.isoToScreen(pos.getQ(), pos.getT()).getT() - 23 - vertical, null);
+
+		} else {
+			g2.drawImage(BLUE, (int) iL.isoToScreen(pos.getQ(), pos.getT()).getQ(), (int) iL.isoToScreen(pos.getQ(), pos.getT()).getT() - 23 - vertical, null);
 		}
+	}
+
+	public boolean contains(double x, double y) {
+		if (x < pos.getQ() || x > pos.getQ() + size.getWidth()) {
+			return false;
+		}
+
+		if (y < pos.getT() || y > pos.getT() + size.getHeight()) {
+			return false;
+		}
+
+		return true;
 	}
 
 	@Override
@@ -44,6 +62,18 @@ public class Wall extends Item {
 	public Item fromInputStream(DataInputStream din) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void setBlue() {
+		color = TILECOLOR.BLUE;
+	}
+
+	public void setRed() {
+		color = TILECOLOR.RED;
+	}
+
+	public TILECOLOR getColor() {
+		return color;
 	}
 
 	private static final Image RED = ImageLoader.loadImage("tileRed.png");
