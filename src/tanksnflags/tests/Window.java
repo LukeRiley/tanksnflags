@@ -16,12 +16,12 @@ import java.util.List;
 
 import javax.swing.*;
 
-import tanksnflags.game.Item;
-import tanksnflags.game.Tank;
-import tanksnflags.game.Tank.TILECOLOR;
-import tanksnflags.game.Wall;
 import tanksnflags.helpers.IsoLogic;
 import tanksnflags.helpers.Vector;
+import tanksnflags.tokens.Item;
+import tanksnflags.tokens.Tank;
+import tanksnflags.tokens.Wall;
+import tanksnflags.tokens.Tank.TILECOLOR;
 
 public class Window extends JFrame implements MouseListener, KeyListener {
 

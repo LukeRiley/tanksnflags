@@ -1,4 +1,4 @@
-package tanksnflags.game;
+package tanksnflags.tokens;
 
 import java.awt.Graphics2D;
 import java.io.DataInputStream;

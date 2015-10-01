@@ -1,38 +1,36 @@
-package tanksnflags.game;
+package tanksnflags.tokens;
 
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import tanksnflags.game.Wall.TILECOLOR;
-import tanksnflags.helpers.IsoLogic;
-import tanksnflags.helpers.Vector;
+import tanksnflags.helpers.*;
 import tanksnflags.ui.ImageLoader;
 
-/**
- * A tank in the game. Assigned a unique id to link it to a player in the game with the same id.
- * @author Haylem
- *
- */
-public class Tank extends Item {
+public class Wall extends Item {
 
-	private int uid;
-	
-	private int vertical = 28;
+	private int vertical = 0;
 
 	public enum TILECOLOR {
 		RED, BLUE
 	}
-	
-	TILECOLOR color = TILECOLOR.BLUE;
-	
-	public Tank(Vector pos, IsoLogic iL, int uid){
+
+	public Dimension size = new Dimension(48, 48);
+
+	private TILECOLOR color = TILECOLOR.BLUE;
+
+	public Wall(Vector pos, IsoLogic iL) {
 		super(pos, iL);
-		this.uid=uid;
+		// TODO Auto-generated constructor stub
 	}
-	
+
+	public void moveVertical(int delta) {
+		vertical += delta;
+	}
+
 	@Override
 	public void draw(Graphics2D g2) {
 		if (color == TILECOLOR.RED) {
@@ -42,9 +40,29 @@ public class Tank extends Item {
 			g2.drawImage(BLUE, (int) iL.isoToScreen(pos.getQ(), pos.getT()).getQ(), (int) iL.isoToScreen(pos.getQ(), pos.getT()).getT() - 23 - vertical, null);
 		}
 	}
-	
-	public TILECOLOR getColor(){
-		return color;
+
+	public boolean contains(double x, double y) {
+		if (x < pos.getQ() || x > pos.getQ() + size.getWidth()) {
+			return false;
+		}
+
+		if (y < pos.getT() || y > pos.getT() + size.getHeight()) {
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public void toOutputStream(DataOutputStream dout) throws IOException {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public Item fromInputStream(DataInputStream din) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	public void setBlue() {
@@ -55,26 +73,12 @@ public class Tank extends Item {
 		color = TILECOLOR.RED;
 	}
 
-	
-	@Override
-	public void toOutputStream(DataOutputStream dout) throws IOException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Item fromInputStream(DataInputStream din) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+	public TILECOLOR getColor() {
+		return color;
 	}
 
 	private static final Image RED = ImageLoader.loadImage("tileRed.png");
 
 	private static final Image BLUE = ImageLoader.loadImage("tileBlue.png");
 
-	public void move(Vector delta) {
-		pos = pos.add(delta);
-	}
-	
-	// Images of tank
 }
