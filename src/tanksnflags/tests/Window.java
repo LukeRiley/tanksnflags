@@ -9,12 +9,25 @@ import java.awt.RenderingHints;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 
+import tanksnflags.game.Floor;
 import tanksnflags.game.Item;
+import tanksnflags.game.Tank;
 import tanksnflags.game.Wall;
 import tanksnflags.helpers.IsoLogic;
 import tanksnflags.helpers.Vector;
@@ -28,7 +41,10 @@ public class Window extends JFrame implements MouseListener {
 	IsoLogic isoLogic = new IsoLogic(Math.toRadians(60), Math.toRadians(60), AXIS_INT.getX(), AXIS_INT.getY());
 	
 	List<Wall> walls = new ArrayList<Wall>();
+	List<Tank> tanks = new ArrayList<Tank>();
 	Item[][] items;
+	Item[][] floor;
+	
 
 	public Window() {
 		initializeItems();
@@ -73,6 +89,9 @@ public class Window extends JFrame implements MouseListener {
 				}
 			}
 		}
+		for(Tank t: tanks){
+			t.draw(g2);
+		}
 	}
 
 	private void initializeItems() {
@@ -84,6 +103,18 @@ public class Window extends JFrame implements MouseListener {
 				walls.add(wall);
 			}
 		}
+		for (int u = 1; u < items[0].length-1; u++) {
+			for (int v = 1; v < items.length-1; v++) {
+				Floor floor = new Floor(new Vector(u * 46, v * 46), isoLogic);
+				items[u][v] = floor;
+			}
+		}
+		Tank t1 = new Tank(new Vector(3*46,6*46), isoLogic, 1);
+		Tank t2 = new Tank(new Vector(7*46,2*46), isoLogic, 2);
+		t2.setWest();
+		tanks.add(t1);
+		tanks.add(t2);
+		
 	}
 
 	public void drawAxis(Graphics g) {
@@ -95,6 +126,23 @@ public class Window extends JFrame implements MouseListener {
 	}
 
 	public static void main(String[] args) {
+		try {
+		    File yourFile = new File("champ.wav");
+		    AudioInputStream stream;
+		    AudioFormat format;
+		    DataLine.Info info;
+		    Clip clip;
+
+		    stream = AudioSystem.getAudioInputStream(yourFile);
+		    format = stream.getFormat();
+		    info = new DataLine.Info(Clip.class, format);
+		    clip = (Clip) AudioSystem.getLine(info);
+		    clip.open(stream);
+		    clip.start();
+		}
+		catch (Exception e) {
+		    System.out.println(e.getMessage());
+		}
 		new Window();
 	}
 
@@ -130,6 +178,8 @@ public class Window extends JFrame implements MouseListener {
 				break;
 			}
 		}
+		tanks.get(1).setPosition(iso);
+		this.repaint();
 	}
 
 	@Override
