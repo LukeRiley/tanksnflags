@@ -98,7 +98,7 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 		for (int u = 0; u < items[0].length; u++) {
 			for (int v = 0; v < items.length; v++) {
 				List<Item> bucket = new ArrayList<Item>();
-				if (u == items[0].length - 1 || v == items.length - 1) {
+				if (u == items[0].length - 1 || v == items.length - 1 || u == 0 || v == 0) {
 					Wall wall = new Wall(new Vector(u * 46, v * 46), isoLogic);
 					bucket.add(wall);
 					walls.add(wall);
