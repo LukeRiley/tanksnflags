@@ -32,14 +32,14 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 
 	JPanel canvas;
 	Dimension canvasSize = new Dimension(700, 700);
-	Point AXIS_INT = new Point(40, 500);
+	Point AXIS_INT = new Point(40, 300);
 
 	IsoLogic isoLogic = new IsoLogic(Math.toRadians(60), Math.toRadians(60), AXIS_INT.getX(), AXIS_INT.getY());
 
 	List<Tile> tiles = new ArrayList<Tile>();
 	List<Wall> walls = new ArrayList<Wall>();
 	AList[][] items;
-	Tank tank = new Tank(new Vector(0, 0), isoLogic, 50);
+	Tank tank = new Tank(new Vector(4*46, 4*46), isoLogic, 50);
 
 	public Window() {
 		initializeItems();
@@ -93,6 +93,36 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 		}
 	}
 
+	public <T> void renderFromArrayWall(Graphics2D g2) {
+		for (int gridX = items[0].length; gridX >= 0; gridX--) {
+			int currentX = gridX;
+			for (int gridY = 0; gridY < items.length; gridY++) {
+				if (currentX < items[0].length) {
+					for (Item item : items[currentX][gridY]) {
+						if (item.getClass().equals(tank.getClass()) || item.getClass().equals(Wall.class)) {
+							item.draw(g2);
+						}
+					}
+					currentX++;
+				}
+			}
+		}
+
+		for (int gridY = 0; gridY < items[0].length; gridY++) {
+			int currentY = gridY;
+			for (int gridX = 0; gridX < items.length; gridX++) {
+				if (currentY < items.length) {
+					for (Item item : items[gridX][currentY]) {
+						if (item.getClass().equals(tank.getClass()) || item.getClass().equals(Wall.class)) {
+							item.draw(g2);
+						}
+					}
+					currentY++;
+				}
+			}
+		}
+	}
+
 	private void initializeItems() {
 		items = new AList[10][10];
 		for (int u = 0; u < items[0].length; u++) {
@@ -111,17 +141,18 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 
 			}
 		}
-		items[4][1].add(tank);
+		items[4][4].add(tank);
 	}
 
 	public void drawAxis(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g2.drawLine(AXIS_INT.x, AXIS_INT.y, (int) isoLogic.isoToScreen(0, 300).getQ(), (int) isoLogic.isoToScreen(0, 300).getT());
-		g2.drawLine(AXIS_INT.x, AXIS_INT.y, (int) isoLogic.isoToScreen(300, 0).getQ(), (int) isoLogic.isoToScreen(300, 0).getT());
+		g2.drawLine(AXIS_INT.x, AXIS_INT.y, (int) isoLogic.isoToScreen(0, 300).getQ(),
+				(int) isoLogic.isoToScreen(0, 300).getT());
+		g2.drawLine(AXIS_INT.x, AXIS_INT.y, (int) isoLogic.isoToScreen(300, 0).getQ(),
+				(int) isoLogic.isoToScreen(300, 0).getT());
 		renderFromArray(g2, new Tile(new Vector(0, 0), null));
-		renderFromArray(g2, tank);
-		renderFromArray(g2, new Wall(new Vector(0, 0), null));
+		renderFromArrayWall(g2);
 
 	}
 
@@ -154,8 +185,10 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 			if (Tile.contains(iso.getQ(), iso.getT())) {
 				if (Tile.getColor() == TILECOLOR.BLUE) {
 					Tile.setRed();
+					Tile.moveVertical(-10);
 				} else {
 					Tile.setBlue();
+					Tile.moveVertical(10);
 				}
 				this.repaint();
 				break;
@@ -168,7 +201,7 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 		// TODO Auto-generated method stub
 
 	}
-
+	
 	@Override
 	public void keyPressed(KeyEvent e) {
 		Vector move = new Vector(0, 0);
