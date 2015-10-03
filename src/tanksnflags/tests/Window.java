@@ -39,7 +39,7 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 	List<Tile> tiles = new ArrayList<Tile>();
 	List<Wall> walls = new ArrayList<Wall>();
 	AList[][] items;
-	Tank tank = new Tank(new Vector(4*46, 4*46), isoLogic, 50);
+	Tank tank = new Tank(new Vector(4 * 46, 4 * 46), new Vector(4, 4), isoLogic, 50);
 
 	public Window() {
 		initializeItems();
@@ -128,12 +128,11 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 		for (int u = 0; u < items[0].length; u++) {
 			for (int v = 0; v < items.length; v++) {
 				List<Item> bucket = new ArrayList<Item>();
-				if (u == items[0].length - 1 || v == items.length - 1 || u == 0 || v == 0) {
-					Wall wall = new Wall(new Vector(u * 46, v * 46), isoLogic);
-					bucket.add(wall);
-					walls.add(wall);
-
-				}
+				/*
+				 * if (u == items[0].length - 1 || v == items.length - 1 || u ==
+				 * 0 || v == 0) { Wall wall = new Wall(new Vector(u * 46, v *
+				 * 46), isoLogic); bucket.add(wall); walls.add(wall); }
+				 */
 				Tile tile = new Tile(new Vector(u * 46, v * 46), isoLogic);
 				bucket.add(tile);
 				tiles.add(tile);
@@ -147,10 +146,8 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 	public void drawAxis(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g2.drawLine(AXIS_INT.x, AXIS_INT.y, (int) isoLogic.isoToScreen(0, 300).getQ(),
-				(int) isoLogic.isoToScreen(0, 300).getT());
-		g2.drawLine(AXIS_INT.x, AXIS_INT.y, (int) isoLogic.isoToScreen(300, 0).getQ(),
-				(int) isoLogic.isoToScreen(300, 0).getT());
+		g2.drawLine(AXIS_INT.x, AXIS_INT.y, (int) isoLogic.isoToScreen(0, 300).getQ(), (int) isoLogic.isoToScreen(0, 300).getT());
+		g2.drawLine(AXIS_INT.x, AXIS_INT.y, (int) isoLogic.isoToScreen(300, 0).getQ(), (int) isoLogic.isoToScreen(300, 0).getT());
 		renderFromArray(g2, new Tile(new Vector(0, 0), null));
 		renderFromArrayWall(g2);
 
@@ -201,23 +198,37 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	@Override
 	public void keyPressed(KeyEvent e) {
 		Vector move = new Vector(0, 0);
+		Vector tankGrid = tank.getGridPos();
+		items[(int) tankGrid.getQ()][(int) tankGrid.getT()].remove(tank);
 		if (e.getKeyCode() == (e.VK_UP)) {
-			tank.move(new Vector(46, 0));
+			tank.moveUp();
 		}
 		if (e.getKeyCode() == (e.VK_DOWN)) {
-			tank.move(new Vector(-46, 0));
+			tank.moveDown();
 		}
 		if (e.getKeyCode() == (e.VK_RIGHT)) {
-			tank.move(new Vector(0, 46));
+			tank.moveRight();
 		}
 		if (e.getKeyCode() == (e.VK_LEFT)) {
-			tank.move(new Vector(0, -46));
+			tank.moveLeft();
 		}
 
+		for (Item item : items[(int) tankGrid.getQ()][(int) tankGrid.getT()]) {
+			if (item instanceof Tile) {
+				Tile tile = (Tile) item;
+				if (tile.getColor() == TILECOLOR.RED) {
+					tile.setBlue();
+					tile.moveVertical(10);
+				}
+
+			}
+		}
+
+		items[(int) tankGrid.getQ()][(int) tankGrid.getT()].add(tank);
 		if (e.getKeyCode() == (e.VK_SPACE)) {
 			if (tank.getColor() == TILECOLOR.BLUE) {
 				tank.setRed();
@@ -249,6 +260,10 @@ class AList implements Iterable<Item> {
 
 	public void add(Item toAdd) {
 		list.add(toAdd);
+	}
+
+	public void remove(Item toRemove) {
+		list.remove(toRemove);
 	}
 
 	public Item get(int index) {

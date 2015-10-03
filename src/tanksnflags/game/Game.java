@@ -2,8 +2,10 @@ package tanksnflags.game;
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import tanksnflags.helpers.IsoLogic;
 import tanksnflags.helpers.Vector;
@@ -15,14 +17,13 @@ public class Game {
 
 	private IsoLogic isoLogic;
 	private AList[][] itemGrid;// array representation of items in game
+	private Map<String, Item> idMap  = new HashMap<String, Item>();
 
 	private int size = 10;// size of itemGrid
 
 	public Game(IsoLogic isoLogic) {
 		itemGrid = new AList[size][size];
 	}
-	
-	
 
 }
 
