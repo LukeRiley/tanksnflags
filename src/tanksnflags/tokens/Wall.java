@@ -12,25 +12,19 @@ import tanksnflags.ui.ImageLoader;
 
 public class Wall extends Item {
 
-	private int vertical = 0;
-
-	private int height = 4;
-
-	public Dimension size = new Dimension(48, 48);
+	private int height = 1;
 
 	public Wall(Vector pos, IsoLogic iL) {
 		super(pos, iL);
-		// TODO Auto-generated constructor stub
-	}
-
-	public void moveVertical(int delta) {
-		vertical += delta;
+		vertical = 29;
 	}
 
 	@Override
 	public void draw(Graphics2D g2) {
+		Vector sPos = iL.isoToScreen(this);
+
 		for (int i = 0; i < height; i++) {
-			g2.drawImage(RED, (int) iL.isoToScreen(pos.getQ(), pos.getT()).getQ(), (int) iL.isoToScreen(pos.getQ(), pos.getT()).getT() - 52 - vertical- i*32, null);
+			g2.drawImage(RED, (int) sPos.getQ(), (int) sPos.getT() - 23 - vertical, null);
 		}
 	}
 

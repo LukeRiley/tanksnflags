@@ -10,14 +10,9 @@ import tanksnflags.helpers.Vector;
 
 public abstract class MovingItem extends Item {
 
-	protected Vector gridPos;
-
-	public MovingItem(Vector pos, IsoLogic iL, Vector gridPos) {
+	public MovingItem(Vector pos, IsoLogic iL ) {
 		super(pos, iL);
-		this.gridPos=gridPos;
 	}
-
-	public abstract void setGridPos(Vector v);
 
 	public abstract void moveUp();
 

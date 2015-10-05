@@ -11,10 +11,10 @@ public class Vector {
 		this.t = t;
 	}
 
-	public Vector perp(){
+	public Vector perp() {
 		return new Vector(-t, q);
 	}
-	
+
 	public Vector subtract(Vector v) {
 		return new Vector(v.getQ() - q, v.getT() - t);
 	}
@@ -56,8 +56,7 @@ public class Vector {
 		return "Vector [q=" + q + ", t=" + t + "]";
 	}
 
-	@Override
-	public boolean equals(Object obj) {
+	public boolean equalsDelta(Object obj, double delta) {
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -65,9 +64,9 @@ public class Vector {
 		if (getClass() != obj.getClass())
 			return false;
 		Vector other = (Vector) obj;
-		if (Double.doubleToLongBits(q) != Double.doubleToLongBits(other.q))
+		if (other.q <q-delta || other.q > q+delta)
 			return false;
-		if (Double.doubleToLongBits(t) != Double.doubleToLongBits(other.t))
+		if (other.t < t-delta || other.t >t+delta)
 			return false;
 		return true;
 	}

@@ -13,16 +13,13 @@ import tanksnflags.ui.ImageLoader;
 
 public class Tile extends Wall {
 
-	private int vertical = 0;
-
-
-
-	public Dimension size = new Dimension(48, 48);
+	public Dimension size = new Dimension(46, 46);
 
 	private TILECOLOR color = TILECOLOR.BLUE;
 
 	public Tile(Vector pos, IsoLogic iL) {
 		super(pos, iL);
+		vertical = 0;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -32,12 +29,14 @@ public class Tile extends Wall {
 
 	@Override
 	public void draw(Graphics2D g2) {
-		if (color == TILECOLOR.RED) {
-			g2.drawImage(RED, (int) iL.isoToScreen(pos.getQ(), pos.getT()).getQ(), (int) iL.isoToScreen(pos.getQ(), pos.getT()).getT() - 23 - vertical, null);
+		Vector sPos = iL.isoToScreen(this);
 
+		if (color == TILECOLOR.RED) {
+			g2.drawImage(RED, (int) sPos.getQ(), (int) sPos.getT() - 23 - vertical, null);
 		} else {
-			g2.drawImage(BLUE, (int) iL.isoToScreen(pos.getQ(), pos.getT()).getQ(), (int) iL.isoToScreen(pos.getQ(), pos.getT()).getT() - 23 - vertical, null);
+			g2.drawImage(BLUE, (int) sPos.getQ(), (int) sPos.getT() - 23 - vertical, null);
 		}
+		
 	}
 
 	public boolean contains(double x, double y) {

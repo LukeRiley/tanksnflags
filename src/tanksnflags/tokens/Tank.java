@@ -1,5 +1,6 @@
 package tanksnflags.tokens;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.io.DataInputStream;
@@ -23,23 +24,28 @@ public class Tank extends MovingItem {
 
 	private int uid;
 
-	private int vertical = 28;
-
 	TILECOLOR color = TILECOLOR.BLUE;
 
-	public Tank(Vector pos,Vector gridPos, IsoLogic iL, int uid) {
-		super(pos, iL, gridPos);
+	public Tank(Vector pos, IsoLogic iL, int uid) {
+		super(pos, iL);
 		this.uid = uid;
+		vertical = 29;
+	}
+	
+	public int uid(){
+		return uid;
 	}
 
 	@Override
 	public void draw(Graphics2D g2) {
+		Vector sPos = iL.isoToScreen(this);
 		if (color == TILECOLOR.RED) {
-			g2.drawImage(RED, (int) iL.isoToScreen(pos.getQ(), pos.getT()).getQ(), (int) iL.isoToScreen(pos.getQ(), pos.getT()).getT() - 23 - vertical, null);
+			g2.drawImage(RED, (int) sPos.getQ(), (int) sPos.getT() - 23 - vertical, null);
 
 		} else {
-			g2.drawImage(BLUE, (int) iL.isoToScreen(pos.getQ(), pos.getT()).getQ(), (int) iL.isoToScreen(pos.getQ(), pos.getT()).getT() - 23 - vertical, null);
+			g2.drawImage(BLUE, (int) sPos.getQ(), (int) sPos.getT() - 23 - vertical, null);
 		}
+		g2.setColor(Color.white);
 	}
 
 	public TILECOLOR getColor() {
@@ -55,25 +61,21 @@ public class Tank extends MovingItem {
 	}
 
 	public void moveUp() {
-		gridPos = new Vector(gridPos.getQ() + 1, gridPos.getT());
-		pos = pos.add(new Vector(46, 0));
+		pos = new Vector(pos.getQ() + 46, pos.getT());
 	}
 
 	public void moveDown() {
-		gridPos = new Vector(gridPos.getQ() - 1, gridPos.getT());
-		pos = pos.add(new Vector(-46, 0));
+		pos = new Vector(pos.getQ() - 46, pos.getT());
 
 	}
 
 	public void moveRight() {
-		gridPos = new Vector(gridPos.getQ(), gridPos.getT() + 1);
-		pos = pos.add(new Vector(0, 46));
+		pos = new Vector(pos.getQ(), pos.getT() + 46);
 
 	}
 
 	public void moveLeft() {
-		gridPos = new Vector(gridPos.getQ(), gridPos.getT() - 1);
-		pos = pos.add(new Vector(0, -46));
+		pos = new Vector(pos.getQ(), pos.getT() - 46);
 
 	}
 
@@ -96,16 +98,4 @@ public class Tank extends MovingItem {
 	public void move(Vector delta) {
 		pos = pos.add(delta);
 	}
-	
-	public Vector getGridPos(){
-		return gridPos;
-	}
-
-	@Override
-	public void setGridPos(Vector v) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	// Images of tank
 }

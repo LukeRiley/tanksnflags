@@ -21,10 +21,20 @@ public abstract class Item {
 	protected Vector pos;
 
 	protected IsoLogic iL;
+	
+	protected int vertical=0;
 
 	public Item(Vector pos, IsoLogic iL) {
 		this.pos = pos;
 		this.iL = iL;
+	}
+	
+	public int vertical(){
+		return vertical;
+	}
+	
+	public Vector pos(){
+		return pos;
 	}
 
 	public abstract void draw(Graphics2D g2);

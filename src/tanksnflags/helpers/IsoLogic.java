@@ -2,6 +2,8 @@ package tanksnflags.helpers;
 
 import java.awt.Point;
 
+import tanksnflags.tokens.Item;
+
 /**
  * A class which helps with the isometric math. The axis are labeled u and v.
  * The u axis is the one closest to the y axis of the screen. The v axis is the
@@ -55,11 +57,28 @@ public class IsoLogic {
 	 */
 	public Vector isoToScreen(double u, double v) {
 		Vector screen = origin.add((vVector.scale(v)).add(uVector.scale(u)));
+		screen = new Vector(Math.round(screen.getQ()), Math.round(screen.getT()));
 		return screen;
 	}
 
+	public Vector isoToScreen(Vector v) {
+		return isoToScreen(v.getQ(), v.getT());
+	}
+
+	public Vector isoToScreen(Item i) {
+		return isoToScreen(i.pos());
+	}
+
 	public Vector screenToIso(double x, double y) {
-		return new Vector(originY + (x - originX) * Math.tan(uAngle / 2) - y, (x - originX) * Math.tan(uAngle / 2) + y - originY);
+		return new Vector(Math.round(originY + (x - originX) * Math.tan(uAngle / 2) - y), Math.round((x - originX) * Math.tan(uAngle / 2) + y - originY));
+	}
+
+	public Vector screenToIso(Vector v) {
+		return screenToIso(v.getQ(), v.getT());
+	}
+
+	public Vector screenToIso(Item i) {
+		return screenToIso(i.pos());
 	}
 
 }

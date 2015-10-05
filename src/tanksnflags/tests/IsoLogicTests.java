@@ -9,25 +9,25 @@ import static org.junit.Assert.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Random;
 
 public class IsoLogicTests {
+
+	Random rnd = new Random();
 
 	@Test
 	public void testAxisConversion() {
 
 		IsoLogic iL = new IsoLogic(Math.toRadians(60), Math.toRadians(60), 0, 500);
-		
-/*		Vector screenVOne = iL.isoToScreen(1, 0);
-		System.out.println(screenVOne);
-		Vector isoScreenV = new Vector(screenVOne.getQ() - 500, screenVOne.getT() - 900);
-		System.out.println(isoScreenV.abs());*/
 
-		int u = 30;
-		int v = 26;
-		Vector screenV = iL.isoToScreen(u, v);
-		Vector isoV = iL.screenToIso(screenV.getQ(), screenV.getT());
-		//System.out.println(screenV);
-		System.out.println(isoV);
+		for (int i = 0; i < 1000; i++) {
+			int u = rnd.nextInt(10000);
+			int v = rnd.nextInt(10000);
+			Vector screenV = iL.isoToScreen(u, v);
+			Vector isoV = iL.screenToIso(screenV.getQ(), screenV.getT());
+			assertEquals(u, isoV.getQ(), 1);
+		}
+
 	}
 
 }

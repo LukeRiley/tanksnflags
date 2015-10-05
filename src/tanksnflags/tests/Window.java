@@ -6,20 +6,19 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-
 import javax.swing.*;
-
 import tanksnflags.helpers.IsoLogic;
 import tanksnflags.helpers.Vector;
 import tanksnflags.tokens.Item;
+import tanksnflags.tokens.MovingItem;
 import tanksnflags.tokens.Tank;
 import tanksnflags.tokens.Tile;
 import tanksnflags.tokens.Wall;
@@ -32,18 +31,17 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 
 	JPanel canvas;
 	Dimension canvasSize = new Dimension(700, 700);
-	Point AXIS_INT = new Point(40, 300);
-
+	Point AXIS_INT = new Point(400, 300);
+	int count = 0;
 	IsoLogic isoLogic = new IsoLogic(Math.toRadians(60), Math.toRadians(60), AXIS_INT.getX(), AXIS_INT.getY());
 
 	List<Tile> tiles = new ArrayList<Tile>();
 	List<Wall> walls = new ArrayList<Wall>();
-	AList[][] items;
-	Tank tank = new Tank(new Vector(4 * 46, 4 * 46), new Vector(4, 4), isoLogic, 50);
+	List<Item> itemList = new ArrayList<Item>();
+	Tank tank = new Tank(new Vector(1 * 46, 1 * 46), isoLogic, 50);
 
 	public Window() {
 		initializeItems();
-
 		canvas = new JPanel() {
 			@Override
 			protected void paintComponent(Graphics g) {
@@ -63,93 +61,39 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 		this.setVisible(true);
 	}
 
-	public <T> void renderFromArray(Graphics2D g2, Item c) {
-		for (int gridX = items[0].length; gridX >= 0; gridX--) {
-			int currentX = gridX;
-			for (int gridY = 0; gridY < items.length; gridY++) {
-				if (currentX < items[0].length) {
-					for (Item item : items[currentX][gridY]) {
-						if (item.getClass().equals(c.getClass())) {
-							item.draw(g2);
-						}
-					}
-					currentX++;
-				}
-			}
-		}
-
-		for (int gridY = 0; gridY < items[0].length; gridY++) {
-			int currentY = gridY;
-			for (int gridX = 0; gridX < items.length; gridX++) {
-				if (currentY < items.length) {
-					for (Item item : items[gridX][currentY]) {
-						if (item.getClass().equals(c.getClass())) {
-							item.draw(g2);
-						}
-					}
-					currentY++;
-				}
-			}
-		}
-	}
-
-	public <T> void renderFromArrayWall(Graphics2D g2) {
-		for (int gridX = items[0].length; gridX >= 0; gridX--) {
-			int currentX = gridX;
-			for (int gridY = 0; gridY < items.length; gridY++) {
-				if (currentX < items[0].length) {
-					for (Item item : items[currentX][gridY]) {
-						if (item.getClass().equals(tank.getClass()) || item.getClass().equals(Wall.class)) {
-							item.draw(g2);
-						}
-					}
-					currentX++;
-				}
-			}
-		}
-
-		for (int gridY = 0; gridY < items[0].length; gridY++) {
-			int currentY = gridY;
-			for (int gridX = 0; gridX < items.length; gridX++) {
-				if (currentY < items.length) {
-					for (Item item : items[gridX][currentY]) {
-						if (item.getClass().equals(tank.getClass()) || item.getClass().equals(Wall.class)) {
-							item.draw(g2);
-						}
-					}
-					currentY++;
-				}
-			}
+	private void renderCollection(Graphics2D g2) {
+		Comparator<Item> comp = new DepthComparator(isoLogic);
+		Collections.sort(itemList, comp);
+		Vector sPos = new Vector(0, 0);
+		for (int i = 0; i < itemList.size(); i++) {
+			itemList.get(i).draw(g2);
 		}
 	}
 
 	private void initializeItems() {
-		items = new AList[10][10];
-		for (int u = 0; u < items[0].length; u++) {
-			for (int v = 0; v < items.length; v++) {
-				List<Item> bucket = new ArrayList<Item>();
-				/*
-				 * if (u == items[0].length - 1 || v == items.length - 1 || u ==
-				 * 0 || v == 0) { Wall wall = new Wall(new Vector(u * 46, v *
-				 * 46), isoLogic); bucket.add(wall); walls.add(wall); }
-				 */
-				Tile tile = new Tile(new Vector(u * 46, v * 46), isoLogic);
-				bucket.add(tile);
-				tiles.add(tile);
-				items[u][v] = new AList(bucket);
+		for (int u = 0; u < 10; u++) {
+			for (int v = 0; v < 10; v++) {
 
+				if (u == 10 - 1 || v == 10 - 1 || u == 0 || v == 0) {
+					Wall wall = new Wall(new Vector(u * 46, v * 46), isoLogic);
+					walls.add(wall);
+					itemList.add(wall);
+				}
+
+				Tile tile = new Tile(new Vector(u * 46, v * 46), isoLogic);
+				tiles.add(tile);
+				itemList.add(tile);
 			}
 		}
-		items[4][4].add(tank);
+		itemList.add(tank);
 	}
 
 	public void drawAxis(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g2.drawLine(AXIS_INT.x, AXIS_INT.y, (int) isoLogic.isoToScreen(0, 300).getQ(), (int) isoLogic.isoToScreen(0, 300).getT());
-		g2.drawLine(AXIS_INT.x, AXIS_INT.y, (int) isoLogic.isoToScreen(300, 0).getQ(), (int) isoLogic.isoToScreen(300, 0).getT());
-		renderFromArray(g2, new Tile(new Vector(0, 0), null));
-		renderFromArrayWall(g2);
+		renderCollection(g2);
+		g2.drawLine((int) isoLogic.isoToScreen(new Vector(-500, 0)).getQ(), (int) isoLogic.isoToScreen(new Vector(-500, 0)).getT(), (int) isoLogic.isoToScreen(new Vector(500, 0)).getQ(), (int) isoLogic.isoToScreen(new Vector(500, 0)).getT());
+		g2.drawLine((int) isoLogic.isoToScreen(new Vector(0, -500)).getQ(), (int) isoLogic.isoToScreen(new Vector(0, -500)).getT(), (int) isoLogic.isoToScreen(new Vector(0, 500)).getQ(), (int) isoLogic.isoToScreen(new Vector(0, 500)).getT());
 
 	}
 
@@ -199,43 +143,66 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 
 	}
 
+	public boolean canMoveUp(MovingItem character) {
+		for (Item item : itemList) {
+			Vector itemPos = item.pos();
+			if (!item.equals(character) && itemPos.equalsDelta(new Vector(character.pos().getQ() + 46, character.pos().getT()), 10) && item.vertical() >= character.vertical()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public boolean canMoveDown(MovingItem character) {
+		for (Item item : itemList) {
+			Vector itemPos = item.pos();
+			if (!item.equals(character) && itemPos.equalsDelta(new Vector(character.pos().getQ() - 46, character.pos().getT()), 10) && item.vertical() >= character.vertical()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public boolean canMoveRight(MovingItem character) {
+		for (Item item : itemList) {
+			Vector itemPos = item.pos();
+			if (!item.equals(character) && itemPos.equalsDelta(new Vector(character.pos().getQ(), character.pos().getT() + 46), 10) && item.vertical() >= character.vertical()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public boolean canMoveLeft(MovingItem character) {
+		for (Item item : itemList) {
+			Vector itemPos = item.pos();
+			if (!item.equals(character) && itemPos.equalsDelta(new Vector(character.pos().getQ(), character.pos().getT() - 46), 10) && item.vertical() >= character.vertical()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	@Override
 	public void keyPressed(KeyEvent e) {
-		Vector move = new Vector(0, 0);
-		Vector tankGrid = tank.getGridPos();
-		items[(int) tankGrid.getQ()][(int) tankGrid.getT()].remove(tank);
+		itemList.remove(tank);// for some reason the tank has to be removed otherwise the sorting doesn't work properly
 		if (e.getKeyCode() == (e.VK_UP)) {
-			tank.moveUp();
+			if (canMoveUp(tank))
+				tank.moveUp();
 		}
 		if (e.getKeyCode() == (e.VK_DOWN)) {
-			tank.moveDown();
+			if (canMoveDown(tank))
+				tank.moveDown();
 		}
 		if (e.getKeyCode() == (e.VK_RIGHT)) {
-			tank.moveRight();
+			if (canMoveRight(tank))
+				tank.moveRight();
 		}
 		if (e.getKeyCode() == (e.VK_LEFT)) {
-			tank.moveLeft();
+			if (canMoveLeft(tank))
+				tank.moveLeft();
 		}
-
-		for (Item item : items[(int) tankGrid.getQ()][(int) tankGrid.getT()]) {
-			if (item instanceof Tile) {
-				Tile tile = (Tile) item;
-				if (tile.getColor() == TILECOLOR.RED) {
-					tile.setBlue();
-					tile.moveVertical(10);
-				}
-
-			}
-		}
-
-		items[(int) tankGrid.getQ()][(int) tankGrid.getT()].add(tank);
-		if (e.getKeyCode() == (e.VK_SPACE)) {
-			if (tank.getColor() == TILECOLOR.BLUE) {
-				tank.setRed();
-			} else {
-				tank.setBlue();
-			}
-		}
+		itemList.add(tank);
 		this.repaint();
 	}
 
@@ -248,30 +215,22 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 	public void keyTyped(KeyEvent e) {
 
 	}
-
 }
 
-class AList implements Iterable<Item> {
-	public List<Item> list;
+class DepthComparator implements Comparator<Item> {
 
-	public AList(List<Item> l) {
-		list = l;
-	}
+	IsoLogic iL;
 
-	public void add(Item toAdd) {
-		list.add(toAdd);
-	}
-
-	public void remove(Item toRemove) {
-		list.remove(toRemove);
-	}
-
-	public Item get(int index) {
-		return list.get(index);
+	public DepthComparator(IsoLogic iL) {
+		this.iL = iL;
 	}
 
 	@Override
-	public Iterator<Item> iterator() {
-		return list.iterator();
+	public int compare(Item i1, Item i2) {
+		if (iL.isoToScreen(i1).equalsDelta(iL.isoToScreen(i2), 1)) {
+			return i1.vertical() - i2.vertical();
+		}
+		return (int) (iL.isoToScreen(i1).getT() - iL.isoToScreen(i2).getT());
 	}
+
 }
