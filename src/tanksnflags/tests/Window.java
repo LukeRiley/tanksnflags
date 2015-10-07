@@ -31,9 +31,9 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 
 	JPanel canvas;
 	Dimension canvasSize = new Dimension(700, 700);
-	Point AXIS_INT = new Point(400, 300);
+	Point AXIS_INT = new Point(500, 450);
 	int count = 0;
-	IsoLogic isoLogic = new IsoLogic(Math.toRadians(60), Math.toRadians(60), AXIS_INT.getX(), AXIS_INT.getY());
+	IsoLogic isoLogic = new IsoLogic(Math.toRadians(30), Math.toRadians(330), AXIS_INT.getX(), AXIS_INT.getY());
 
 	List<Tile> tiles = new ArrayList<Tile>();
 	List<Wall> walls = new ArrayList<Wall>();
@@ -64,10 +64,15 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 	private void renderCollection(Graphics2D g2) {
 		Comparator<Item> comp = new DepthComparator(isoLogic);
 		Collections.sort(itemList, comp);
-		Vector sPos = new Vector(0, 0);
 		for (int i = 0; i < itemList.size(); i++) {
 			itemList.get(i).draw(g2);
 		}
+	}
+
+	public void tick() {
+		itemList.remove(tank);
+		itemList.add(tank);
+		tank.tick();
 	}
 
 	private void initializeItems() {
@@ -75,12 +80,12 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 			for (int v = 0; v < 10; v++) {
 
 				if (u == 10 - 1 || v == 10 - 1 || u == 0 || v == 0) {
-					Wall wall = new Wall(new Vector(u * 46, v * 46), isoLogic);
+					Wall wall = new Wall(new Vector(u * 46 - 230, v * 46 - 230), isoLogic);
 					walls.add(wall);
 					itemList.add(wall);
 				}
 
-				Tile tile = new Tile(new Vector(u * 46, v * 46), isoLogic);
+				Tile tile = new Tile(new Vector(u * 46 - 230, v * 46 - 230), isoLogic);
 				tiles.add(tile);
 				itemList.add(tile);
 			}
@@ -88,12 +93,18 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 		itemList.add(tank);
 	}
 
+	public void rotate() {
+		isoLogic.rotateAxis();
+		this.repaint();
+	}
+
 	public void drawAxis(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		renderCollection(g2);
-		g2.drawLine((int) isoLogic.isoToScreen(new Vector(-500, 0)).getQ(), (int) isoLogic.isoToScreen(new Vector(-500, 0)).getT(), (int) isoLogic.isoToScreen(new Vector(500, 0)).getQ(), (int) isoLogic.isoToScreen(new Vector(500, 0)).getT());
-		g2.drawLine((int) isoLogic.isoToScreen(new Vector(0, -500)).getQ(), (int) isoLogic.isoToScreen(new Vector(0, -500)).getT(), (int) isoLogic.isoToScreen(new Vector(0, 500)).getQ(), (int) isoLogic.isoToScreen(new Vector(0, 500)).getT());
+		g2.drawLine((int) isoLogic.isoToScreen(new Vector(0, 0)).getQ(), (int) isoLogic.isoToScreen(new Vector(0, 0)).getT(), (int) isoLogic.isoToScreen(new Vector(500, 0)).getQ(), (int) isoLogic.isoToScreen(new Vector(500, 0)).getT());
+		g2.setColor(Color.yellow);
+		g2.drawLine((int) isoLogic.isoToScreen(new Vector(0, 0)).getQ(), (int) isoLogic.isoToScreen(new Vector(0, 0)).getT(), (int) isoLogic.isoToScreen(new Vector(0, 500)).getQ(), (int) isoLogic.isoToScreen(new Vector(0, 500)).getT());
 
 	}
 
@@ -203,7 +214,6 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 				tank.moveLeft();
 		}
 		itemList.add(tank);
-		this.repaint();
 	}
 
 	@Override
@@ -227,7 +237,7 @@ class DepthComparator implements Comparator<Item> {
 
 	@Override
 	public int compare(Item i1, Item i2) {
-		if (iL.isoToScreen(i1).equalsDelta(iL.isoToScreen(i2), 1)) {
+		if (iL.isoToScreen(i1).equals(iL.isoToScreen(i2))) {
 			return i1.vertical() - i2.vertical();
 		}
 		return (int) (iL.isoToScreen(i1).getT() - iL.isoToScreen(i2).getT());

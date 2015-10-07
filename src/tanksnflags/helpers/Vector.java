@@ -55,6 +55,36 @@ public class Vector {
 	public String toString() {
 		return "Vector [q=" + q + ", t=" + t + "]";
 	}
+	
+	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		long temp;
+		temp = Double.doubleToLongBits(q);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(t);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Vector other = (Vector) obj;
+		if (Double.doubleToLongBits(q) != Double.doubleToLongBits(other.q))
+			return false;
+		if (Double.doubleToLongBits(t) != Double.doubleToLongBits(other.t))
+			return false;
+		return true;
+	}
 
 	public boolean equalsDelta(Object obj, double delta) {
 		if (this == obj)

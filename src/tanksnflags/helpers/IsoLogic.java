@@ -31,16 +31,46 @@ public class IsoLogic {
 	private Vector uVector;// u unit vector in terms of x/y axis
 	private Vector vVector;// v unit vector in terms of x/y axis
 
+	boolean swap = true;
+
 	public IsoLogic(double uAngle, double vAngle, double originX, double originY) {
 		this.uAngle = uAngle;
 		this.vAngle = vAngle;
 		this.originX = originX;
 		this.originY = originY;
 
-		uVector = new Vector(Math.sin(uAngle), -Math.cos(uAngle));
-		vVector = new Vector(Math.sin(vAngle), Math.cos(vAngle));
+		uVector = new Vector(Math.cos(uAngle), -Math.sin(uAngle));
+		vVector = new Vector(Math.cos(vAngle), -Math.sin(vAngle));
 
 		origin = new Vector(originX, originY);
+
+		rotateAxis();
+		rotateAxis();
+
+		computeUnitVectors();
+	}
+
+	public void rotateAxis() {
+		if (swap) {
+			uAngle += Math.toRadians(120);
+			vAngle += Math.toRadians(60);
+			swap = false;
+		} else {
+			uAngle += Math.toRadians(60);
+			vAngle += Math.toRadians(120);
+			swap = true;
+		}
+		computeUnitVectors();
+	}
+
+	private void computeUnitVectors() {
+		uVector = new Vector(Math.cos(uAngle), -Math.sin(uAngle));
+		vVector = new Vector(Math.cos(vAngle), -Math.sin(vAngle));
+	}
+
+	public void mirrorHorizontal() {
+		uVector = new Vector(Math.cos(uAngle + Math.toRadians(120)), -Math.sin(uAngle + Math.toRadians(120)));
+		vVector = new Vector(Math.cos(vAngle + Math.toRadians(60)), -Math.sin(vAngle + Math.toRadians(60)));
 	}
 
 	/**

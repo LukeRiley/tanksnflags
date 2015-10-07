@@ -60,7 +60,7 @@ public class Tank extends MovingItem {
 		color = TILECOLOR.RED;
 	}
 
-	public void moveUp() {
+/*	public void moveUp() {
 		pos = new Vector(pos.getQ() + 46, pos.getT());
 	}
 
@@ -77,7 +77,7 @@ public class Tank extends MovingItem {
 	public void moveLeft() {
 		pos = new Vector(pos.getQ(), pos.getT() - 46);
 
-	}
+	}*/
 
 	@Override
 	public void toOutputStream(DataOutputStream dout) throws IOException {
@@ -94,8 +94,4 @@ public class Tank extends MovingItem {
 	private static final Image RED = ImageLoader.loadImage("tileRed.png");
 
 	private static final Image BLUE = ImageLoader.loadImage("tileBlue.png");
-
-	public void move(Vector delta) {
-		pos = pos.add(delta);
-	}
 }
