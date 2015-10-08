@@ -44,10 +44,10 @@ public class IsoLogic {
 
 		origin = new Vector(originX, originY);
 
-		rotateAxis();
+/*		rotateAxis();
 		rotateAxis();
 
-		computeUnitVectors();
+		computeUnitVectors();*/
 	}
 
 	public void rotateAxis() {
@@ -66,11 +66,6 @@ public class IsoLogic {
 	private void computeUnitVectors() {
 		uVector = new Vector(Math.cos(uAngle), -Math.sin(uAngle));
 		vVector = new Vector(Math.cos(vAngle), -Math.sin(vAngle));
-	}
-
-	public void mirrorHorizontal() {
-		uVector = new Vector(Math.cos(uAngle + Math.toRadians(120)), -Math.sin(uAngle + Math.toRadians(120)));
-		vVector = new Vector(Math.cos(vAngle + Math.toRadians(60)), -Math.sin(vAngle + Math.toRadians(60)));
 	}
 
 	/**

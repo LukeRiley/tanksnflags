@@ -13,12 +13,10 @@ import tanksnflags.ui.ImageLoader;
 
 public class Tile extends Wall {
 
-	public Dimension size = new Dimension(46, 46);
-
 	private TILECOLOR color = TILECOLOR.BLUE;
 
-	public Tile(Vector pos, IsoLogic iL) {
-		super(pos, iL);
+	public Tile(Vector pos, IsoLogic iL, Dir dir) {
+		super(pos, iL, dir);
 		vertical = 0;
 		// TODO Auto-generated constructor stub
 	}

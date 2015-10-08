@@ -14,8 +14,8 @@ public class Wall extends Item {
 
 	private int height = 1;
 
-	public Wall(Vector pos, IsoLogic iL) {
-		super(pos, iL);
+	public Wall(Vector pos, IsoLogic iL, Dir dir) {
+		super(pos, iL, dir);
 		vertical = 29;
 	}
 

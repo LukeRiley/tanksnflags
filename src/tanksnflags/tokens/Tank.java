@@ -26,19 +26,22 @@ public class Tank extends MovingItem {
 
 	TILECOLOR color = TILECOLOR.BLUE;
 
-	public Tank(Vector pos, IsoLogic iL, int uid) {
-		super(pos, iL);
+	private Dir dir;
+
+	public Tank(Vector pos, IsoLogic iL, int uid, Dir dir) {
+		super(pos, iL, dir);
 		this.uid = uid;
-		vertical = 0;
+		vertical = 29;
 	}
-	
-	public int uid(){
+
+	public int uid() {
 		return uid;
 	}
 
 	@Override
 	public void draw(Graphics2D g2) {
 		Vector sPos = iL.isoToScreen(this);
+		System.out.println(this.getDrawPos(sPos));
 		if (color == TILECOLOR.RED) {
 			g2.drawImage(RED, (int) sPos.getQ(), (int) sPos.getT() - 23 - vertical, null);
 
@@ -59,25 +62,6 @@ public class Tank extends MovingItem {
 	public void setRed() {
 		color = TILECOLOR.RED;
 	}
-
-/*	public void moveUp() {
-		pos = new Vector(pos.getQ() + 46, pos.getT());
-	}
-
-	public void moveDown() {
-		pos = new Vector(pos.getQ() - 46, pos.getT());
-
-	}
-
-	public void moveRight() {
-		pos = new Vector(pos.getQ(), pos.getT() + 46);
-
-	}
-
-	public void moveLeft() {
-		pos = new Vector(pos.getQ(), pos.getT() - 46);
-
-	}*/
 
 	@Override
 	public void toOutputStream(DataOutputStream dout) throws IOException {

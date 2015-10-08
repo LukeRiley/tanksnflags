@@ -16,38 +16,9 @@ import tanksnflags.tokens.Wall;
 public class Game {
 
 	private IsoLogic isoLogic;
-	private AList[][] itemGrid;// array representation of items in game
 	private Map<String, Item> idMap  = new HashMap<String, Item>();
 
 	private int size = 10;// size of itemGrid
 
-	public Game(IsoLogic isoLogic) {
-		itemGrid = new AList[size][size];
-	}
 
-}
-
-/*
- * Used as a 'bucket' for the itemGrid
- */
-
-class AList implements Iterable<Item> {
-	public List<Item> list;
-
-	public AList(List<Item> l) {
-		list = l;
-	}
-
-	public void add(Item toAdd) {
-		list.add(toAdd);
-	}
-
-	public Item get(int index) {
-		return list.get(index);
-	}
-
-	@Override
-	public Iterator<Item> iterator() {
-		return list.iterator();
-	}
 }

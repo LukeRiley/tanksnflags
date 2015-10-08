@@ -38,7 +38,7 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 	List<Tile> tiles = new ArrayList<Tile>();
 	List<Wall> walls = new ArrayList<Wall>();
 	List<Item> itemList = new ArrayList<Item>();
-	Tank tank = new Tank(new Vector(0, 0), isoLogic, 50);
+	Tank tank = new Tank(new Vector(0, 0), isoLogic, 50, Item.Dir.EAST);
 
 	public Window() {
 		initializeItems();
@@ -73,9 +73,9 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 	}
 
 	public void tick() {
-		itemList.remove(tank);
-		itemList.add(tank);
-		tank.tick();
+		/*
+		 * itemList.remove(tank); itemList.add(tank); tank.tick();
+		 */
 	}
 
 	private void initializeItems() {
@@ -87,10 +87,10 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 				 * wall = new Wall(new Vector(u * 46 - 230, v * 46 - 230),
 				 * isoLogic); walls.add(wall); itemList.add(wall); }
 				 */
-
-				Tile tile = new Tile(new Vector(u * 46, v * 46), isoLogic);
+/*
+				Tile tile = new Tile(new Vector(u * 46, v * 46), isoLogic, Item.Dir.EAST);
 				tiles.add(tile);
-				itemList.add(tile);
+				itemList.add(tile);*/
 			}
 		}
 		itemList.add(tank);
@@ -99,6 +99,9 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 	public void rotate() {
 		System.out.println(tank.pos());
 		isoLogic.rotateAxis();
+		for (Item item : itemList) {
+			item.setDir(item.leftOf(item.dir()));
+		}
 		this.repaint();
 	}
 
@@ -106,9 +109,15 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		renderCollection(g2);
-		g2.drawLine((int) isoLogic.isoToScreen(new Vector(0, 0)).getQ(), (int) isoLogic.isoToScreen(new Vector(0, 0)).getT(), (int) isoLogic.isoToScreen(new Vector(500, 0)).getQ(), (int) isoLogic.isoToScreen(new Vector(500, 0)).getT());
+		g2.drawLine((int) isoLogic.isoToScreen(new Vector(0, 0)).getQ(),
+				(int) isoLogic.isoToScreen(new Vector(0, 0)).getT(),
+				(int) isoLogic.isoToScreen(new Vector(500, 0)).getQ(),
+				(int) isoLogic.isoToScreen(new Vector(500, 0)).getT());
 		g2.setColor(Color.yellow);
-		g2.drawLine((int) isoLogic.isoToScreen(new Vector(0, 0)).getQ(), (int) isoLogic.isoToScreen(new Vector(0, 0)).getT(), (int) isoLogic.isoToScreen(new Vector(0, 500)).getQ(), (int) isoLogic.isoToScreen(new Vector(0, 500)).getT());
+		g2.drawLine((int) isoLogic.isoToScreen(new Vector(0, 0)).getQ(),
+				(int) isoLogic.isoToScreen(new Vector(0, 0)).getT(),
+				(int) isoLogic.isoToScreen(new Vector(0, 500)).getQ(),
+				(int) isoLogic.isoToScreen(new Vector(0, 500)).getT());
 
 	}
 
@@ -161,7 +170,9 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 	public boolean canMoveUp(MovingItem character) {
 		for (Item item : itemList) {
 			Vector itemPos = item.pos();
-			if (!item.equals(character) && itemPos.equalsDelta(new Vector(character.pos().getQ() + 46, character.pos().getT()), 10) && item.vertical() >= character.vertical()) {
+			if (!item.equals(character)
+					&& itemPos.equalsDelta(new Vector(character.pos().getQ() + 46, character.pos().getT()), 10)
+					&& item.vertical() >= character.vertical()) {
 				return false;
 			}
 		}
@@ -171,7 +182,9 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 	public boolean canMoveDown(MovingItem character) {
 		for (Item item : itemList) {
 			Vector itemPos = item.pos();
-			if (!item.equals(character) && itemPos.equalsDelta(new Vector(character.pos().getQ() - 46, character.pos().getT()), 10) && item.vertical() >= character.vertical()) {
+			if (!item.equals(character)
+					&& itemPos.equalsDelta(new Vector(character.pos().getQ() - 46, character.pos().getT()), 10)
+					&& item.vertical() >= character.vertical()) {
 				return false;
 			}
 		}
@@ -181,7 +194,9 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 	public boolean canMoveRight(MovingItem character) {
 		for (Item item : itemList) {
 			Vector itemPos = item.pos();
-			if (!item.equals(character) && itemPos.equalsDelta(new Vector(character.pos().getQ(), character.pos().getT() + 46), 10) && item.vertical() >= character.vertical()) {
+			if (!item.equals(character)
+					&& itemPos.equalsDelta(new Vector(character.pos().getQ(), character.pos().getT() + 46), 10)
+					&& item.vertical() >= character.vertical()) {
 				return false;
 			}
 		}
@@ -191,7 +206,9 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 	public boolean canMoveLeft(MovingItem character) {
 		for (Item item : itemList) {
 			Vector itemPos = item.pos();
-			if (!item.equals(character) && itemPos.equalsDelta(new Vector(character.pos().getQ(), character.pos().getT() - 46), 10) && item.vertical() >= character.vertical()) {
+			if (!item.equals(character)
+					&& itemPos.equalsDelta(new Vector(character.pos().getQ(), character.pos().getT() - 46), 10)
+					&& item.vertical() >= character.vertical()) {
 				return false;
 			}
 		}
@@ -200,7 +217,8 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		itemList.remove(tank);// for some reason the tank has to be removed otherwise the sorting doesn't work properly
+		itemList.remove(tank);// for some reason the tank has to be removed
+								// otherwise the sorting doesn't work properly
 		if (e.getKeyCode() == (e.VK_UP)) {
 			if (canMoveUp(tank))
 				tank.moveUp();

@@ -17,8 +17,8 @@ public abstract class MovingItem extends Item {
 	int count = 0;
 	int state = 0;
 
-	public MovingItem(Vector pos, IsoLogic iL) {
-		super(pos, iL);
+	public MovingItem(Vector pos, IsoLogic iL, Dir dir) {
+		super(pos, iL, dir);
 	}
 
 	public void moveUp() {
