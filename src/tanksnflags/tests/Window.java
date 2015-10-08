@@ -38,7 +38,7 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 	List<Tile> tiles = new ArrayList<Tile>();
 	List<Wall> walls = new ArrayList<Wall>();
 	List<Item> itemList = new ArrayList<Item>();
-	Tank tank = new Tank(new Vector(1 * 46, 1 * 46), isoLogic, 50);
+	Tank tank = new Tank(new Vector(0, 0), isoLogic, 50);
 
 	public Window() {
 		initializeItems();
@@ -65,6 +65,9 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 		Comparator<Item> comp = new DepthComparator(isoLogic);
 		Collections.sort(itemList, comp);
 		for (int i = 0; i < itemList.size(); i++) {
+			if (itemList.get(i).pos().getQ() < 0 || itemList.get(i).pos().getT() < 0) {
+				System.out.println(itemList.get(i).pos());
+			}
 			itemList.get(i).draw(g2);
 		}
 	}
@@ -76,16 +79,16 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 	}
 
 	private void initializeItems() {
-		for (int u = 0; u < 10; u++) {
-			for (int v = 0; v < 10; v++) {
+		for (int u = 0; u < 8; u++) {
+			for (int v = 0; v < 8; v++) {
 
-				if (u == 10 - 1 || v == 10 - 1 || u == 0 || v == 0) {
-					Wall wall = new Wall(new Vector(u * 46 - 230, v * 46 - 230), isoLogic);
-					walls.add(wall);
-					itemList.add(wall);
-				}
+				/*
+				 * if (u == 10 - 1 || v == 10 - 1 || u == 0 || v == 0) { Wall
+				 * wall = new Wall(new Vector(u * 46 - 230, v * 46 - 230),
+				 * isoLogic); walls.add(wall); itemList.add(wall); }
+				 */
 
-				Tile tile = new Tile(new Vector(u * 46 - 230, v * 46 - 230), isoLogic);
+				Tile tile = new Tile(new Vector(u * 46, v * 46), isoLogic);
 				tiles.add(tile);
 				itemList.add(tile);
 			}
@@ -94,6 +97,7 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 	}
 
 	public void rotate() {
+		System.out.println(tank.pos());
 		isoLogic.rotateAxis();
 		this.repaint();
 	}
@@ -212,6 +216,10 @@ public class Window extends JFrame implements MouseListener, KeyListener {
 		if (e.getKeyCode() == (e.VK_LEFT)) {
 			if (canMoveLeft(tank))
 				tank.moveLeft();
+		}
+		if (e.getKeyCode() == e.VK_9) {
+			rotate();
+			repaint();
 		}
 		itemList.add(tank);
 	}

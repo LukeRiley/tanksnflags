@@ -13,10 +13,8 @@ public class Main extends Thread {
 	public void run() {
 		while (true) {
 			window.tick();
-			window.repaint();
-			window.rotate();
 			try {
-				Thread.sleep(500);
+				Thread.sleep(10);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -86,7 +86,7 @@ public class IsoLogic {
 	 *         second is the y coordinate.
 	 */
 	public Vector isoToScreen(double u, double v) {
-		Vector screen = origin.add((vVector.scale(v)).add(uVector.scale(u)));
+  		Vector screen = origin.add((vVector.scale(v)).add(uVector.scale(u)));
 		screen = new Vector(Math.round(screen.getQ()), Math.round(screen.getT()));
 		return screen;
 	}

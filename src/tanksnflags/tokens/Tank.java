@@ -29,7 +29,7 @@ public class Tank extends MovingItem {
 	public Tank(Vector pos, IsoLogic iL, int uid) {
 		super(pos, iL);
 		this.uid = uid;
-		vertical = 29;
+		vertical = 0;
 	}
 	
 	public int uid(){
@@ -93,5 +93,5 @@ public class Tank extends MovingItem {
 
 	private static final Image RED = ImageLoader.loadImage("tileRed.png");
 
-	private static final Image BLUE = ImageLoader.loadImage("tileBlue.png");
+	private static final Image BLUE = ImageLoader.loadImage("tileRed.png");
 }
