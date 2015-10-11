@@ -1,0 +1,15 @@
+ * Y  x ----------------------------
+ * |
+ * |
+ * |
+ * |
+ * |
+ * |         \      /
+ * | u axis   \    /   v axis
+ * |		   \  /
+ * |	        \/) angle
+ * |
+ 
+ the angles are measured according to 0 degrees being where angle is written. 
+ So say the v axis was at 45 degrees from there and the u axis is meant to the 
+ same but from the other direction then it would be at 135 degrees.
