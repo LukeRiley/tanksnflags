@@ -7,11 +7,11 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import tanksnflags.game.Game;
+import tanksnflags.game.Game.TILECOLOR;
 import tanksnflags.helpers.IsoLogic;
 import tanksnflags.helpers.Vector;
 import tanksnflags.helpers.IsoLogic.Dir;
-import tanksnflags.tests.Window;
-import tanksnflags.tests.Window.TILECOLOR;
 import tanksnflags.ui.ImageLoader;
 
 /**

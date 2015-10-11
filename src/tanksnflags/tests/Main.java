@@ -1,11 +1,16 @@
 package tanksnflags.tests;
 
+import java.io.File;
+
+import tanksnflags.game.Game;
+import tanksnflags.ui.ImageLoader;
+
 public class Main extends Thread {
 
-	Window window;
+	Game window;
 
 	public Main() {
-		window = new Window();
+		window = new Game();
 		this.start();
 	}
 

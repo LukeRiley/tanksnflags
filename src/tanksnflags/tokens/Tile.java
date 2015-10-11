@@ -7,9 +7,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import tanksnflags.game.Game.TILECOLOR;
 import tanksnflags.helpers.*;
 import tanksnflags.helpers.IsoLogic.Dir;
-import tanksnflags.tests.Window.TILECOLOR;
 import tanksnflags.ui.ImageLoader;
 
 public class Tile extends Wall {
