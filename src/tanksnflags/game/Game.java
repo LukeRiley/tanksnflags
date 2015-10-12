@@ -22,13 +22,14 @@ import javax.swing.*;
 import tanksnflags.helpers.IsoLogic;
 import tanksnflags.helpers.IsoLogic.Dir;
 import tanksnflags.helpers.Vector;
+import tanksnflags.tokens.Door;
 import tanksnflags.tokens.Item;
 import tanksnflags.tokens.MovingItem;
 import tanksnflags.tokens.Tank;
 import tanksnflags.tokens.Tile;
 import tanksnflags.tokens.Wall;
 
-public class Game extends JFrame implements MouseListener, KeyListener {
+public class Game extends JFrame {
 
 	public enum TILECOLOR {
 		RED, BLUE
@@ -61,8 +62,6 @@ public class Game extends JFrame implements MouseListener, KeyListener {
 		canvas.setBackground(Color.darkGray);
 		canvas.setSize(new Dimension(100, 1000));
 		canvas.setVisible(true);
-		canvas.addMouseListener(this);
-		this.addKeyListener(this);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setVisible(true);
 	}
@@ -71,27 +70,45 @@ public class Game extends JFrame implements MouseListener, KeyListener {
 		Comparator<Item> comp = new DepthComparator(isoLogic);
 		Collections.sort(itemList, comp);
 		for (int i = 0; i < itemList.size(); i++) {
-			if (itemList.get(i).pos().getQ() < 0 || itemList.get(i).pos().getT() < 0) {
-				System.out.println(itemList.get(i).pos());
-			}
 			itemList.get(i).draw(g2, dir);
+			Vector sPos = isoLogic.isoToScreen(itemList.get(i));
+			g2.setColor(Color.white);
+			/*
+			 * if (itemList.get(i) instanceof Tank) {
+			 * g2.drawString(String.valueOf(i), (int) sPos.getQ() + 30, (int)
+			 * sPos.getT() - 20); } else { g2.drawString(String.valueOf(i),
+			 * (int) sPos.getQ() + 30, (int) sPos.getT() + 10); }
+			 */
 		}
 	}
 
+	public Tank tank() {
+		return tank;
+	}
+
 	public void tick() {
-		itemList.remove(tank);
-		itemList.add(tank);
-		tank.tick();
+		for (Item item : itemList) {
+			if (item instanceof MovingItem) {
+				MovingItem mItem = (MovingItem) item;
+				mItem.tick();
+			}
+		}
 	}
 
 	private void initializeItems() {
 		for (int u = -4; u < 4; u++) {
 			for (int v = -4; v < 4; v++) {
 
-				if (u == -4 || v == -4 || u == 3 || v == 3) {
-					Wall wall = new Wall(new Vector(u * 46, v * 46), isoLogic);
-					itemList.add(wall);
+				if (u == 2 && v == 2) {
+					Door door = new Door(new Vector(u * 46, v * 46), isoLogic, 10);
+					itemList.add(door);
 				}
+
+				/*
+				 * if (u == -4 || v == -4 || u == 3 || v == 3) { Wall wall = new
+				 * Wall(new Vector(u * 46, v * 46), isoLogic);
+				 * itemList.add(wall); }
+				 */
 
 				Tile tile = new Tile(new Vector(u * 46, v * 46), isoLogic);
 				itemList.add(tile);
@@ -136,48 +153,7 @@ public class Game extends JFrame implements MouseListener, KeyListener {
 		new Game();
 	}
 
-	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void mousePressed(MouseEvent arg0) {
-		Vector iso = isoLogic.screenToIso(arg0.getX(), arg0.getY());
-		for (Item item : itemList) {
-			if (item instanceof Tile) {
-				Tile tile = (Tile) item;
-				if (tile.contains(iso.getQ(), iso.getT())) {
-					if (tile.getColor() == TILECOLOR.BLUE) {
-						tile.setRed();
-						tile.moveVertical(-10);
-					} else {
-						tile.setBlue();
-						tile.moveVertical(10);
-					}
-					this.repaint();
-					break;
-				}
-			}
-		}
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -221,41 +197,6 @@ public class Game extends JFrame implements MouseListener, KeyListener {
 		return true;
 	}
 
-	@Override
-	public void keyPressed(KeyEvent e) {
-		itemList.remove(tank);// for some reason the tank has to be removed otherwise the sorting doesn't work properly
-		if (e.getKeyCode() == (e.VK_UP)) {
-			if (canMoveUp(tank))
-				tank.moveUp();
-		}
-		if (e.getKeyCode() == (e.VK_DOWN)) {
-			if (canMoveDown(tank))
-				tank.moveDown();
-		}
-		if (e.getKeyCode() == (e.VK_RIGHT)) {
-			if (canMoveRight(tank))
-				tank.moveRight();
-		}
-		if (e.getKeyCode() == (e.VK_LEFT)) {
-			if (canMoveLeft(tank))
-				tank.moveLeft();
-		}
-		if (e.getKeyCode() == e.VK_9) {
-			rotate();
-			repaint();
-		}
-		itemList.add(tank);
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-
-	}
 }
 
 class DepthComparator implements Comparator<Item> {
@@ -268,9 +209,11 @@ class DepthComparator implements Comparator<Item> {
 
 	@Override
 	public int compare(Item i1, Item i2) {
-		if (iL.isoToScreen(i1).equals(iL.isoToScreen(i2))) {
+
+		if (i1.contains(i2)) {
 			return i1.vertical() - i2.vertical();
 		}
+
 		return (int) (iL.isoToScreen(i1).getT() - iL.isoToScreen(i2).getT());
 	}
 

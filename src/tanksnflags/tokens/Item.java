@@ -1,5 +1,6 @@
 package tanksnflags.tokens;
 
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -21,10 +22,9 @@ public abstract class Item {
 
 	protected Vector pos;
 	protected Vector sPos;
-
 	protected IsoLogic iL;
-
 	protected int vertical = 0;
+	public Dimension size = new Dimension(46, 46);
 
 	public Item(Vector pos, IsoLogic iL) {
 		this.pos = pos;
@@ -44,7 +44,7 @@ public abstract class Item {
 		Vector[] vertices = new Vector[4];
 		vertices[0] = sPos;
 		vertices[1] = iL.isoToScreen(new Vector(pos.getQ() + 46, pos.getT()));
-		vertices[2] = iL.isoToScreen(new Vector(pos.getQ() + 46, pos.getT()+46));
+		vertices[2] = iL.isoToScreen(new Vector(pos.getQ() + 46, pos.getT() + 46));
 		vertices[3] = iL.isoToScreen(new Vector(pos.getQ(), pos.getT() + 46));
 
 		switch (dir) {
@@ -58,6 +58,21 @@ public abstract class Item {
 			sPos = vertices[3];
 			break;
 		}
+	}
+
+	public boolean contains(Item other) {
+		Vector oPos = other.pos();
+		int delta = 0;
+		if (oPos.getQ() - delta >= pos.getQ() + size.getWidth()) {
+			return false;
+		} else if (oPos.getT() - delta >= pos.getT() + size.getHeight()) {
+			return false;
+		} else if (oPos.getQ() + other.size.getWidth() + delta <= pos.getQ()) {
+			return false;
+		} else if (oPos.getT() + other.size.getHeight() + delta <= pos.getT()) {
+			return false;
+		}
+		return true;
 	}
 
 	public abstract void draw(Graphics2D g2, Dir dir);

@@ -61,14 +61,6 @@ public class Tank extends MovingItem {
 		color = TILECOLOR.RED;
 	}
 
-	/*
-	 * public void moveUp() { pos = new Vector(pos.getQ() + 46, pos.getT()); }
-	 * public void moveDown() { pos = new Vector(pos.getQ() - 46, pos.getT()); }
-	 * public void moveRight() { pos = new Vector(pos.getQ(), pos.getT() + 46);
-	 * } public void moveLeft() { pos = new Vector(pos.getQ(), pos.getT() - 46);
-	 * }
-	 */
-
 	@Override
 	public void toOutputStream(DataOutputStream dout) throws IOException {
 		// TODO Auto-generated method stub
@@ -84,4 +76,25 @@ public class Tank extends MovingItem {
 	private static final Image RED = ImageLoader.loadImage("tileRed.png");
 
 	private static final Image BLUE = ImageLoader.loadImage("tileRed.png");
+
+	@Override
+	protected void renderTick(int moveRate) {
+		if (dir == null) {
+			return;
+		}
+		switch (dir) {
+		case NORTH:
+			pos = pos.add(new Vector(moveRate, 0));
+			break;
+		case SOUTH:
+			pos = pos.add(new Vector(-moveRate, 0));
+			break;
+		case WEST:
+			pos = pos.add(new Vector(0, -moveRate));
+			break;
+		case EAST:
+			pos = pos.add(new Vector(0, moveRate));
+			break;
+		}
+	}
 }

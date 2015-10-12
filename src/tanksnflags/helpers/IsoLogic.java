@@ -50,6 +50,11 @@ public class IsoLogic {
 		computeUnitVectors();
 	}
 
+	/**
+	 * Returns left rotated direction of the one given.
+	 * @param dir the direction you wish to rotate.
+	 * @return the direction that is left of the one given.
+	 */
 	public Dir rotateLeft(Dir dir) {
 		switch (dir) {
 		case EAST:
@@ -63,6 +68,9 @@ public class IsoLogic {
 		}
 	}
 
+	/**
+	 * Change the angle of the axis. The rotation rotates left.
+	 */
 	public void rotateAxis() {
 		if (swap) {
 			uAngle += Math.toRadians(120);
@@ -79,11 +87,6 @@ public class IsoLogic {
 	private void computeUnitVectors() {
 		uVector = new Vector(Math.cos(uAngle), -Math.sin(uAngle));
 		vVector = new Vector(Math.cos(vAngle), -Math.sin(vAngle));
-	}
-
-	public void mirrorHorizontal() {
-		uVector = new Vector(Math.cos(uAngle + Math.toRadians(120)), -Math.sin(uAngle + Math.toRadians(120)));
-		vVector = new Vector(Math.cos(vAngle + Math.toRadians(60)), -Math.sin(vAngle + Math.toRadians(60)));
 	}
 
 	/**

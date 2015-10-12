@@ -14,8 +14,6 @@ import tanksnflags.ui.ImageLoader;
 
 public class Tile extends Wall {
 
-	public Dimension size = new Dimension(46, 46);
-
 	private TILECOLOR color = TILECOLOR.BLUE;
 
 	public Tile(Vector pos, IsoLogic iL) {
@@ -39,17 +37,6 @@ public class Tile extends Wall {
 
 	}
 
-	public boolean contains(double x, double y) {
-		if (x < pos.getQ() || x > pos.getQ() + size.getWidth()) {
-			return false;
-		}
-
-		if (y < pos.getT() || y > pos.getT() + size.getHeight()) {
-			return false;
-		}
-
-		return true;
-	}
 
 	@Override
 	public void toOutputStream(DataOutputStream dout) throws IOException {

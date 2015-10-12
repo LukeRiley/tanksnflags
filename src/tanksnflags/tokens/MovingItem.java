@@ -11,37 +11,44 @@ import tanksnflags.helpers.Vector;
 
 public abstract class MovingItem extends Item {
 
-	String dir = "null";
+	Dir dir = null;
+
 	double size = 46;
-	int frames = 10;
-	double moveRate = 40 / frames;
+	// variables for animation
+	protected int frames = 10;
+	protected int moveIncrement = 46;
+	protected int moveRate = moveIncrement / frames;
 	int count = 0;
-	int state = 0;
+	int state = 1;
 
 	public MovingItem(Vector pos, IsoLogic iL) {
 		super(pos, iL);
 	}
 
+	public Dir dir() {
+		return dir;
+	}
+
 	public void moveUp() {
-		moveCommand("up");
+		moveCommand(Dir.NORTH);
 
 	}
 
 	public void moveDown() {
-		moveCommand("down");
+		moveCommand(Dir.SOUTH);
 
 	}
 
 	public void moveRight() {
-		moveCommand("right");
+		moveCommand(Dir.EAST);
 
 	}
 
 	public void moveLeft() {
-		moveCommand("left");
+		moveCommand(Dir.WEST);
 	}
 
-	public void moveCommand(String dir) {
+	public void moveCommand(Dir dir) {
 		if (state == 1) {
 			this.dir = dir;
 			count = 0;
@@ -49,40 +56,20 @@ public abstract class MovingItem extends Item {
 		}
 	}
 
-	public void tick() {
+	public void tick(){
 		if (count == frames - 1) {
-			moveRate = moveRate + size - moveRate * frames;
+			moveRate = moveIncrement - (int) moveRate * frames + moveRate;
 		}
-		switch (dir) {
-		case "up":
-			pos = pos.add(new Vector(moveRate, 0));
-			break;
-		case "down":
-			pos = pos.add(new Vector(-moveRate, 0));
-			break;
-		case "left":
-			pos = pos.add(new Vector(0, -moveRate));
-			break;
-		case "right":
-			pos = pos.add(new Vector(0, moveRate));
-			break;
-		}
+		renderTick(moveRate);
 		count++;
 		if (count == frames) {
-			moveRate = 40 / frames;
-			dir = "null";
+			moveRate = moveIncrement / frames;
+			dir = null;
 			count = 0;
 			state = 1;
 		}
 	}
-
-	@Override
-	public abstract void draw(Graphics2D g2, Dir dir);
-
-	@Override
-	public abstract void toOutputStream(DataOutputStream dout) throws IOException;
-
-	@Override
-	public abstract Item fromInputStream(DataInputStream din) throws IOException;
+	
+	protected abstract void renderTick(int moveRate);
 
 }
