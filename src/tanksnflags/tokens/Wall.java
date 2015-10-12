@@ -30,18 +30,19 @@ public class Wall extends Item {
 
 	@Override
 	public void toOutputStream(DataOutputStream dout) throws IOException {
-		// TODO Auto-generated method stub
-
+		dout.writeDouble(iL.screenToIso(pos).getQ());
+		dout.writeDouble(iL.screenToIso(pos).getT());
 	}
 
 	@Override
-	public Item fromInputStream(DataInputStream din) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+	public Item fromInputStream(DataInputStream din, IsoLogic iL) throws IOException {
+		Vector v = new Vector(din.readDouble(), din.readDouble());
+		Wall w = new  Wall(v, iL);
+		return w;
 	}
 
-	private static final Image RED = ImageLoader.loadImage("tileRed.png");
+	private static final Image RED = ImageLoader.loadImage("tile.png");
 
-	private static final Image BLUE = ImageLoader.loadImage("tileBlue.png");
+	private static final Image BLUE = ImageLoader.loadImage("flag.png");
 
 }

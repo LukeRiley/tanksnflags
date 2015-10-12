@@ -53,14 +53,15 @@ public class Tile extends Wall {
 
 	@Override
 	public void toOutputStream(DataOutputStream dout) throws IOException {
-		// TODO Auto-generated method stub
-
+		dout.writeDouble(iL.screenToIso(pos).getQ());
+		dout.writeDouble(iL.screenToIso(pos).getT());
 	}
 
 	@Override
-	public Item fromInputStream(DataInputStream din) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+	public Item fromInputStream(DataInputStream din, IsoLogic iL) throws IOException {
+		Vector v = new Vector(din.readDouble(), din.readDouble());
+		Tile t = new  Tile(v, iL);
+		return t;
 	}
 
 	public void setBlue() {
@@ -75,8 +76,8 @@ public class Tile extends Wall {
 		return color;
 	}
 
-	private static final Image RED = ImageLoader.loadImage("tileRed.png");
+	private static final Image RED = ImageLoader.loadImage("tile.png");
 
-	private static final Image BLUE = ImageLoader.loadImage("tileBlue.png");
+	private static final Image BLUE = ImageLoader.loadImage("tile.png");
 
 }

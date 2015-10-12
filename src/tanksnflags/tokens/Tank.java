@@ -81,17 +81,19 @@ public class Tank extends MovingItem {
 
 	@Override
 	public void toOutputStream(DataOutputStream dout) throws IOException {
-		// TODO Auto-generated method stub
-
+		dout.writeDouble(iL.screenToIso(pos).getQ());
+		dout.writeDouble(iL.screenToIso(pos).getT());
+		dout.writeByte(uid);
 	}
 
 	@Override
-	public Item fromInputStream(DataInputStream din) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+	public Item fromInputStream(DataInputStream din, IsoLogic iL) throws IOException {
+		Vector v = new Vector(din.readDouble(),din.readDouble());
+		int uid = din.readInt();
+		return new Tank(v, iL, uid);
 	}
 
-	private static final Image RED = ImageLoader.loadImage("tileRed.png");
+	private static final Image RED = ImageLoader.loadImage("tankS.png");
 
-	private static final Image BLUE = ImageLoader.loadImage("tileRed.png");
+	private static final Image BLUE = ImageLoader.loadImage("tankN.png");
 }

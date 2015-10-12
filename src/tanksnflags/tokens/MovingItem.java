@@ -82,6 +82,6 @@ public abstract class MovingItem extends Item {
 	public abstract void toOutputStream(DataOutputStream dout) throws IOException;
 
 	@Override
-	public abstract Item fromInputStream(DataInputStream din) throws IOException;
+	public abstract Item fromInputStream(DataInputStream din, IsoLogic iL) throws IOException;
 
 }

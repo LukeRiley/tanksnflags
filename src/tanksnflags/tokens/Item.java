@@ -41,6 +41,6 @@ public abstract class Item {
 
 	public abstract void toOutputStream(DataOutputStream dout) throws IOException;
 
-	public abstract Item fromInputStream(DataInputStream din) throws IOException;
+	public abstract Item fromInputStream(DataInputStream din, IsoLogic iL) throws IOException;
 
 }
