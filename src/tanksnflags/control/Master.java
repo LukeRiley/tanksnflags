@@ -56,16 +56,24 @@ public class Master extends Thread {
 
 						switch (btn) {
 						case 1:
-							game.tank(playerID).moveUp();
+							if (game.canMoveUp(game.tank(playerID))) {
+								game.tank(playerID).moveUp();
+							}
 							break;
 						case 2:
-							game.tank(playerID).moveDown();
+							if (game.canMoveDown(game.tank(playerID))) {
+								game.tank(playerID).moveDown();
+							}
 							break;
 						case 3:
-							game.tank(playerID).moveRight();
+							if (game.canMoveRight(game.tank(playerID))) {
+								game.tank(playerID).moveRight();
+							}
 							break;
 						case 4:
-							game.tank(playerID).moveLeft();
+							if (game.canMoveLeft(game.tank(playerID))) {
+								game.tank(playerID).moveLeft();
+							}
 							break;
 						}
 						game.tank(playerID).tick();
@@ -75,7 +83,7 @@ public class Master extends Thread {
 					oStream.writeInt(state.length);
 					oStream.write(state);
 					oStream.flush();
-					Thread.sleep(500);// broadcastClock);
+					Thread.sleep(100);// broadcastClock);
 				} catch (InterruptedException ex) {
 				}
 			}

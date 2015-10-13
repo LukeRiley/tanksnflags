@@ -90,6 +90,8 @@ public abstract class Item {
 			return Tank.fromInputStream(u, v, din, iL);
 		} else if (type == Game.TILE) {
 			return Tile.fromInputStream(u, v, din, iL);
+		} else if (type == Game.WALL) {
+			return Wall.fromInputStream(u, v, din, iL);
 		} else {
 			throw new IOException();
 		}

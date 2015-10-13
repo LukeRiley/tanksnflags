@@ -84,8 +84,8 @@ public class Game extends JFrame {
 	 * @return
 	 */
 	private boolean occupied(int u, int v) {
-		for (Tank tank : tanks) {
-			if (tank.pos().equals(new Vector(u * 46, v * 46))) {
+		for (Item item : itemList) {
+			if (item.pos().equals(new Vector(u * 46, v * 46)) && item.vertical() == 29) {
 				return true;
 			}
 		}
@@ -105,16 +105,10 @@ public class Game extends JFrame {
 		for (int u = -size / 2; u < size / 2; u++) {
 			for (int v = -size / 2; v < size / 2; v++) {
 
-				/*
-				 * if (u == 2 && v == 2) { Door door = new Door(new Vector(u *
-				 * 46, v * 46), isoLogic, 10); itemList.add(door); }
-				 */
-
-				/*
-				 * if (u == -4 || v == -4 || u == 3 || v == 3) { Wall wall = new
-				 * Wall(new Vector(u * 46, v * 46), isoLogic);
-				 * itemList.add(wall); }
-				 */
+				if (u == -4 || v == -4 || u == 3 || v == 3) {
+					Wall wall = new Wall(new Vector(u * 46, v * 46), isoLogic);
+					itemList.add(wall);
+				}
 
 				Tile tile = new Tile(new Vector(u * 46, v * 46), isoLogic);
 				itemList.add(tile);
@@ -123,6 +117,9 @@ public class Game extends JFrame {
 	}
 
 	public boolean canMoveUp(MovingItem character) {
+		if (occupied((int) character.pos().getQ(), (int) character.pos().getT() + 46)) {
+			return false;
+		}
 		for (Item item : itemList) {
 			Vector itemPos = item.pos();
 			if (!item.equals(character) && itemPos.equalsDelta(new Vector(character.pos().getQ() + 46, character.pos().getT()), 10) && item.vertical() >= character.vertical()) {
@@ -133,6 +130,9 @@ public class Game extends JFrame {
 	}
 
 	public boolean canMoveDown(MovingItem character) {
+		if (occupied((int) character.pos().getQ(), (int) character.pos().getT() - 46)) {
+			return false;
+		}
 		for (Item item : itemList) {
 			Vector itemPos = item.pos();
 			if (!item.equals(character) && itemPos.equalsDelta(new Vector(character.pos().getQ() - 46, character.pos().getT()), 10) && item.vertical() >= character.vertical()) {
@@ -143,6 +143,9 @@ public class Game extends JFrame {
 	}
 
 	public boolean canMoveRight(MovingItem character) {
+		if (occupied((int) character.pos().getQ() + 46, (int) character.pos().getT())) {
+			return false;
+		}
 		for (Item item : itemList) {
 			Vector itemPos = item.pos();
 			if (!item.equals(character) && itemPos.equalsDelta(new Vector(character.pos().getQ(), character.pos().getT() + 46), 10) && item.vertical() >= character.vertical()) {
@@ -153,6 +156,9 @@ public class Game extends JFrame {
 	}
 
 	public boolean canMoveLeft(MovingItem character) {
+		if (occupied((int) character.pos().getQ() - 46, (int) character.pos().getT())) {
+			return false;
+		}
 		for (Item item : itemList) {
 			Vector itemPos = item.pos();
 			if (!item.equals(character) && itemPos.equalsDelta(new Vector(character.pos().getQ(), character.pos().getT() - 46), 10) && item.vertical() >= character.vertical()) {

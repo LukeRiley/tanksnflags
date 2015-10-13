@@ -35,7 +35,6 @@ public class TestingServer {
 				playerID++;
 				if (nClients == 0) {
 					System.out.println("ALL CLIENTS ACCEPTED --- GAME BEGINS");
-
 				}
 			}
 		} catch (IOException e) {

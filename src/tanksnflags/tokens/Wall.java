@@ -7,6 +7,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import tanksnflags.game.Game;
 import tanksnflags.helpers.*;
 import tanksnflags.helpers.IsoLogic.Dir;
 import tanksnflags.ui.ImageLoader;
@@ -30,13 +31,13 @@ public class Wall extends Item {
 
 	@Override
 	public void toOutputStream(DataOutputStream dout) throws IOException {
-		// TODO Auto-generated method stub
-
+		dout.writeByte(Game.WALL);
+		dout.writeDouble(pos.getQ());
+		dout.writeDouble(pos.getT());
 	}
 
-	public static Wall fromInputStream(DataInputStream din) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+	public static Wall fromInputStream(double u, double v, DataInputStream din, IsoLogic iL) throws IOException {
+		return new Wall(new Vector(u, v), iL);
 	}
 
 	private static final Image RED = ImageLoader.loadImage("tileRed.png");
