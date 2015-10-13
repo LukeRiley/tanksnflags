@@ -7,104 +7,134 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+import javax.swing.JFrame;
+
+import tanksnflags.game.Game;
+import tanksnflags.game.GameCanvas;
+import tanksnflags.helpers.IsoLogic;
+
 /**
- * The slave has a local copy of the board which it updates based on the information that it receives. It
- * also has a key listener TODO AND A MOUSE LISTENER???? through which it get input from the user and passes onto
- * it's master.
+ * The slave has a local copy of the board which it updates based on the
+ * information that it receives. It also has a key listener TODO AND A MOUSE
+ * LISTENER???? through which it get input from the user and passes onto it's
+ * master.
  * 
  * @author Daniel Hunt
  *
  */
-public final class Slave extends Thread implements KeyListener{
-	//private Board board; // the game board
+public final class Slave extends Thread implements KeyListener {
+	// private Board board; // the game board
 	private int playerID; // the players id, matches its master
-	//private int totalSent; // TODO is this needed??
+	// private int totalSent; // TODO is this needed??
 	private DataInputStream iStream;
 	private DataOutputStream oStream;
 	private final Socket socket;
-	
-	
+	private Game game;
+
 	/**
 	 * Construct a slave which connects to a master via the provided socket.
-	 * @param sock Socket to create a slave for.
+	 * 
+	 * @param sock
+	 *            Socket to create a slave for.
 	 */
-	public Slave(Socket sock){
+	public Slave(Socket sock) {
+		IsoLogic iL = new IsoLogic(Math.toRadians(30), Math.toRadians(330), 500, 500);
 		this.socket = sock;
+		game = new Game(iL);
+		game.addKeyListener(this);
+		JFrame frame = new JFrame();
+		frame.setSize(100, 500);
+		frame.setContentPane(new GameCanvas(game, iL));
+		frame.setVisible(true);
+
 	}
-	
-	public void run(){
-		try{
+
+	public void run() {
+		try {
 			this.oStream = new DataOutputStream(socket.getOutputStream());
 			this.iStream = new DataInputStream(socket.getInputStream());
-			
+
 			this.playerID = iStream.readInt();
-			// TODO DO WE NEED THIS??  varies based on the setup of the game
-//			int width = iStream.readInt();
-//			int height = iStream.readInt();
-//			int bitWidth = iStream.readInt();
-//			int bitSize = iStream.readInt();
-//			byte[] wallBytes = new byte[bitSize];
-//			iStream.read(wallBytes);
+			// TODO DO WE NEED THIS?? varies based on the setup of the game
+			// int width = iStream.readInt();
+			// int height = iStream.readInt();
+			// int bitWidth = iStream.readInt();
+			// int bitSize = iStream.readInt();
+			// byte[] wallBytes = new byte[bitSize];
+			// iStream.read(wallBytes);
 			System.out.println("Tanks and Flags client! Player: " + this.playerID);
-			
-//			this.board = new Board(width, height); // TODO alter game board or whateverrrr
-//			game.wallsFromByteArray(wallBytes); // TODO I DONT THINK WE NEED THIS
-//			BoardFrame display = new BoardFrame(); // TODO AGAIN NOT SURE IF NEEDED
-			
+
+			// this.board = new Board(width, height); // TODO alter game board
+			// or whateverrrr
+			// game.wallsFromByteArray(wallBytes); // TODO I DONT THINK WE NEED
+			// THIS
+			// BoardFrame display = new BoardFrame(); // TODO AGAIN NOT SURE IF
+			// NEEDED
+
 			boolean exit = false;
 			long totalReceived = 0;
-			
-			while(!exit){
-				oStream.writeInt(199);
-				//int amount = iStream.readInt();
-				//byte[] data = new byte[amount];
-				int input = iStream.readInt();
-				System.out.println("Received " + input +" from the server");
-				//iStream.readFully(data);
-				//this.board.fromByteArray(data); // TODO board needs a from byte array
-				//display.repaint();
-				//totalReceived += amount;
-				
-				// TODO PACMAN PRINTS OUT SOME USEFUL INFO ABOUT DATA TRANSFERRED HERE
-				//USING THE RATE METHOD
+
+			while (!exit) {
+				int amount = iStream.readInt();
+
+				System.out.println(amount);
+				byte[] data = new byte[amount];
+				iStream.readFully(data);
+				game.fromByteArray(data);
+				game.repaint();
+				// System.out.println("Received " + input + " from the server");
+				// iStream.readFully(data);
+				// this.board.fromByteArray(data); // TODO board needs a from
+				// byte array
+				// display.repaint();
+				// totalReceived += amount;
+
+				// TODO PACMAN PRINTS OUT SOME USEFUL INFO ABOUT DATA
+				// TRANSFERRED HERE
+				// USING THE RATE METHOD
 			}
-			socket.close();			
-		}catch(IOException e){
+			socket.close();
+		} catch (IOException e) {
 			System.err.println("IO error: " + e.getMessage());
 			e.printStackTrace(System.err);
 		}
 	}
-	
-	public void keyPressed(KeyEvent e){ //TODO DROPPING BOMBS?? AND OTHER THINGS
-		try{
+
+	public void keyPressed(KeyEvent e) { // TODO DROPPING BOMBS?? AND OTHER
+											// THINGS
+		try {
 			int btn = e.getKeyCode();
-			if(btn == KeyEvent.VK_UP){
+			if (btn == KeyEvent.VK_UP) {
 				oStream.writeInt(1);
-				//totalSent+= 4;
+				// totalSent+= 4;
 			}
-			
-			else if(btn == KeyEvent.VK_LEFT || btn == KeyEvent.VK_KP_LEFT){
+
+			else if (btn == KeyEvent.VK_LEFT || btn == KeyEvent.VK_KP_LEFT) {
 				oStream.writeInt(4);
-				//totalSent+= 4;
+				// totalSent+= 4;
 			}
-			
-			else if(btn == KeyEvent.VK_DOWN){
+
+			else if (btn == KeyEvent.VK_DOWN) {
 				oStream.writeInt(2);
-				//totalSent+= 4;
+				// totalSent+= 4;
 			}
-			
-			else if(btn == KeyEvent.VK_RIGHT || btn == KeyEvent.VK_KP_RIGHT){
+
+			else if (btn == KeyEvent.VK_RIGHT || btn == KeyEvent.VK_KP_RIGHT) {
 				oStream.writeInt(3);
-				//totalSent+= 4;
+				// totalSent+= 4;
 			}
-			
+
 			oStream.flush();
-		}catch(IOException er){
-			// Do not need to do anything here as there was just an error sending move to the master.			
+		} catch (IOException er) {
+			// Do not need to do anything here as there was just an error
+			// sending move to the master.
 		}
 	}
-	
-	public void keyReleased(KeyEvent e){}
-	public void keyTyped(KeyEvent e){}
-	
+
+	public void keyReleased(KeyEvent e) {
+	}
+
+	public void keyTyped(KeyEvent e) {
+	}
+
 }

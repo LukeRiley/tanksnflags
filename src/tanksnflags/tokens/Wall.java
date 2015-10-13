@@ -34,8 +34,7 @@ public class Wall extends Item {
 
 	}
 
-	@Override
-	public Item fromInputStream(DataInputStream din) throws IOException {
+	public static Wall fromInputStream(DataInputStream din) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}

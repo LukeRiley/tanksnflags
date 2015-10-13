@@ -4,7 +4,7 @@ import java.net.Socket;
 
 public class TestingClient {
 	private static int port = 32768;
-	private static String url = "192.168.0.22";
+	private static String url = null;
 	
 	public static void main(String[] args){
 		try {

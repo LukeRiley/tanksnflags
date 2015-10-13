@@ -7,6 +7,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import tanksnflags.game.Game;
 import tanksnflags.game.Game.TILECOLOR;
 import tanksnflags.helpers.*;
 import tanksnflags.helpers.IsoLogic.Dir;
@@ -40,14 +41,13 @@ public class Tile extends Wall {
 
 	@Override
 	public void toOutputStream(DataOutputStream dout) throws IOException {
-		// TODO Auto-generated method stub
-
+		dout.writeByte(Game.TILE);
+		dout.writeDouble(pos.getQ());
+		dout.writeDouble(pos.getT());
 	}
 
-	@Override
-	public Item fromInputStream(DataInputStream din) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+	public static Tile fromInputStream(double u, double v, DataInputStream din, IsoLogic iL) throws IOException {
+		return new Tile(new Vector(u, v), iL);
 	}
 
 	public void setBlue() {

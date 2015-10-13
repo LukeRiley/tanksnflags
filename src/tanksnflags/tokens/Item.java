@@ -5,6 +5,8 @@ import java.awt.Graphics2D;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+
+import tanksnflags.game.Game;
 import tanksnflags.helpers.IsoLogic;
 import tanksnflags.helpers.IsoLogic.Dir;
 import tanksnflags.helpers.Vector;
@@ -79,6 +81,19 @@ public abstract class Item {
 
 	public abstract void toOutputStream(DataOutputStream dout) throws IOException;
 
-	public abstract Item fromInputStream(DataInputStream din) throws IOException;
+	public static Item fromInputStream(DataInputStream din, IsoLogic iL) throws IOException {
+		int type = din.readByte();
+		double u = din.readDouble();
+		double v = din.readDouble();
+
+		if (type == Game.TANK) {
+			return Tank.fromInputStream(u, v, din, iL);
+		} else if (type == Game.TILE) {
+			return Tile.fromInputStream(u, v, din, iL);
+		} else {
+			throw new IOException();
+		}
+
+	}
 
 }

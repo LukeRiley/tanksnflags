@@ -63,14 +63,13 @@ public class Tank extends MovingItem {
 
 	@Override
 	public void toOutputStream(DataOutputStream dout) throws IOException {
-		// TODO Auto-generated method stub
-
+		dout.writeByte(Game.TANK);
+		dout.writeDouble(pos.getQ());
+		dout.writeDouble(pos.getT());
 	}
 
-	@Override
-	public Item fromInputStream(DataInputStream din) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+	public static Tank fromInputStream(double u, double v, DataInputStream din, IsoLogic iL) throws IOException {
+		return new Tank(new Vector(u, v), iL, 10);
 	}
 
 	private static final Image RED = ImageLoader.loadImage("tileRed.png");

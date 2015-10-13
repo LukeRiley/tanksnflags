@@ -29,7 +29,6 @@ public class Door extends MovingItem {
 
 	}
 
-	@Override
 	public Item fromInputStream(DataInputStream din) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
@@ -37,12 +36,12 @@ public class Door extends MovingItem {
 
 	@Override
 	protected void renderTick(int moveRate) {
-		System.out.println(moveRate);
+/*		System.out.println(moveRate);
 		if (STATE == 0) {
 			wall.vertical = wall.vertical + moveRate;
 		} else if (STATE == 1) {
 			wall.vertical = wall.vertical - moveRate;
-		}
+		}*/
 	}
 
 	@Override
