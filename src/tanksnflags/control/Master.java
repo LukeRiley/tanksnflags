@@ -24,11 +24,12 @@ public class Master extends Thread {
 	// private final int broadcastClock; // TODO not sure if this is necessary
 	private Game game;
 
-	public Master(int playerID,
-			Socket sock/* , Board game, int broadcastClock */) {
+	public Master(int playerID, Socket sock, Game game) {
 		this.playerID = playerID;
 		this.socket = sock;
-		this.game = new Game(new IsoLogic(Math.toRadians(30), Math.toRadians(330), 500, 500));
+		this.game = game;
+		game.registerTank(playerID);
+
 		// this.game = game;
 		// this.broadcastClock = broadcastClock;
 	}
@@ -44,8 +45,7 @@ public class Master extends Thread {
 			// oStream.writeInt(game.height());//TODO board/game which is the
 			// same as the one in the master.
 			// oStream.write(game.wallsToByteArray()); // TODO will need to
-			// adjust for our own game
-
+			// adjust for our own game			
 			boolean exit = false;
 			while (!exit) {
 				try {
@@ -56,19 +56,19 @@ public class Master extends Thread {
 
 						switch (btn) {
 						case 1:
-							game.tank().moveUp();
+							game.tank(playerID).moveUp();
 							break;
 						case 2:
-							game.tank().moveDown();
+							game.tank(playerID).moveDown();
 							break;
 						case 3:
-							game.tank().moveRight();
+							game.tank(playerID).moveRight();
 							break;
 						case 4:
-							game.tank().moveLeft();
+							game.tank(playerID).moveLeft();
 							break;
 						}
-						game.tank().tick();
+						game.tank(playerID).tick();
 
 					}
 					byte[] state = game.toByteArray();

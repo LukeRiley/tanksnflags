@@ -56,45 +56,17 @@ public final class Slave extends Thread implements KeyListener {
 		try {
 			this.oStream = new DataOutputStream(socket.getOutputStream());
 			this.iStream = new DataInputStream(socket.getInputStream());
-
 			this.playerID = iStream.readInt();
-			// TODO DO WE NEED THIS?? varies based on the setup of the game
-			// int width = iStream.readInt();
-			// int height = iStream.readInt();
-			// int bitWidth = iStream.readInt();
-			// int bitSize = iStream.readInt();
-			// byte[] wallBytes = new byte[bitSize];
-			// iStream.read(wallBytes);
 			System.out.println("Tanks and Flags client! Player: " + this.playerID);
-
-			// this.board = new Board(width, height); // TODO alter game board
-			// or whateverrrr
-			// game.wallsFromByteArray(wallBytes); // TODO I DONT THINK WE NEED
-			// THIS
-			// BoardFrame display = new BoardFrame(); // TODO AGAIN NOT SURE IF
-			// NEEDED
-
 			boolean exit = false;
 			long totalReceived = 0;
-
 			while (!exit) {
-				System.out.println(game.tank().pos());
 				int amount = iStream.readInt();
 				byte[] data = new byte[amount];
 
 				iStream.readFully(data);
 				game.fromByteArray(data);
 				frame.repaint();
-				// System.out.println("Received " + input + " from the server");
-				// iStream.readFully(data);
-				// this.board.fromByteArray(data); // TODO board needs a from
-				// byte array
-				// display.repaint();
-				// totalReceived += amount;
-
-				// TODO PACMAN PRINTS OUT SOME USEFUL INFO ABOUT DATA
-				// TRANSFERRED HERE
-				// USING THE RATE METHOD
 			}
 			socket.close();
 		} catch (IOException e) {

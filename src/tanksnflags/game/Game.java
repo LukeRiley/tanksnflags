@@ -39,8 +39,9 @@ public class Game extends JFrame {
 	}
 
 	List<Item> itemList = new ArrayList<Item>();
-	Tank tank;
 	IsoLogic isoLogic;
+	List<Tank> tanks = new ArrayList<Tank>();
+	int size = 8;
 
 	Dir dir = Dir.EAST;
 
@@ -53,8 +54,42 @@ public class Game extends JFrame {
 		this.isoLogic = isoLogic;
 	}
 
-	public Tank tank() {
-		return tank;
+	public Tank tank(int uid) {
+		for (Tank tank : tanks) {
+			if (tank.uid() == uid) {
+				return tank;
+			}
+		}
+		return null;
+	}
+
+	public synchronized void registerTank(int uid) {
+		for (int u = -size / 2; u < size / 2; u++) {
+			for (int v = -size / 2; v < size / 2; v++) {
+				if (!occupied(u, v)) {
+					Tank newTank = new Tank(new Vector(u * 46, v * 46), isoLogic, uid);
+					tanks.add(newTank);
+					itemList.add(newTank);
+					return;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Returns whether the given coordinates contain a moving item
+	 * 
+	 * @param u
+	 * @param v
+	 * @return
+	 */
+	private boolean occupied(int u, int v) {
+		for (Tank tank : tanks) {
+			if (tank.pos().equals(new Vector(u * 46, v * 46))) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void tick() {
@@ -67,14 +102,13 @@ public class Game extends JFrame {
 	}
 
 	private void initializeItems() {
-		tank = new Tank(new Vector(0, 0), isoLogic, 50);
-		for (int u = -4; u < 4; u++) {
-			for (int v = -4; v < 4; v++) {
+		for (int u = -size / 2; u < size / 2; u++) {
+			for (int v = -size / 2; v < size / 2; v++) {
 
-/*				if (u == 2 && v == 2) {
-					Door door = new Door(new Vector(u * 46, v * 46), isoLogic, 10);
-					itemList.add(door);
-				}*/
+				/*
+				 * if (u == 2 && v == 2) { Door door = new Door(new Vector(u *
+				 * 46, v * 46), isoLogic, 10); itemList.add(door); }
+				 */
 
 				/*
 				 * if (u == -4 || v == -4 || u == 3 || v == 3) { Wall wall = new
@@ -86,15 +120,12 @@ public class Game extends JFrame {
 				itemList.add(tile);
 			}
 		}
-		itemList.add(tank);
 	}
 
 	public boolean canMoveUp(MovingItem character) {
 		for (Item item : itemList) {
 			Vector itemPos = item.pos();
-			if (!item.equals(character)
-					&& itemPos.equalsDelta(new Vector(character.pos().getQ() + 46, character.pos().getT()), 10)
-					&& item.vertical() >= character.vertical()) {
+			if (!item.equals(character) && itemPos.equalsDelta(new Vector(character.pos().getQ() + 46, character.pos().getT()), 10) && item.vertical() >= character.vertical()) {
 				return false;
 			}
 		}
@@ -104,9 +135,7 @@ public class Game extends JFrame {
 	public boolean canMoveDown(MovingItem character) {
 		for (Item item : itemList) {
 			Vector itemPos = item.pos();
-			if (!item.equals(character)
-					&& itemPos.equalsDelta(new Vector(character.pos().getQ() - 46, character.pos().getT()), 10)
-					&& item.vertical() >= character.vertical()) {
+			if (!item.equals(character) && itemPos.equalsDelta(new Vector(character.pos().getQ() - 46, character.pos().getT()), 10) && item.vertical() >= character.vertical()) {
 				return false;
 			}
 		}
@@ -116,9 +145,7 @@ public class Game extends JFrame {
 	public boolean canMoveRight(MovingItem character) {
 		for (Item item : itemList) {
 			Vector itemPos = item.pos();
-			if (!item.equals(character)
-					&& itemPos.equalsDelta(new Vector(character.pos().getQ(), character.pos().getT() + 46), 10)
-					&& item.vertical() >= character.vertical()) {
+			if (!item.equals(character) && itemPos.equalsDelta(new Vector(character.pos().getQ(), character.pos().getT() + 46), 10) && item.vertical() >= character.vertical()) {
 				return false;
 			}
 		}
@@ -128,9 +155,7 @@ public class Game extends JFrame {
 	public boolean canMoveLeft(MovingItem character) {
 		for (Item item : itemList) {
 			Vector itemPos = item.pos();
-			if (!item.equals(character)
-					&& itemPos.equalsDelta(new Vector(character.pos().getQ(), character.pos().getT() - 46), 10)
-					&& item.vertical() >= character.vertical()) {
+			if (!item.equals(character) && itemPos.equalsDelta(new Vector(character.pos().getQ(), character.pos().getT() - 46), 10) && item.vertical() >= character.vertical()) {
 				return false;
 			}
 		}
