@@ -30,6 +30,7 @@ public final class Slave extends Thread implements KeyListener {
 	private DataOutputStream oStream;
 	private final Socket socket;
 	private Game game;
+	GameCanvas gameCanvas;
 	JFrame frame;
 
 	/**
@@ -45,7 +46,7 @@ public final class Slave extends Thread implements KeyListener {
 		game.addKeyListener(this);
 		frame = new JFrame();
 		frame.setSize(100, 500);
-		GameCanvas gameCanvas = new GameCanvas(game, iL);
+		gameCanvas = new GameCanvas(game, iL);
 		frame.addKeyListener(this);
 		frame.setContentPane(gameCanvas);
 		frame.setVisible(true);
@@ -97,6 +98,10 @@ public final class Slave extends Thread implements KeyListener {
 			else if (btn == KeyEvent.VK_RIGHT || btn == KeyEvent.VK_KP_RIGHT) {
 				oStream.writeInt(3);
 				// totalSent+= 4;
+			}
+
+			else if (btn == KeyEvent.VK_9) {
+				gameCanvas.rotate();
 			}
 
 			oStream.flush();

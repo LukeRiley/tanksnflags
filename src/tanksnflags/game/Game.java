@@ -35,7 +35,7 @@ import tanksnflags.tokens.Wall;
 public class Game extends JFrame {
 
 	public enum TILECOLOR {
-		RED, BLUE
+		RED, BLUE, GREY
 	}
 
 	List<Item> itemList = new ArrayList<Item>();
@@ -49,7 +49,9 @@ public class Game extends JFrame {
 	public static final int TANK = 2;
 	public static final int TILE = 3;
 
-	public Game(IsoLogic isoLogic) {
+	public int uid;
+
+	public Game(IsoLogic isoLogic ) {
 		initializeItems();
 		this.isoLogic = isoLogic;
 	}
@@ -62,7 +64,7 @@ public class Game extends JFrame {
 		}
 		return null;
 	}
-
+  
 	public synchronized void registerTank(int uid) {
 		for (int u = -size / 2; u < size / 2; u++) {
 			for (int v = -size / 2; v < size / 2; v++) {

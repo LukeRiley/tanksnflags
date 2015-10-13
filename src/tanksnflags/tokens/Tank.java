@@ -43,8 +43,10 @@ public class Tank extends MovingItem {
 		if (color == TILECOLOR.RED) {
 			g2.drawImage(RED, (int) sPos.getQ(), (int) sPos.getT() - 23 - vertical, null);
 
-		} else {
+		} else if (color == TILECOLOR.BLUE) {
 			g2.drawImage(BLUE, (int) sPos.getQ(), (int) sPos.getT() - 23 - vertical, null);
+		} else {
+			g2.drawImage(GREY, (int) sPos.getQ(), (int) sPos.getT() - 23 - vertical, null);
 		}
 		g2.setColor(Color.white);
 	}
@@ -61,20 +63,28 @@ public class Tank extends MovingItem {
 		color = TILECOLOR.RED;
 	}
 
+	public void setGrey() {
+		color = TILECOLOR.GREY;
+	}
+
 	@Override
 	public void toOutputStream(DataOutputStream dout) throws IOException {
 		dout.writeByte(Game.TANK);
 		dout.writeDouble(pos.getQ());
 		dout.writeDouble(pos.getT());
+		dout.writeInt(uid);
 	}
 
 	public static Tank fromInputStream(double u, double v, DataInputStream din, IsoLogic iL) throws IOException {
-		return new Tank(new Vector(u, v), iL, 10);
+		int uid = din.readInt();
+		return new Tank(new Vector(u, v), iL, uid);
 	}
 
 	private static final Image RED = ImageLoader.loadImage("tileRed.png");
 
 	private static final Image BLUE = ImageLoader.loadImage("tileRed.png");
+
+	private static final Image GREY = ImageLoader.loadImage("tileGrey.png");
 
 	@Override
 	protected void renderTick(int moveRate) {
