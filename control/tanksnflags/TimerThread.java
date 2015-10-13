@@ -8,12 +8,12 @@ package tanksnflags;
  *
  */
 public class TimerThread extends Thread{
-	private final Board board; // the game board 
+	private final Game game; // the game board 
 	private final int pause; // the amount of time between pulses
 	private final BoardFrame display; //TODO ?? not sure if we will need this
 	
-	public TimerThread(Board board, int pause, BoardFrame display){
-		this.board = board;
+	public TimerThread(Game game, int pause, BoardFrame display){
+		this.game = game;
 		this.pause = pause;
 		this.display = display;
 	}

@@ -9,7 +9,7 @@ public class Slave {
 	import java.net.Socket;
 
 	/**
-	 * The slave has a local copy of the board which it updates based on the information that it receives. It
+	 * The slave has a local copy of the game which it updates based on the information that it receives. It
 	 * also has a key listener TODO AND A MOUSE LISTENER???? through which it get input from the user and passes onto
 	 * it's master.
 	 * 
@@ -17,7 +17,7 @@ public class Slave {
 	 *
 	 */
 	public final class Slave extends Thread implements KeyListener{
-		private Board board; // the game board
+		private Game game; // the game board
 		private int playerID; // the players id, matches its master
 		private int totalSent; // TODO is this needed??
 		private DataInputStream iStream;
@@ -48,7 +48,7 @@ public class Slave {
 				iStream.read(wallBytes);
 				System.out.println("Tanks and Flags client! Player: " + this.playerID);
 				
-				this.board = new Board(width, height); // TODO alter game board or whateverrrr
+				this.game = new Game(width, height); // TODO alter game board or whateverrrr
 				game.wallsFromByteArray(wallBytes); // TODO I DONT THINK WE NEED THIS
 				BoardFrame display = new BoardFrame(); // TODO AGAIN NOT SURE IF NEEDED
 				
@@ -59,7 +59,7 @@ public class Slave {
 					int amount = iStream.readInt();
 					byte[] data = new byte[amount];
 					iStream.readFully(data);
-					this.board.fromByteArray(data); // TODO board needs a from byte array
+					this.game.fromByteArray(data); // TODO game needs a from byte array
 					display.repaint();
 					totalReceived += amount;
 					

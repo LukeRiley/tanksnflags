@@ -9,7 +9,7 @@ import java.net.Socket;
 /**
  * 
  * The master exchanges data with the slave, via a socket. It receives movement instructions from 
- * the slave, and sends back the updated board.
+ * the slave, and sends back the updated Game.
  * 
  * @author Daniel Hunt
  *
@@ -17,11 +17,11 @@ import java.net.Socket;
 public class Master extends Thread{
 	private final int playerID;
 	private final Socket socket; // the socket with the slave.
-	private final Board game;
+	private final Game game;
 	private final int broadcastClock; // TODO not sure if this is necessary
 	
 	
-	public Master(int playerID, Socket sock, Board game, int broadcastClock){
+	public Master(int playerID, Socket sock, Game game, int broadcastClock){
 		this.playerID = playerID;
 		this.socket = sock;
 		this.game = game;
