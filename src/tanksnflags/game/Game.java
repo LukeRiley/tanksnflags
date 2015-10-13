@@ -71,10 +71,10 @@ public class Game extends JFrame {
 		for (int u = -4; u < 4; u++) {
 			for (int v = -4; v < 4; v++) {
 
-				if (u == 2 && v == 2) {
+/*				if (u == 2 && v == 2) {
 					Door door = new Door(new Vector(u * 46, v * 46), isoLogic, 10);
 					itemList.add(door);
-				}
+				}*/
 
 				/*
 				 * if (u == -4 || v == -4 || u == 3 || v == 3) { Wall wall = new

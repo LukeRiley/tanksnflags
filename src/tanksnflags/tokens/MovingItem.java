@@ -15,7 +15,7 @@ public abstract class MovingItem extends Item {
 
 	double size = 46;
 	// variables for animation
-	protected int frames = 10;
+	protected int frames = 1;
 	protected int moveIncrement = 46;
 	protected int moveRate = moveIncrement / frames;
 	int count = 0;

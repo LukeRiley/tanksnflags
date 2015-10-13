@@ -51,7 +51,7 @@ public class Master extends Thread {
 				try {
 					if (iStream.available() != 0) {
 						int btn = iStream.readInt(); // get the button pressed
-														// from the user/slave
+													// from the user/slave
 						System.out.println("Button " + btn + " received from " + playerID);
 
 						switch (btn) {
@@ -68,10 +68,7 @@ public class Master extends Thread {
 							game.tank().moveLeft();
 							break;
 						}
-
-						// byte[] state = game.toByteArray();
-						// oStream.writeInt(state.length);
-						// oStream.write(state);
+						game.tank().tick();
 
 					}
 					byte[] state = game.toByteArray();

@@ -14,9 +14,6 @@ public class TestingClient {
 			e.printStackTrace();
 		}
 	}
-
-	
-	
 	
 	private static void runClient(String addr, int port)throws IOException{
 		System.out.println("starting client");

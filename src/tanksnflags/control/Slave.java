@@ -30,6 +30,7 @@ public final class Slave extends Thread implements KeyListener {
 	private DataOutputStream oStream;
 	private final Socket socket;
 	private Game game;
+	JFrame frame;
 
 	/**
 	 * Construct a slave which connects to a master via the provided socket.
@@ -42,9 +43,11 @@ public final class Slave extends Thread implements KeyListener {
 		this.socket = sock;
 		game = new Game(iL);
 		game.addKeyListener(this);
-		JFrame frame = new JFrame();
+		frame = new JFrame();
 		frame.setSize(100, 500);
-		frame.setContentPane(new GameCanvas(game, iL));
+		GameCanvas gameCanvas = new GameCanvas(game, iL);
+		frame.addKeyListener(this);
+		frame.setContentPane(gameCanvas);
 		frame.setVisible(true);
 
 	}
@@ -75,13 +78,13 @@ public final class Slave extends Thread implements KeyListener {
 			long totalReceived = 0;
 
 			while (!exit) {
+				System.out.println(game.tank().pos());
 				int amount = iStream.readInt();
-
-				System.out.println(amount);
 				byte[] data = new byte[amount];
+
 				iStream.readFully(data);
 				game.fromByteArray(data);
-				game.repaint();
+				frame.repaint();
 				// System.out.println("Received " + input + " from the server");
 				// iStream.readFully(data);
 				// this.board.fromByteArray(data); // TODO board needs a from
@@ -101,7 +104,7 @@ public final class Slave extends Thread implements KeyListener {
 	}
 
 	public void keyPressed(KeyEvent e) { // TODO DROPPING BOMBS?? AND OTHER
-											// THINGS
+										// THINGS
 		try {
 			int btn = e.getKeyCode();
 			if (btn == KeyEvent.VK_UP) {
