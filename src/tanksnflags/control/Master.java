@@ -1,10 +1,12 @@
-package tanksnflags;
+package tanksnflags.control;
 
 import java.io.DataInputStream;
 import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+
+import tanksnflags.game.Game;
 
 /**
  * 
@@ -34,9 +36,6 @@ public class Master extends Thread{
 			DataOutputStream oStream = new DataOutputStream(socket.getOutputStream());
 			
 			oStream.writeInt(playerID);
-			oStream.writeInt(game.width()); // TODO this is just sending the data so slave can create a
-			oStream.writeInt(game.height());//TODO board/game which is the same as the one in the master.
-			oStream.write(game.wallsToByteArray()); // TODO will need to adjust for our own game
 			
 			boolean exit = false;
 			while(!exit){
@@ -45,16 +44,16 @@ public class Master extends Thread{
 						int btn = iStream.readInt(); // get the button pressed from the user/slave
 						switch(btn){
 						case 1:
-							game.player(playerID).moveUp();
+							game.tank(playerID).moveUp();
 							break;
 						case 2:
-							game.player(playerID).moveDown();
+							game.tank(playerID).moveDown();
 							break;
 						case 3: 
-							game.player(playerID).moveRight();
+							game.tank(playerID).moveRight();
 							break;
 						case 4:
-							game.player(playerID).moveLeft();
+							game.tank(playerID).moveLeft();
 							break;
 						}
 					}
@@ -69,7 +68,6 @@ public class Master extends Thread{
 			socket.close();
 		}catch(IOException e){
 			System.err.println(playerID + " is disconnected!");
-			game.disconnectPlayer(playerID);
 		}
 	}
 	
