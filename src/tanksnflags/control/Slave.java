@@ -12,9 +12,9 @@ import java.net.Socket;
 import javax.swing.JFrame;
 
 import tanksnflags.game.Game;
-import tanksnflags.game.GameCanvas;
 import tanksnflags.helpers.IsoLogic;
 import tanksnflags.ui.BoardFrame;
+import tanksnflags.ui.GameCanvas;
 
 /**
  * The slave has a local copy of the game which it updates based on the

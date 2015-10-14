@@ -29,7 +29,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import tanksnflags.game.Game;
-import tanksnflags.game.GameCanvas;
 import tanksnflags.helpers.IsoLogic;
 import tanksnflags.helpers.Vector;
 import tanksnflags.helpers.IsoLogic.Dir;
@@ -40,18 +39,19 @@ import tanksnflags.tokens.Tile;
 import tanksnflags.tokens.Wall;
 
 /**
- * This class creates a JFrame that holds all menu bars and window..
+ * This class creates a JFrame that holds all menu bars and canvas.
+ * Keylistener, so responds to keys for shortcuts to a help pop up and quiting the game
  * @author raymondgeuze
  *
  */
 public class BoardFrame extends JFrame implements KeyListener{
-	private JMenu gameMenu;
-	private JMenuBar menuBar;
-	private JMenuItem quitGame;
-	private JMenu helpMenu;
-	private JMenuItem help;
+	private JMenu gameMenu; //game menu which holds quit menuitem
+	private JMenuBar menuBar; //menubar to hold the different menus
+	private JMenuItem quitGame; //menu item to quit
+	private JMenu helpMenu; //help menu which hold help menuItem
+	private JMenuItem help; //menu item for displaying help
 	private static ImageIcon tagIcon = new ImageIcon("src/tanksnflags/ui/images/tag.png");
-	private GameCanvas canvas;
+	private GameCanvas canvas; //the canvas everything is drawn to
  
 	public BoardFrame(GameCanvas canvas){
 		super("Tanks'n'Flags");

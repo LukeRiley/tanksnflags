@@ -1,7 +1,7 @@
 package tanksnflags.control;
 
 import tanksnflags.game.Game;
-import tanksnflags.game.GameCanvas;
+import tanksnflags.ui.GameCanvas;
 
 /**
  * The Timer thread is used to create a timing constant which updates the game
