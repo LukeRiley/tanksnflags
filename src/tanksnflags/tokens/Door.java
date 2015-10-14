@@ -15,9 +15,9 @@ import tanksnflags.ui.ImageLoader;
 public class Door extends Item {
 
 	private int height = 1;
-	private Key key;
+	private Key key;					//not implemented but a door could require a certain key
 	public boolean locked = true;
-	private int[] rooms = new int[2];
+	private int[] rooms = new int[2]; 	//the rooms which the door connects
 
 	public Door(Vector pos, int[] rooms) {
 		super(pos);

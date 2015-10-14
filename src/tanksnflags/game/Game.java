@@ -173,34 +173,38 @@ public class Game extends JFrame {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * Draps a key behind the player.
-=======
-	 * draps a key behind the player.
->>>>>>> branch 'main' of ssh://git@github.com/LukeRiley/tanksnflags.git
 	 */
 	public void dropItem(Tank tank) {
+		//if a key is available to drop
 		if (tank.getNumKeys() > 0) {
-			System.out.println(tank.getNumKeys());
 			Vector v = tank.pos();
+			//create a new key to drop as actual picked up key objects are not stored, just a count
 			Key key = new Key(new Vector(v.getQ(), v.getT()));
+			//add it to the room to be picked up later
 			rooms.get(tank.room).add(key);
 			tank.reduceNumKeys();
-			System.out.println(tank.getNumKeys());
 		}
 	}
-
+	/**
+	 * if possible will unlock the door
+	 * if the door is unlocked then move through to next room and lock behind
+	 */
 	public void enterDoor(MovingItem character, Door door) {
+		//cast as tank so the number of keys can be checked.
 		Tank tank = (Tank) character;
 		if (tank.getNumKeys() > 0 && door.locked) {
+			//if door is locked and a key is available unlock it
 			door.unlock();
-			enterDoor(character, door);
 			tank.reduceNumKeys();
 		}
-		if (!door.locked) {
+		else if (!door.locked) {
+			//re lock door so that another key is needed
 			door.lock();
+			//remove player from old room
 			rooms.get(character.room).remove(character);
 			int[] rooms = door.getRooms();
+			//change the room number that is stored in the tank/moving item
 			int room = character.room;
 			if (room == rooms[0]) {
 				room = rooms[1];
@@ -208,6 +212,7 @@ public class Game extends JFrame {
 				room = rooms[0];
 			}
 			character.room = room;
+			//place tank in new room in random position
 			Random rnd = new Random();
 			while (true) {
 				List<Item> itemList = getRooms().get(character.room);
@@ -215,6 +220,7 @@ public class Game extends JFrame {
 				int v = rnd.nextInt(size) - size / 2;
 				if (!occupied(u, v, character.room)) {
 					character.setPos(new Vector(u * 46, v * 46));
+					//once a position is found then add the tank to the new rooms item list
 					this.rooms.get(character.room).add(character);
 					return;
 				}
@@ -223,25 +229,32 @@ public class Game extends JFrame {
 
 	}
 
+	/**
+	 * checks if a player has an empty space above to move to
+	 * will pick up any keys on the newly moved to tile
+	 * will attempt to move through any doors above
+	 */
 	public boolean canMoveUp(MovingItem character) {
 		Tank tank = (Tank) character;
+		//check whether another tank/moving object is in the way first
 		if (occupied((int) character.pos().getQ(), (int) character.pos().getT() + 46, character.room)) {
 			return false;
 		}
+		//iterate through rooms items and check each
 		for (Item item : getRooms().get(character.room)) {
 			Vector itemPos = item.pos();
 			if (!item.equals(character)
 					&& itemPos.equalsDelta(new Vector(character.pos().getQ() + 46, character.pos().getT()), 0)
 					&& item.vertical() >= character.vertical()) {
 				if (item instanceof Key) {
+					//if moving onto a key then you pick up key
 					removeItem(item);
 					tank.addKey();
 					return true;
 				} else if (item instanceof Door) {
+					//get the door item cast and try enter next room
 					Door d = (Door) item;
-
 					enterDoor(character, d);
-
 					return false;
 
 				}
@@ -251,7 +264,12 @@ public class Game extends JFrame {
 		return true;
 
 	}
-
+	
+	/**
+	 * checks if a player has an empty space below to move to
+	 * will pick up any keys on the newly moved to tile
+	 * will attempt to below through any doors above
+	 */
 	public boolean canMoveDown(MovingItem character) {
 		Tank tank = (Tank) character;
 		if (occupied((int) character.pos().getQ(), (int) character.pos().getT() - 46, character.room)) {
@@ -280,6 +298,11 @@ public class Game extends JFrame {
 		return true;
 	}
 
+	/**
+	 * checks if a player has an empty space right to move to
+	 * will pick up any keys on the newly moved to tile
+	 * will attempt to move through any doors right
+	 */
 	public boolean canMoveRight(MovingItem character) {
 		Tank tank = (Tank) character;
 		if (occupied((int) character.pos().getQ() + 46, (int) character.pos().getT(), character.room)) {
@@ -306,6 +329,11 @@ public class Game extends JFrame {
 		return true;
 	}
 
+	/**
+	 * checks if a player has an empty space left to move to
+	 * will pick up any keys on the newly moved to tile
+	 * will attempt to move through any doors left
+	 */
 	public boolean canMoveLeft(MovingItem character) {
 		Tank tank = (Tank) character;
 		if (occupied((int) character.pos().getQ() - 46, (int) character.pos().getT(), character.room)) {

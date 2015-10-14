@@ -20,6 +20,7 @@ public class Key extends Item {
 	public Key(Vector pos) {
 		super(pos);
 		vertical = 29;
+		//key would generate a special keyNo to match a door
 		Random r = new Random();
 		keyNo = r.nextInt(100);
 	}
