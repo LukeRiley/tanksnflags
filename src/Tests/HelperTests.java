@@ -20,6 +20,8 @@ public class HelperTests {
 	@Test
 	public void isoLogicTestIsoToScreen(){
 		IsoLogic iL = new IsoLogic(Math.toRadians(30), Math.toRadians(330), 500, 500);
+		//Vector v = new Vector(0,0);
+		//System.out.println(iL.isoToScreen(0,0).getQ()+" "+ iL.isoToScreen(0,0).getT());
 		assertTrue(iL.isoToScreen(0,0).getQ() == 500);
 		assertTrue(iL.isoToScreen(0,0).getT() == 500);
 	}
@@ -36,7 +38,6 @@ public class HelperTests {
 	public void isoLogicTestRotateAxis(){
 		IsoLogic iL = new IsoLogic(Math.toRadians(30), Math.toRadians(330), 500, 500);
 		iL.rotateAxis();
-		System.out.println(Math.toDegrees(iL.getvAngle()));
 		assertTrue(iL.getvAngle() == 150);
 	}
 	
