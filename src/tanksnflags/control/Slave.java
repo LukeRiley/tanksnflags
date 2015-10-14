@@ -18,22 +18,21 @@ import tanksnflags.ui.BoardFrame;
 
 /**
  * The slave has a local copy of the game which it updates based on the
- * information that it receives. It also has a key listener TODO AND A MOUSE
- * LISTENER???? through which it get input from the user and passes onto it's
+ * information that it receives. It also has a key listener 
+ *  through which it get input from the user and passes onto it's
  * master.
  * 
- * @author Daniel Hunt
+ * @author huntdani1
  *
  */
 public final class Slave extends Thread implements KeyListener {
 	private Game game; // the game board
 	private int playerID; // the players id, matches its master
-	private int totalSent; // TODO is this needed??
-	private DataInputStream iStream;
-	private DataOutputStream oStream;
-	private final Socket socket;
-	private BoardFrame frame;
-	private GameCanvas canvas;
+	private DataInputStream iStream; // input stream from the master
+	private DataOutputStream oStream; //output stream to the master
+	private final Socket socket;// socket between the slave and master
+	private BoardFrame frame; //Frame that holds the game
+	private GameCanvas canvas;//canvas that game is drawn on
 
 
 	/**
@@ -46,14 +45,18 @@ public final class Slave extends Thread implements KeyListener {
 		this.socket = sock;
 	}
 
+	/**
+	 * Run the slave
+	 */
 	public void run() {
 		try {
 			this.oStream = new DataOutputStream(socket.getOutputStream());
 			this.iStream = new DataInputStream(socket.getInputStream());
 
-			this.playerID = iStream.readInt();
+			this.playerID = iStream.readInt(); // get the player ID from the master
 			System.out.println("Tanks and Flags client! Player: " + this.playerID);
 			IsoLogic iL = new IsoLogic(Math.toRadians(30), Math.toRadians(330), 500, 320);
+			//create new game, canvas and frame
 			game = new Game(iL, playerID);
 			canvas = new GameCanvas(game, iL, playerID);
 			frame = new BoardFrame(canvas);
@@ -61,17 +64,14 @@ public final class Slave extends Thread implements KeyListener {
 			boolean exit = false;
 
 			while (!exit) {
-				int amount = iStream.readInt();
-				byte[] data = new byte[amount];
-				iStream.readFully(data);
-				this.game.fromByteArray(data); // TODO game needs a from byte
-												// array
+				int amount = iStream.readInt(); // get the length of the incoming data array from the master
+				byte[] data = new byte[amount]; // create a new array to put game info into
+				iStream.readFully(data);		// read the output from the socket
+				this.game.fromByteArray(data); // update a game from the byte array
+											
 				game.tick();
-				frame.repaint();
+				frame.repaint();			//redraw the updated game
 
-				// TODO PACMAN PRINTS OUT SOME USEFUL INFO ABOUT DATA
-				// TRANSFERRED HERE
-				// USING THE RATE METHOD
 			}
 			socket.close();
 		} catch (IOException e) {
@@ -79,29 +79,27 @@ public final class Slave extends Thread implements KeyListener {
 			e.printStackTrace(System.err);
 		}
 	}
-
-	public void keyPressed(KeyEvent e) { // TODO DROPPING BOMBS?? AND OTHER
-											// THINGS
+	/**
+	 * If one of the game play keys is pressed (up, down, left, right) the slave sends
+	 * a number to the master, which updates the game board accordingly
+	 */
+	public void keyPressed(KeyEvent e) { 
 		try {
 			int btn = e.getKeyCode();
 			if (btn == KeyEvent.VK_UP) {
 				oStream.writeInt(1);
-				totalSent += 4;
 			}
 
 			else if (btn == KeyEvent.VK_LEFT || btn == KeyEvent.VK_KP_LEFT) {
 				oStream.writeInt(4);
-				totalSent += 4;
 			}
 
 			else if (btn == KeyEvent.VK_DOWN) {
 				oStream.writeInt(2);
-				totalSent += 4;
 			}
 
 			else if (btn == KeyEvent.VK_RIGHT || btn == KeyEvent.VK_KP_RIGHT) {
 				oStream.writeInt(3);
-				totalSent += 4;
 			}
 			else if(btn == KeyEvent.VK_9){
 				canvas.rotate();
