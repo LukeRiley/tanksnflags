@@ -173,41 +173,69 @@ public class Game extends JFrame {
 	}
 
 	/**
-	 * draps a key behind the player.
+	 * Draps a key behind the player.
 	 */
 	public void dropItem(Tank tank) {
+		//if a key is available to drop
 		if (tank.getNumKeys() > 0) {
-			System.out.println(tank.getNumKeys());
 			Vector v = tank.pos();
+			//create a new key to drop as actual picked up key objects are not stored, just a count
 			Key key = new Key(new Vector(v.getQ(), v.getT()));
+			//add it to the room to be picked up later
 			rooms.get(tank.room).add(key);
 			tank.reduceNumKeys();
-			System.out.println(tank.getNumKeys());
 		}
 	}
-
+	/**
+	 * if possible will unlock the door
+	 * if the door is unlocked then move through to next room and lock behind
+	 */
 	public void enterDoor(MovingItem character, Door door) {
-		int[] rooms = door.getRooms();
-		int room = character.room;
-		if (room == rooms[0]) {
-			room = rooms[1];
-		} else {
-			room = rooms[0];
+		//cast as tank so the number of keys can be checked.
+		Tank tank = (Tank) character;
+		if (tank.getNumKeys() > 0 && door.locked) {
+			//if door is locked and a key is available unlock it
+			door.unlock();
+			tank.reduceNumKeys();
 		}
-		character.room = room;
-		Random rnd = new Random();
-		while (true) {
-			int u = rnd.nextInt(size) - size / 2;
-			int v = rnd.nextInt(size) - size / 2;
-			if (!occupied(u, v, character.room)) {
-				character.setPos(new Vector(u * 46, v * 46));
-				return;
+		else if (!door.locked) {
+			//re lock door so that another key is needed
+			door.lock();
+			//remove player from old room
+			rooms.get(character.room).remove(character);
+			int[] rooms = door.getRooms();
+			//change the room number that is stored in the tank/moving item
+			int room = character.room;
+			if (room == rooms[0]) {
+				room = rooms[1];
+			} else {
+				room = rooms[0];
+			}
+			character.room = room;
+			//place tank in new room in random position
+			Random rnd = new Random();
+			while (true) {
+				List<Item> itemList = getRooms().get(character.room);
+				int u = rnd.nextInt(size) - size / 2;
+				int v = rnd.nextInt(size) - size / 2;
+				if (!occupied(u, v, character.room)) {
+					character.setPos(new Vector(u * 46, v * 46));
+					//once a position is found then add the tank to the new rooms item list
+					this.rooms.get(character.room).add(character);
+					return;
+				}
 			}
 		}
 
 	}
 
+	/**
+	 * checks if a player has an empty space above to move to
+	 * will pick up any keys on the newly moved to tile
+	 * will attempt to move through any doors above
+	 */
 	public boolean canMoveUp(Tank character) {
+
 		if (occupied((int) character.pos().getQ(), (int) character.pos().getT() + 46, character.room)) {
 			return false;
 		}
@@ -215,21 +243,40 @@ public class Game extends JFrame {
 
 	}
 
+	
+	/**
+	 * checks if a player has an empty space below to move to
+	 * will pick up any keys on the newly moved to tile
+	 * will attempt to below through any doors above
+	 */
 	public boolean canMoveDown(Tank character) {
 		if (occupied((int) character.pos().getQ(), (int) character.pos().getT() - 46, character.room)) {
 			return false;
 		}
 		return checkItem(character, new Vector(character.pos().getQ() - 46, character.pos().getT()));
 
+
 	}
 
+
+	/**
+	 * checks if a player has an empty space right to move to
+	 * will pick up any keys on the newly moved to tile
+	 * will attempt to move through any doors right
+	 */
 	public boolean canMoveRight(Tank character) {
+		Tank tank = (Tank) character;
 		if (occupied((int) character.pos().getQ() + 46, (int) character.pos().getT(), character.room)) {
 			return false;
 		}
 		return checkItem(character, new Vector((int) character.pos().getQ(), (int) character.pos().getT() + 46));
 	}
 
+	/**
+	 * checks if a player has an empty space left to move to
+	 * will pick up any keys on the newly moved to tile
+	 * will attempt to move through any doors left
+	 */
 	public boolean canMoveLeft(Tank character) {
 		if (occupied((int) character.pos().getQ() - 46, (int) character.pos().getT(), character.room)) {
 			return false;
@@ -247,12 +294,9 @@ public class Game extends JFrame {
 					return true;
 				} else if (item instanceof Door) {
 					Door d = (Door) item;
-					if (!d.locked) {
-						rooms.get(character.room).remove(character);
-						enterDoor(character, d);
-						rooms.get(character.room).add(character);
-						return false;
-					}
+					enterDoor(character, d);
+					return false;
+
 				}
 				return false;
 			}

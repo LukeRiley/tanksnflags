@@ -15,9 +15,9 @@ import tanksnflags.ui.ImageLoader;
 public class Door extends Item {
 
 	private int height = 1;
-	private Key key;
-	public boolean locked = false;
-	private int[] rooms = new int[2];
+	private Key key;					//not implemented but a door could require a certain key
+	public boolean locked = true;
+	private int[] rooms = new int[2]; 	//the rooms which the door connects
 
 	public Door(Vector pos, int[] rooms) {
 		super(pos);
@@ -25,12 +25,12 @@ public class Door extends Item {
 		this.rooms = rooms;
 	}
 
-	public boolean unlock(Key k) {
-		if (k == key) {
-			locked = false;
-			return true;
-		}
-		return false;
+	public void unlock() {
+		locked = false;
+	}
+	
+	public void lock() {
+		locked = true;
 	}
 
 	@Override
@@ -69,7 +69,7 @@ public class Door extends Item {
 		return rooms;
 	}
 
-	private static final Image RED = ImageLoader.loadImage("tileRed.png");
+	private static final Image RED = ImageLoader.loadImage("tileGrey.png");
 
 	private static final Image BLUE = ImageLoader.loadImage("tileBlue.png");
 
