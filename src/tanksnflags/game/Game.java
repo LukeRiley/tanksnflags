@@ -60,6 +60,7 @@ public class Game extends JFrame {
 	public static final int DOOR = 4;
 	public static final int KEY = 5;
 	public int uid;
+	private int numKeys =0;
 
 	public Game(IsoLogic isoLogic, int uid) {
 		this.isoLogic = isoLogic;
@@ -171,6 +172,20 @@ public class Game extends JFrame {
 			getRooms().get(key).remove(toRemove);
 		}
 	}
+	
+	/**
+	 * draps a key behind the player. 
+	 */
+	public void dropItem(Tank tank){
+		if(tank.getNumKeys()>0){
+			System.out.println(tank.getNumKeys());
+			Vector v = tank.pos();
+			Key key = new Key(new Vector(v.getQ(), v.getT()));
+			rooms.get(tank.room).add(key);
+			tank.reduceNumKeys();
+			System.out.println(tank.getNumKeys());
+		}
+	}
 
 	public void enterDoor(MovingItem character, Door door) {
 		int[] rooms = door.getRooms();
@@ -195,6 +210,7 @@ public class Game extends JFrame {
 	}
 
 	public boolean canMoveUp(MovingItem character) {
+		Tank tank = (Tank) character;
 		if (occupied((int) character.pos().getQ(), (int) character.pos().getT() + 46, character.room)) {
 			return false;
 		}
@@ -205,6 +221,7 @@ public class Game extends JFrame {
 					&& item.vertical() >= character.vertical()) {
 				if (item instanceof Key) {
 					removeItem(item);
+					tank.addKey();
 					return true;
 				} else if (item instanceof Door) {
 					Door d = (Door) item;
@@ -222,6 +239,7 @@ public class Game extends JFrame {
 	}
 
 	public boolean canMoveDown(MovingItem character) {
+		Tank tank = (Tank) character;
 		if (occupied((int) character.pos().getQ(), (int) character.pos().getT() - 46, character.room)) {
 			return false;
 		}
@@ -234,6 +252,7 @@ public class Game extends JFrame {
 					Key key = (Key) item;
 					System.out.println(key.keyNo);
 					removeItem(item);
+					tank.addKey();
 					return true;
 				} else if (item instanceof Door) {
 					Door d = (Door) item;
@@ -251,6 +270,7 @@ public class Game extends JFrame {
 	}
 
 	public boolean canMoveRight(MovingItem character) {
+		Tank tank = (Tank) character;
 		if (occupied((int) character.pos().getQ() + 46, (int) character.pos().getT(), character.room)) {
 			return false;
 		}
@@ -261,6 +281,7 @@ public class Game extends JFrame {
 					&& item.vertical() >= character.vertical()) {
 				if (item instanceof Key) {
 					removeItem(item);
+					tank.addKey();
 					return true;
 				} else if (item instanceof Door) {
 					Door d = (Door) item;
@@ -278,6 +299,7 @@ public class Game extends JFrame {
 	}
 
 	public boolean canMoveLeft(MovingItem character) {
+		Tank tank = (Tank) character;
 		if (occupied((int) character.pos().getQ() - 46, (int) character.pos().getT(), character.room)) {
 			return false;
 		}
@@ -288,6 +310,7 @@ public class Game extends JFrame {
 					&& item.vertical() >= character.vertical()) {
 				if (item instanceof Key) {
 					removeItem(item);
+					tank.addKey();
 					return true;
 				} else if (item instanceof Door) {
 					Door d = (Door) item;

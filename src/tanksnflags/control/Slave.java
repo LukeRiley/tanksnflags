@@ -104,6 +104,9 @@ public final class Slave extends Thread implements KeyListener {
 			else if(btn == KeyEvent.VK_9){
 				canvas.rotate();
 			}
+			else if(btn == KeyEvent.VK_D){
+				oStream.writeInt(5);
+			}
 
 			System.out.println("CLICKED");
 

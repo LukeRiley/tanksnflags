@@ -24,6 +24,7 @@ import tanksnflags.ui.ImageLoader;
 public class Tank extends MovingItem {
 
 	private int uid;
+	private int numKeys=0;
 
 	TILECOLOR color = TILECOLOR.BLUE;
 
@@ -35,6 +36,24 @@ public class Tank extends MovingItem {
 
 	public int uid() {
 		return uid;
+	}
+	
+	public int getNumKeys(){
+		return numKeys;
+	}
+	
+	/**
+	 * reduces number of keys held by this player
+	 */
+	public void reduceNumKeys(){
+		numKeys--;
+	}
+	
+	/**
+	 * Adds one key to the number held by this player
+	 */
+	public void addKey(){
+		numKeys++;
 	}
 
 	@Override

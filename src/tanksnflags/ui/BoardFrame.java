@@ -1,42 +1,17 @@
 package tanksnflags.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-
-import tanksnflags.game.Game;
-import tanksnflags.helpers.IsoLogic;
-import tanksnflags.helpers.Vector;
-import tanksnflags.helpers.IsoLogic.Dir;
-import tanksnflags.tokens.Item;
-import tanksnflags.tokens.MovingItem;
-import tanksnflags.tokens.Tank;
-import tanksnflags.tokens.Tile;
-import tanksnflags.tokens.Wall;
 
 /**
  * This class creates a JFrame that holds all menu bars and canvas.
