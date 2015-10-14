@@ -62,6 +62,10 @@ public class Master extends Thread {
 								game.tank(playerID).moveLeft();
 							}
 							break;
+						case 5:
+							if(game.tank(playerID).getNumKeys()>0){
+								game.dropItem(game.tank(playerID));
+							}
 						}
 					}
 

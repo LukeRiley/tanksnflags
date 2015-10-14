@@ -108,6 +108,7 @@ public final class Slave extends Thread implements KeyListener {
 				oStream.writeInt(5);
 			}
 
+
 			oStream.flush();
 		} catch (IOException er) {
 			// Do not need to do anything here as there was just an error

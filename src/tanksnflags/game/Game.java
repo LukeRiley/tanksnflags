@@ -172,6 +172,7 @@ public class Game extends JFrame {
 		}
 	}
 	
+	
 	/**
 	 * draps a key behind the player. 
 	 */
