@@ -129,8 +129,13 @@ public class Game extends JFrame {
 		}
 	}
 
+	/**
+	 * creates the initial rooms, populating them with items
+	 * creates the door between the two rooms
+	 */
 	private void initializeItems() {
 		int nRooms = 2;
+		//each room contains same items so use a for loop
 		for (int r = 0; r <= nRooms; r++) {
 			List<Item> itemList = new ArrayList<Item>();
 			for (int u = -size / 2; u < size / 2; u++) {
@@ -139,7 +144,8 @@ public class Game extends JFrame {
 							&& (u == 2 && v == size / 2 - 1) == false) {
 						itemList.add(new Wall(new Vector(u * 46, v * 46)));
 					}
-
+					//create the door to connect the two rooms, both doors can be exactly 
+					//the same as enter door method checks which way player enters through 
 					if (u == 2 && v == size / 2 - 1) {
 						itemList.add(new Door(new Vector(u * 46, v * 46), new int[] { 0, 1 }));
 					}
@@ -149,7 +155,7 @@ public class Game extends JFrame {
 			}
 			getRooms().put(r, itemList);
 		}
-
+		//for each room randomly place keys on the ground
 		for (int r = 0; r < nRooms; r++) {
 			Random rnd = new Random();
 			int nKeys = 5;
@@ -165,7 +171,9 @@ public class Game extends JFrame {
 		}
 
 	}
-
+	/**
+	 * removes a given item
+	 */
 	public void removeItem(Item toRemove) {
 		for (int key : getRooms().keySet()) {
 			getRooms().get(key).remove(toRemove);
@@ -173,7 +181,7 @@ public class Game extends JFrame {
 	}
 
 	/**
-	 * Draps a key behind the player.
+	 * Drops a key behind the player.
 	 */
 	public void dropItem(Tank tank) {
 		//if a key is available to drop
@@ -360,6 +368,9 @@ public class Game extends JFrame {
 		return true;
 	}
 
+	/**
+	 * puts the game into a byte array to be sent to server
+	 */
 	public synchronized byte[] toByteArray() throws IOException {
 		ByteArrayOutputStream bout = new ByteArrayOutputStream();
 		DataOutputStream dout = new DataOutputStream(bout);
@@ -376,6 +387,9 @@ public class Game extends JFrame {
 		return bout.toByteArray();
 	}
 
+	/**
+	 * receives a byte array from server to be turned into game for player
+	 */
 	public synchronized void fromByteArray(byte[] bytes) throws IOException {
 		ByteArrayInputStream bin = new ByteArrayInputStream(bytes);
 		DataInputStream din = new DataInputStream(bin);
