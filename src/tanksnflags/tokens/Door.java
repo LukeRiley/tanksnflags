@@ -67,6 +67,10 @@ public class Door extends Item {
 		return d;
 		// doesnt need to read in the position, passed through as an argument.
 	}
+	
+	public int[] getRooms(){
+		return rooms;
+	}
 
 	private static final Image RED = ImageLoader.loadImage("tileRed.png");
 

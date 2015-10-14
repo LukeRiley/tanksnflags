@@ -76,6 +76,15 @@ public abstract class MovingItem extends Item {
 			state = 1;
 		}
 	}
+	
+	public void updateRoom(Door d){
+		int[] rooms = d.getRooms();
+		if(room == rooms[0]){
+			room = rooms[1];
+		} else {
+			room = rooms[0];
+		}
+	}
 
 	/*
 	 * The render tick method was used for animation of movement however not

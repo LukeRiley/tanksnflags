@@ -129,7 +129,7 @@ public class Game extends JFrame {
 
 	private void initializeItems() {
 		int nRooms = 1;
-		for (int r = 0; r < nRooms; r++) {
+		for (int r = 0; r <= nRooms; r++) {
 			List<Item> itemList = new ArrayList<Item>();
 			for (int u = -size / 2; u < size / 2; u++) {
 				for (int v = -size / 2; v < size / 2; v++) {
@@ -185,7 +185,12 @@ public class Game extends JFrame {
 					return true;
 				} else if (item instanceof Door) {
 					Door d = (Door) item;
-					return !d.locked;
+					if(!d.locked){
+						rooms.get(character.room).remove(character);
+						character.updateRoom(d);
+						rooms.get(character.room).add(character);
+						return false;
+					}
 				}
 				return false;
 			}
@@ -209,7 +214,12 @@ public class Game extends JFrame {
 					return true;
 				} else if (item instanceof Door) {
 					Door d = (Door) item;
-					return !d.locked;
+					if(!d.locked){
+						rooms.get(character.room).remove(character);
+						character.updateRoom(d);
+						rooms.get(character.room).add(character);
+						return false;
+					}
 				}
 				return false;
 			}
@@ -231,7 +241,12 @@ public class Game extends JFrame {
 					return true;
 				} else if (item instanceof Door) {
 					Door d = (Door) item;
-					return !d.locked;
+					if(!d.locked){
+						rooms.get(character.room).remove(character);
+						character.updateRoom(d);
+						rooms.get(character.room).add(character);
+						return false;
+					}
 				}
 				return false;
 			}
@@ -253,7 +268,12 @@ public class Game extends JFrame {
 					return true;
 				} else if (item instanceof Door) {
 					Door d = (Door) item;
-					return !d.locked;
+					if(!d.locked){
+						rooms.get(character.room).remove(character);
+						character.updateRoom(d);
+						rooms.get(character.room).add(character);
+						return false;
+					}
 				}
 				return false;
 			}
