@@ -1,4 +1,4 @@
-package tanksnflags.game;
+package tanksnflags.ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -17,7 +17,9 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import tanksnflags.game.Game.DepthComparator;
+
+import tanksnflags.game.Game;
+//import tanksnflags.game.Game.DepthComparator;
 import tanksnflags.helpers.IsoLogic;
 import tanksnflags.helpers.Vector;
 import tanksnflags.helpers.IsoLogic.Dir;
@@ -25,11 +27,11 @@ import tanksnflags.tokens.Item;
 
 public class GameCanvas extends JPanel {
 
-	Game game;
+	Game game; 
 	int count = 0;
-	Dir dir = Dir.EAST;
+	Dir dir = Dir.EAST; //the direction of the field
 	private IsoLogic isoLogic;
-	private BufferedImage backgroundImage;
+	private BufferedImage backgroundImage; //the background image
 
 	int uid;
 
@@ -64,10 +66,12 @@ public class GameCanvas extends JPanel {
 			this.renderCollection(g2);
 			}	
 		}
-
+		/**
+		 * Draws all the items in the itemlist. if there are no items does nothing. 
+	 	 * @param g2
+	 	 */
 	private void renderCollection(Graphics2D g2) {
-
-		List<Item> itemList = game.rooms.get(0);
+		List<Item> itemList = game.getRooms().get(0);
 		if (itemList == null) {
 			return;
 		}
@@ -79,12 +83,21 @@ public class GameCanvas extends JPanel {
 		}
 	}
 
+	/**
+	 * Rotates the field, displaying all elements in it from a rotation of 90 degrees
+	 */
 	public void rotate() {
 		isoLogic.rotateAxis();
 		dir = isoLogic.rotateLeft(dir);
 		this.repaint();
 	}
 
+	/**
+	 * A comparator to compare items in the isometric display. 
+	 * implements the compares method which compares their depths
+	 * to determine which is greater.
+	 *
+	 */
 	class DepthComparator implements Comparator<Item> {
 
 		IsoLogic iL;

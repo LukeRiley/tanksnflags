@@ -1,19 +1,19 @@
 package tanksnflags.control;
 
 import tanksnflags.game.Game;
-import tanksnflags.game.GameCanvas;
+import tanksnflags.ui.GameCanvas;
 
 /**
  * The Timer thread is used to create a timing constant which updates the game
- * state
+ * state. 
  * 
- * @author Daniel Hunt
+ * @author huntdani1
  *
  */
 public class TimerThread extends Thread {
 	private final Game game; // the game board
 	private final int pause; // the amount of time between pulses
-	private final GameCanvas display; // TODO ?? not sure if we will need this
+	private final GameCanvas display;
 
 	public TimerThread(Game game, int pause, GameCanvas display) {
 		this.game = game;
@@ -26,7 +26,7 @@ public class TimerThread extends Thread {
 			try {
 				Thread.sleep(pause);
 				game.tick(); // clockTick() comes from the board class
-									// dont know if necessary?? TODO
+									
 				if (display != null) {
 					display.repaint();
 				}

@@ -49,7 +49,7 @@ public class Game extends JFrame {
 		RED, BLUE, GREY
 	}
 
-	Map<Integer, List<Item>> rooms = new HashMap<Integer, List<Item>>();
+	private Map<Integer, List<Item>> rooms = new HashMap<Integer, List<Item>>();
 	IsoLogic isoLogic;
 	List<Tank> tanks = new ArrayList<Tank>(); // for easy access to the tanks in
 	int size = 8;
@@ -84,13 +84,13 @@ public class Game extends JFrame {
 	 *            the unique id of the game.
 	 */
 	public synchronized void registerTank(int uid) {
-		for (int r : rooms.keySet()) {
+		for (int r : getRooms().keySet()) {
 			for (int u = -size / 2; u < size / 2; u++) {
 				for (int v = -size / 2; v < size / 2; v++) {
 					if (!occupied(u, v, r)) {
 						Tank newTank = new Tank(new Vector(u * 46, v * 46), uid);
 						tanks.add(newTank);
-						rooms.get(r).add(newTank);
+						getRooms().get(r).add(newTank);
 						return;
 					}
 				}
@@ -108,7 +108,7 @@ public class Game extends JFrame {
 	 */
 	private boolean occupied(int u, int v, int rID) {
 
-		for (Item item : rooms.get(rID)) {
+		for (Item item : getRooms().get(rID)) {
 			if (item.pos().equals(new Vector(u * 46, v * 46)) && item.vertical() == 29) {
 				return true;
 			}
@@ -117,8 +117,8 @@ public class Game extends JFrame {
 	}
 
 	public void tick() {
-		for (int r : rooms.keySet()) {
-			for (Item item : rooms.get(r)) {
+		for (int r : getRooms().keySet()) {
+			for (Item item : getRooms().get(r)) {
 				if (item instanceof MovingItem) {
 					MovingItem mItem = (MovingItem) item;
 					mItem.tick();
@@ -145,13 +145,13 @@ public class Game extends JFrame {
 					itemList.add(new Tile(new Vector(u * 46, v * 46)));
 				}
 			}
-			rooms.put(r, itemList);
+			getRooms().put(r, itemList);
 		}
 
 		for (int r = 0; r < nRooms; r++) {
 			Random rnd = new Random();
 			int nKeys = 5;
-			List<Item> itemList = rooms.get(r);
+			List<Item> itemList = getRooms().get(r);
 			for (int i = 0; i < 5; i++) {
 				int u = rnd.nextInt(size / 2);
 				int v = rnd.nextInt(size / 2);
@@ -166,8 +166,8 @@ public class Game extends JFrame {
 	}
 
 	public void removeItem(Item toRemove) {
-		for (int key : rooms.keySet()) {
-			rooms.get(key).remove(toRemove);
+		for (int key : getRooms().keySet()) {
+			getRooms().get(key).remove(toRemove);
 		}
 	}
 
@@ -175,7 +175,7 @@ public class Game extends JFrame {
 		if (occupied((int) character.pos().getQ(), (int) character.pos().getT() + 46, character.room)) {
 			return false;
 		}
-		for (Item item : rooms.get(character.room)) {
+		for (Item item : getRooms().get(character.room)) {
 			Vector itemPos = item.pos();
 			if (!item.equals(character)
 					&& itemPos.equalsDelta(new Vector(character.pos().getQ() + 46, character.pos().getT()), 0)
@@ -202,7 +202,7 @@ public class Game extends JFrame {
 		if (occupied((int) character.pos().getQ(), (int) character.pos().getT() - 46, character.room)) {
 			return false;
 		}
-		for (Item item : rooms.get(character.room)) {
+		for (Item item : getRooms().get(character.room)) {
 			Vector itemPos = item.pos();
 			if (!item.equals(character)
 					&& itemPos.equalsDelta(new Vector(character.pos().getQ() - 46, character.pos().getT()), 0)
@@ -231,7 +231,7 @@ public class Game extends JFrame {
 		if (occupied((int) character.pos().getQ() + 46, (int) character.pos().getT(), character.room)) {
 			return false;
 		}
-		for (Item item : rooms.get(character.room)) {
+		for (Item item : getRooms().get(character.room)) {
 			Vector itemPos = item.pos();
 			if (!item.equals(character)
 					&& itemPos.equalsDelta(new Vector(character.pos().getQ(), character.pos().getT() + 46), 0)
@@ -258,7 +258,7 @@ public class Game extends JFrame {
 		if (occupied((int) character.pos().getQ() - 46, (int) character.pos().getT(), character.room)) {
 			return false;
 		}
-		for (Item item : rooms.get(character.room)) {
+		for (Item item : getRooms().get(character.room)) {
 			Vector itemPos = item.pos();
 			if (!item.equals(character)
 					&& itemPos.equalsDelta(new Vector(character.pos().getQ(), character.pos().getT() - 46), 0)
@@ -285,11 +285,11 @@ public class Game extends JFrame {
 		ByteArrayOutputStream bout = new ByteArrayOutputStream();
 		DataOutputStream dout = new DataOutputStream(bout);
 
-		dout.writeInt(rooms.size());
-		for (Integer roomID : rooms.keySet()) {
+		dout.writeInt(getRooms().size());
+		for (Integer roomID : getRooms().keySet()) {
 			dout.writeInt(roomID);
-			dout.writeInt(rooms.get(roomID).size());
-			for (Item item : rooms.get(roomID)) {
+			dout.writeInt(getRooms().get(roomID).size());
+			for (Item item : getRooms().get(roomID)) {
 				item.toOutputStream(dout);
 			}
 		}
@@ -302,7 +302,7 @@ public class Game extends JFrame {
 		DataInputStream din = new DataInputStream(bin);
 
 		int nRooms = din.readInt();
-		rooms.clear();
+		getRooms().clear();
 		tanks.clear();
 		for (int r = 0; r < nRooms; r++) {
 			int roomID = din.readInt();
@@ -315,8 +315,16 @@ public class Game extends JFrame {
 				}
 				itemList.add(item);
 			}
-			rooms.put(roomID, itemList);
+			getRooms().put(roomID, itemList);
 		}
+	}
+
+	public Map<Integer, List<Item>> getRooms() {
+		return rooms;
+	}
+
+	public void setRooms(Map<Integer, List<Item>> rooms) {
+		this.rooms = rooms;
 	}
 
 	class DepthComparator implements Comparator<Item> {
