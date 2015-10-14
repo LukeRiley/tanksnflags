@@ -19,8 +19,8 @@ public class Door extends Item {
 	private int[] rooms = new int[2];
 	
 
-	public Door(Vector pos, IsoLogic iL, Key k, int[] rooms) {
-		super(pos, iL);
+	public Door(Vector pos, Key k, int[] rooms) {
+		super(pos);
 		vertical = 29;
 		key = k;
 		this.rooms = rooms;
@@ -35,7 +35,7 @@ public class Door extends Item {
 	}
 
 	@Override
-	public void draw(Graphics2D g2, Dir dir) {
+	public void draw(Graphics2D g2, Dir dir, IsoLogic iL) {
 		Vector sPos = iL.isoToScreen(this);
 
 		for (int i = 0; i < height; i++) {
@@ -49,22 +49,22 @@ public class Door extends Item {
 
 	@Override
 	public void toOutputStream(DataOutputStream dout) throws IOException {
-		dout.writeDouble(iL.screenToIso(pos).getQ());
-		dout.writeDouble(iL.screenToIso(pos).getT());
+		dout.writeDouble(pos.getQ());
+		dout.writeDouble(pos.getT());
 		dout.writeBoolean(locked);
 		key.toOutputStream(dout);
 		dout.writeInt(rooms[0]);
 		dout.writeInt(rooms[1]);
 	}
 
-	public static Door fromInputStream(double u, double v, DataInputStream din, IsoLogic iL) throws IOException {
+	public static Door fromInputStream(double u, double v, DataInputStream din) throws IOException {
 		Vector vec = new Vector(u, v);
 		boolean l = din.readBoolean();
-		Key k = Key.fromInputStream(u, v, din, iL);
+		Key k = Key.fromInputStream(u, v, din);
 		int[] rooms = new int[2];
 		rooms[0] = din.readInt();
 		rooms[1] = din.readInt();
-		Door d = new Door(vec, iL, k, rooms);
+		Door d = new Door(vec, k, rooms);
 		return d;
 	}
 

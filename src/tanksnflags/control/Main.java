@@ -88,7 +88,7 @@ public class Main {
 			while (1 == 1) {
 				Socket s = ss.accept();
 				System.out.println("ACCEPTED CONNECTION FROM: " + s.getInetAddress());
-				// int playerID = game.registerPlayer();
+				game.registerTank(playerId);
 				connections[--nClients] = new Master(playerId, s, game, 100);
 				connections[nClients].start();
 				if (nClients == 0) {

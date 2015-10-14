@@ -17,8 +17,8 @@ public class Tile extends Wall {
 
 	private TILECOLOR color = TILECOLOR.BLUE;
 
-	public Tile(Vector pos, IsoLogic iL) {
-		super(pos, iL);
+	public Tile(Vector pos) {
+		super(pos);
 		vertical = 0;
 		// TODO Auto-generated constructor stub
 	}
@@ -28,8 +28,8 @@ public class Tile extends Wall {
 	}
 
 	@Override
-	public void draw(Graphics2D g2, Dir dir) {
-		calculateDrawPos(dir);
+	public void draw(Graphics2D g2, Dir dir, IsoLogic iL) {
+		calculateDrawPos(dir, iL);
 		if (color == TILECOLOR.RED) {
 			g2.drawImage(RED, (int) sPos.getQ(), (int) sPos.getT() - 23 - vertical, null);
 		} else {
@@ -46,8 +46,8 @@ public class Tile extends Wall {
 		dout.writeDouble(pos.getT());
 	}
 
-	public static Tile fromInputStream(double u, double v, DataInputStream din, IsoLogic iL) throws IOException {
-		return new Tile(new Vector(u, v), iL);
+	public static Tile fromInputStream(double u, double v, DataInputStream din) throws IOException {
+		return new Tile(new Vector(u, v));
 	}
 
 	public void setBlue() {

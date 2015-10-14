@@ -9,6 +9,11 @@ import tanksnflags.helpers.IsoLogic;
 import tanksnflags.helpers.IsoLogic.Dir;
 import tanksnflags.helpers.Vector;
 
+/**
+ * A moving item is one which can move in any direction in the game.
+ * @author Haylem
+ *
+ */
 public abstract class MovingItem extends Item {
 
 	Dir dir = null;
@@ -21,8 +26,8 @@ public abstract class MovingItem extends Item {
 	int count = 0;
 	int state = 1;
 
-	public MovingItem(Vector pos, IsoLogic iL) {
-		super(pos, iL);
+	public MovingItem(Vector pos) {
+		super(pos);
 	}
 
 	public Dir dir() {
@@ -56,7 +61,7 @@ public abstract class MovingItem extends Item {
 		}
 	}
 
-	public void tick(){
+	public void tick() {
 		if (count == frames - 1) {
 			moveRate = moveIncrement - (int) moveRate * frames + moveRate;
 		}
@@ -69,7 +74,11 @@ public abstract class MovingItem extends Item {
 			state = 1;
 		}
 	}
-	
+
+	/*
+	 * The render tick method was used for animation of movement however not
+	 * completely working.
+	 */
 	protected abstract void renderTick(int moveRate);
 
 }

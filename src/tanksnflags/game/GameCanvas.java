@@ -52,7 +52,7 @@ public class GameCanvas extends JPanel {
 		Comparator<Item> comp = new DepthComparator(isoLogic);
 		Collections.sort(itemList, comp);
 		for (int i = 0; i < itemList.size(); i++) {
-			itemList.get(i).draw(g2, dir);
+			itemList.get(i).draw(g2, dir, isoLogic);
 			Vector sPos = isoLogic.isoToScreen(itemList.get(i));
 			g2.setColor(Color.white);
 		}

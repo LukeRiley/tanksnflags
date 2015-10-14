@@ -35,6 +35,13 @@ import tanksnflags.tokens.Tank;
 import tanksnflags.tokens.Tile;
 import tanksnflags.tokens.Wall;
 
+/**
+ * Game model. Stores all items present in the game and checks whether their
+ * movement is valid.
+ * 
+ * @author Haylem
+ *
+ */
 public class Game extends JFrame {
 
 	public enum TILECOLOR {
@@ -43,7 +50,8 @@ public class Game extends JFrame {
 
 	Map<Integer, List<Item>> rooms = new HashMap<Integer, List<Item>>();
 	IsoLogic isoLogic;
-	List<Tank> tanks = new ArrayList<Tank>();
+	List<Tank> tanks = new ArrayList<Tank>(); // for easy access to the tanks in
+												// the game.
 	int size = 8;
 	Tank player;
 
@@ -70,11 +78,17 @@ public class Game extends JFrame {
 		return null;
 	}
 
+	/**
+	 * Add a tank to the game.
+	 * 
+	 * @param uid
+	 *            the unique id of the game.
+	 */
 	public synchronized void registerTank(int uid) {
 		for (int u = -size / 2; u < size / 2; u++) {
 			for (int v = -size / 2; v < size / 2; v++) {
 				if (!occupied(u, v)) {
-					Tank newTank = new Tank(new Vector(u * 46, v * 46), isoLogic, uid);
+					Tank newTank = new Tank(new Vector(u * 46, v * 46), uid);
 					tanks.add(newTank);
 					player = newTank;
 					rooms.get(player.room).add(newTank);
@@ -114,21 +128,23 @@ public class Game extends JFrame {
 		int[] d = new int[2];
 		d[0] = 1;
 		d[1] = 2;
-		Key key = new Key(new Vector(0, 0), isoLogic);
+		Key key = new Key(new Vector(0, 0));
 		for (int u = -size / 2; u < size / 2; u++) {
 			for (int v = -size / 2; v < size / 2; v++) {
 
 				if (u == -4 || v == -4 || u == 3 || v == 3) {
 					if (u == -4 && v == 0) {
-						Door door = new Door(new Vector(u * 46, v * 46), isoLogic, key, d);
+						Door door = new Door(new Vector(u * 46, v * 46), key, d);
 						itemList.add(door);
 					} else {
-						Wall wall = new Wall(new Vector(u * 46, v * 46), isoLogic);
+						Wall wall = new Wall(new Vector(u * 46, v * 46));
 						itemList.add(wall);
 					}
+					Wall wall = new Wall(new Vector(u * 46, v * 46));
+					itemList.add(wall);
 				}
 
-				Tile tile = new Tile(new Vector(u * 46, v * 46), isoLogic);
+				Tile tile = new Tile(new Vector(u * 46, v * 46));
 				itemList.add(tile);
 			}
 		}
@@ -139,15 +155,15 @@ public class Game extends JFrame {
 
 				if (u == -4 || v == -4 || u == 3 || v == 3) {
 					if (u == 0 && v == -4) {
-						Door door = new Door(new Vector(u * 46, v * 46), isoLogic, key, d);
+						Door door = new Door(new Vector(u * 46, v * 46), key, d);
 						itemList.add(door);
 					} else {
-						Wall wall = new Wall(new Vector(u * 46, v * 46), isoLogic);
+						Wall wall = new Wall(new Vector(u * 46, v * 46));
 						itemList.add(wall);
 					}
 				}
 
-				Tile tile = new Tile(new Vector(u * 46, v * 46), isoLogic);
+				Tile tile = new Tile(new Vector(u * 46, v * 46));
 				itemList.add(tile);
 			}
 		}
@@ -239,7 +255,7 @@ public class Game extends JFrame {
 			int nItems = din.readInt();
 			itemList.clear();
 			for (int i = 0; i != nItems; ++i) {
-				itemList.add(Item.fromInputStream(din, isoLogic));
+				itemList.add(Item.fromInputStream(din));
 			}
 			rooms.put(j, itemList);
 		}
