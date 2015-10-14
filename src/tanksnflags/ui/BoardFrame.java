@@ -50,16 +50,12 @@ public class BoardFrame extends JFrame implements KeyListener{
 	private JMenuItem quitGame;
 	private JMenu helpMenu;
 	private JMenuItem help;
-	//private ImageIcon bombIcon = new ImageIcon(BoardCanvas.class.getResource("images/bomb.png"));
-
-	//tank and items
-	private Point AXIS_INT = new Point(560, 220);
-	private int count = 0;
-	private IsoLogic isoLogic = new IsoLogic(Math.toRadians(30), Math.toRadians(330), AXIS_INT.getX(), AXIS_INT.getY());	
-
+	private static ImageIcon tagIcon = new ImageIcon("src/tanksnflags/ui/images/tag.png");
+	private GameCanvas canvas;
  
 	public BoardFrame(GameCanvas canvas){
 		super("Tanks'n'Flags");
+		this.canvas = canvas;
 		createMenus();
 		setBounds(300,0,0,0);
 		setLayout(new BorderLayout()); // use border layout
@@ -86,7 +82,7 @@ public class BoardFrame extends JFrame implements KeyListener{
 		help.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {//this stuff may need be in canvas for JPanel stuff
-				JOptionPane.showMessageDialog(null, "Give some sort of game discription");
+				displayHelp();
 			}
 		});
 		
@@ -107,13 +103,22 @@ public class BoardFrame extends JFrame implements KeyListener{
 		this.setJMenuBar(menuBar);
 	}
 	
+	/**
+	 * Displays a help pop up exaplining the game
+	 */
+	public void displayHelp(){
+		JOptionPane.showMessageDialog(null, "A simple game of tag, use the directional keys to keep away from the blue"
+				+ " block.\nIf you are the blue block you need to hit another players block.\n"
+				+ "Use the 9 button to rotate the field.","Help",0,tagIcon);
+	}
+	
 	
 	/**
-	 * Displays a pop up wih some sort of informative message to the user
+	 * Displays a pop up with some sort of informative message to the user
 	 * @param message - the message to display in the pop up
 	 */
 	public void showPopUp(String message){
-		JOptionPane.showMessageDialog(null, message);
+		JOptionPane.showMessageDialog(null, message,"Message",0,tagIcon);
 	}
 
 	@Override
@@ -124,6 +129,12 @@ public class BoardFrame extends JFrame implements KeyListener{
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+		if(e.getKeyCode() == KeyEvent.VK_H){
+			displayHelp();
+		}
+		if(e.getKeyCode() == KeyEvent.VK_Q){
+			System.exit(0);
+		}
 	}
 
 	@Override

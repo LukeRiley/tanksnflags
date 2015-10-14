@@ -1,6 +1,7 @@
 package tanksnflags.control;
 
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.DataInputStream;
@@ -31,8 +32,9 @@ public final class Slave extends Thread implements KeyListener {
 	private DataInputStream iStream;
 	private DataOutputStream oStream;
 	private final Socket socket;
-	BoardFrame frame;
-	GameCanvas canvas;
+	private BoardFrame frame;
+	private GameCanvas canvas;
+
 
 	/**
 	 * Construct a slave which connects to a master via the provided socket.
@@ -51,13 +53,11 @@ public final class Slave extends Thread implements KeyListener {
 
 			this.playerID = iStream.readInt();
 			System.out.println("Tanks and Flags client! Player: " + this.playerID);
-			IsoLogic iL = new IsoLogic(Math.toRadians(30), Math.toRadians(330), 500, 500);
+			IsoLogic iL = new IsoLogic(Math.toRadians(30), Math.toRadians(330), 500, 320);
 			game = new Game(iL, playerID);
 			canvas = new GameCanvas(game, iL, playerID);
 			frame = new BoardFrame(canvas);
-
 			frame.addKeyListener(this);
-
 			boolean exit = false;
 
 			while (!exit) {
@@ -102,6 +102,9 @@ public final class Slave extends Thread implements KeyListener {
 			else if (btn == KeyEvent.VK_RIGHT || btn == KeyEvent.VK_KP_RIGHT) {
 				oStream.writeInt(3);
 				totalSent += 4;
+			}
+			else if(btn == KeyEvent.VK_9){
+				canvas.rotate();
 			}
 
 			System.out.println("CLICKED");

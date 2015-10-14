@@ -6,10 +6,15 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import tanksnflags.game.Game.DepthComparator;
@@ -17,15 +22,14 @@ import tanksnflags.helpers.IsoLogic;
 import tanksnflags.helpers.Vector;
 import tanksnflags.helpers.IsoLogic.Dir;
 import tanksnflags.tokens.Item;
-import tanksnflags.tokens.Tank;
 
 public class GameCanvas extends JPanel {
 
 	Game game;
-	Point AXIS_INT = new Point(500, 450);
 	int count = 0;
-	IsoLogic isoLogic;
 	Dir dir = Dir.EAST;
+	private IsoLogic isoLogic;
+	private BufferedImage backgroundImage;
 
 	int uid;
 
@@ -33,21 +37,33 @@ public class GameCanvas extends JPanel {
 		this.uid = uid;
 		this.game = game;
 		this.isoLogic = isoLogic;
-		this.setSize(new Dimension(1000, 1000));
-		this.setBackground(Color.darkGray);
-		this.setSize(new Dimension(100, 1000));
+		this.setLayout(null);
+		try {
+			backgroundImage = ImageIO.read(new File("src/tanksnflags/ui/images/background.png"));		    
+		} catch (IOException e) {
+		}
 		this.setVisible(true);
+	}
+	
+	/**
+	 * Gets the preferred size of the canvas
+	 * @return The preferred size of the canvas
+	 */
+	@Override
+	public Dimension getPreferredSize() {
+		return new Dimension(1000,650);
 	}
 
 	@Override
-	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
+	public void paint(Graphics g){
+		super.paint(g);
+		g.drawImage(backgroundImage, 0, 0, null);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		if (this.game != null) {
 			this.renderCollection(g2);
+			}	
 		}
-	}
 
 	private void renderCollection(Graphics2D g2) {
 
