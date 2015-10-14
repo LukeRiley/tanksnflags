@@ -75,6 +75,10 @@ public abstract class Item {
 		return true;
 	}
 
+	public void setPos(Vector pos){
+		this.pos = pos;
+	}
+	
 	public abstract void draw(Graphics2D g2, Dir dir, IsoLogic iL);
 
 	public abstract void toOutputStream(DataOutputStream dout) throws IOException;

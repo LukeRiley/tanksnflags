@@ -128,17 +128,17 @@ public class Game extends JFrame {
 	}
 
 	private void initializeItems() {
-		int nRooms = 1;
+		int nRooms = 2;
 		for (int r = 0; r <= nRooms; r++) {
 			List<Item> itemList = new ArrayList<Item>();
 			for (int u = -size / 2; u < size / 2; u++) {
 				for (int v = -size / 2; v < size / 2; v++) {
-					if (u == -size / 2 || v == -size / 2 || u == size / 2 - 1
-							|| v == size / 2 - 1 && (u != 2 && v != 2)) {
+					if ((u == -size / 2 || v == -size / 2 || u == size / 2 - 1 || v == size / 2 - 1)
+							&& (u == 2 && v == size / 2 - 1) == false) {
 						itemList.add(new Wall(new Vector(u * 46, v * 46)));
 					}
 
-					if (u == 2 && v == 3) {
+					if (u == 2 && v == size / 2 - 1) {
 						itemList.add(new Door(new Vector(u * 46, v * 46), new int[] { 0, 1 }));
 					}
 
@@ -153,9 +153,10 @@ public class Game extends JFrame {
 			int nKeys = 5;
 			List<Item> itemList = getRooms().get(r);
 			for (int i = 0; i < 5; i++) {
-				int u = rnd.nextInt(size / 2);
-				int v = rnd.nextInt(size / 2);
+				int u = rnd.nextInt(size) - size / 2;
+				int v = rnd.nextInt(size) - size / 2;
 				if (!occupied(u, v, r)) {
+					System.out.println("ADDING KEY");
 					itemList.add(new Key(new Vector(u * 46, v * 46)));
 
 				}
@@ -169,6 +170,28 @@ public class Game extends JFrame {
 		for (int key : getRooms().keySet()) {
 			getRooms().get(key).remove(toRemove);
 		}
+	}
+
+	public void enterDoor(MovingItem character, Door door) {
+		int[] rooms = door.getRooms();
+		int room = character.room;
+		if (room == rooms[0]) {
+			room = rooms[1];
+		} else {
+			room = rooms[0];
+		}
+		character.room = room;
+		Random rnd = new Random();
+		while (true) {
+			List<Item> itemList = getRooms().get(character.room);
+			int u = rnd.nextInt(size) - size / 2;
+			int v = rnd.nextInt(size) - size / 2;
+			if (!occupied(u, v, character.room)) {
+				character.setPos(new Vector(u * 46, v * 46));
+				return;
+			}
+		}
+
 	}
 
 	public boolean canMoveUp(MovingItem character) {
@@ -185,9 +208,9 @@ public class Game extends JFrame {
 					return true;
 				} else if (item instanceof Door) {
 					Door d = (Door) item;
-					if(!d.locked){
+					if (!d.locked) {
 						rooms.get(character.room).remove(character);
-						character.updateRoom(d);
+						enterDoor(character, d);
 						rooms.get(character.room).add(character);
 						return false;
 					}
@@ -214,9 +237,9 @@ public class Game extends JFrame {
 					return true;
 				} else if (item instanceof Door) {
 					Door d = (Door) item;
-					if(!d.locked){
+					if (!d.locked) {
 						rooms.get(character.room).remove(character);
-						character.updateRoom(d);
+						enterDoor(character, d);
 						rooms.get(character.room).add(character);
 						return false;
 					}
@@ -241,9 +264,9 @@ public class Game extends JFrame {
 					return true;
 				} else if (item instanceof Door) {
 					Door d = (Door) item;
-					if(!d.locked){
+					if (!d.locked) {
 						rooms.get(character.room).remove(character);
-						character.updateRoom(d);
+						enterDoor(character, d);
 						rooms.get(character.room).add(character);
 						return false;
 					}
@@ -268,9 +291,9 @@ public class Game extends JFrame {
 					return true;
 				} else if (item instanceof Door) {
 					Door d = (Door) item;
-					if(!d.locked){
+					if (!d.locked) {
 						rooms.get(character.room).remove(character);
-						character.updateRoom(d);
+						enterDoor(character, d);
 						rooms.get(character.room).add(character);
 						return false;
 					}
@@ -302,7 +325,7 @@ public class Game extends JFrame {
 		DataInputStream din = new DataInputStream(bin);
 
 		int nRooms = din.readInt();
-		getRooms().clear();
+		rooms.clear();
 		tanks.clear();
 		for (int r = 0; r < nRooms; r++) {
 			int roomID = din.readInt();

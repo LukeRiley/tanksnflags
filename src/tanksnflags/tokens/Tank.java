@@ -72,12 +72,17 @@ public class Tank extends MovingItem {
 		dout.writeByte(Game.TANK);
 		dout.writeDouble(pos.getQ());
 		dout.writeDouble(pos.getT());
+		dout.writeInt(room);
 		dout.writeInt(uid);
 	}
 
 	public static Tank fromInputStream(double u, double v, DataInputStream din) throws IOException {
+		int room = din.readInt();
 		int uid = din.readInt();
-		return new Tank(new Vector(u, v), uid);
+		Tank newTank = new Tank(new Vector(u, v), uid);
+		newTank.room = room;
+		return newTank;
+
 	}
 
 	private static final Image RED = ImageLoader.loadImage("tileRed.png");

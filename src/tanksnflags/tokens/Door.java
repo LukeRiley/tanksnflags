@@ -57,18 +57,15 @@ public class Door extends Item {
 	}
 
 	public static Door fromInputStream(double u, double v, DataInputStream din) throws IOException {
-		Vector vec = new Vector(u, v);
-		boolean l = din.readBoolean();
-		int[] rooms = new int[2];
-		rooms[0] = din.readInt();
-		rooms[1] = din.readInt();
-		Door d = new Door(vec, rooms);
-		d.locked = l;
-		return d;
-		// doesnt need to read in the position, passed through as an argument.
+		boolean locked = din.readBoolean();
+		int room1 = din.readInt();
+		int room2 = din.readInt();
+		Door door = new Door(new Vector(u, v), new int[] { room1, room2 });
+		door.locked = locked;
+		return door;
 	}
-	
-	public int[] getRooms(){
+
+	public int[] getRooms() {
 		return rooms;
 	}
 

@@ -27,11 +27,11 @@ import tanksnflags.tokens.Item;
 
 public class GameCanvas extends JPanel {
 
-	Game game; 
+	Game game;
 	int count = 0;
-	Dir dir = Dir.EAST; //the direction of the field
+	Dir dir = Dir.EAST; // the direction of the field
 	private IsoLogic isoLogic;
-	private BufferedImage backgroundImage; //the background image
+	private BufferedImage backgroundImage; // the background image
 
 	int uid;
 
@@ -41,37 +41,40 @@ public class GameCanvas extends JPanel {
 		this.isoLogic = isoLogic;
 		this.setLayout(null);
 		try {
-			backgroundImage = ImageIO.read(new File("src/tanksnflags/ui/images/background.png"));		    
+			backgroundImage = ImageIO.read(new File("src/tanksnflags/ui/images/background.png"));
 		} catch (IOException e) {
 		}
 		this.setVisible(true);
 	}
-	
+
 	/**
 	 * Gets the preferred size of the canvas
+	 * 
 	 * @return The preferred size of the canvas
 	 */
 	@Override
 	public Dimension getPreferredSize() {
-		return new Dimension(1000,650);
+		return new Dimension(1000, 650);
 	}
 
 	@Override
-	public void paint(Graphics g){
+	public void paint(Graphics g) {
 		super.paint(g);
 		g.drawImage(backgroundImage, 0, 0, null);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		if (this.game != null) {
 			this.renderCollection(g2);
-			}	
 		}
-		/**
-		 * Draws all the items in the itemlist. if there are no items does nothing. 
-	 	 * @param g2
-	 	 */
+	}
+
+	/**
+	 * Draws all the items in the itemlist. if there are no items does nothing.
+	 * 
+	 * @param g2
+	 */
 	private void renderCollection(Graphics2D g2) {
-		List<Item> itemList = game.getRooms().get(0);
+		List<Item> itemList = game.getRooms().get(game.tank(uid).room);
 		if (itemList == null) {
 			return;
 		}
@@ -84,7 +87,8 @@ public class GameCanvas extends JPanel {
 	}
 
 	/**
-	 * Rotates the field, displaying all elements in it from a rotation of 90 degrees
+	 * Rotates the field, displaying all elements in it from a rotation of 90
+	 * degrees
 	 */
 	public void rotate() {
 		isoLogic.rotateAxis();
@@ -93,9 +97,9 @@ public class GameCanvas extends JPanel {
 	}
 
 	/**
-	 * A comparator to compare items in the isometric display. 
-	 * implements the compares method which compares their depths
-	 * to determine which is greater.
+	 * A comparator to compare items in the isometric display. implements the
+	 * compares method which compares their depths to determine which is
+	 * greater.
 	 *
 	 */
 	class DepthComparator implements Comparator<Item> {

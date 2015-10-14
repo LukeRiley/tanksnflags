@@ -11,8 +11,8 @@ import javax.swing.JOptionPane;
 import tanksnflags.game.Game;
 
 /**
- * The Main class sets up the game and lets the player choose whether they want to start a new game or 
- * join an existing game.
+ * The Main class sets up the game and lets the player choose whether they want
+ * to start a new game or join an existing game.
  * 
  * @author huntdani1
  *
@@ -20,18 +20,17 @@ import tanksnflags.game.Game;
 public class Main {
 
 	private static final int DEFAULT_CLK_PERIOD = 20;
-	private static final int DEFAULT_BROADCAST_CLK_PERIOD = 5;
+	private static final int DEFAULT_BROADCAST_CLK_PERIOD = 10;
 	private static ImageIcon tagIcon = new ImageIcon("src/tanksnflags/ui/images/tag.png");
-
 
 	public static void main(String[] args) {
 
-		boolean server = false; //Whether is a client or not
-		int nClients = 0; //Number of clients
-		String url = null; //IP address of server
+		boolean server = false; // Whether is a client or not
+		int nClients = 0; // Number of clients
+		String url = null; // IP address of server
 		int gameClock = DEFAULT_CLK_PERIOD;
 		int broadcastClock = DEFAULT_BROADCAST_CLK_PERIOD;
-		int port = 32768; //Port to connect to on Server
+		int port = 32768; // Port to connect to on Server
 
 		// UI STUFF HERE done by Ray
 		String[] possibleValues = { "Create Game", "Enter Game" };
@@ -79,11 +78,14 @@ public class Main {
 		}
 		System.exit(0);
 	}
-	
+
 	/**
 	 * Creates a socket to the server, then creates and runs a new slave.
-	 * @param addr The IP address of the Server
-	 * @param port The port number of the server
+	 * 
+	 * @param addr
+	 *            The IP address of the Server
+	 * @param port
+	 *            The port number of the server
 	 * @throws IOException
 	 */
 	private static void runClient(String addr, int port) throws IOException {
@@ -94,11 +96,16 @@ public class Main {
 
 	/**
 	 * Creates a server, and then an array of masters for each of the players.
-	 * @param port Port number of the server
-	 * @param nClients The number of players expected
-	 * @param gameClock 
-	 * @param broadcastClock The time between broadcasts
-	 * @param game The game that is being played
+	 * 
+	 * @param port
+	 *            Port number of the server
+	 * @param nClients
+	 *            The number of players expected
+	 * @param gameClock
+	 * @param broadcastClock
+	 *            The time between broadcasts
+	 * @param game
+	 *            The game that is being played
 	 */
 	private static void runServer(int port, int nClients, int gameClock, int broadcastClock, Game game) {
 		// TimerThread clk = new TimerThread(gameClock, game, null);
@@ -106,16 +113,25 @@ public class Main {
 		System.out.println("TNF SERVER LISTENING ON PORT " + port);
 		System.out.println("TNF SERVER AWAITING " + nClients + " CLIENTS");
 		try {
-			Master[] connections = new Master[nClients]; //Create an array of masters, one for each slave
+			Master[] connections = new Master[nClients]; // Create an array of
+															// masters, one for
+															// each slave
 
 			ServerSocket ss = new ServerSocket(port);
 			while (1 == 1) {
 				Socket s = ss.accept(); // accept connections from new players
 				System.out.println("ACCEPTED CONNECTION FROM: " + s.getInetAddress());
 				game.registerTank(playerId); // create a new tank
-				connections[--nClients] = new Master(playerId, s, game, broadcastClock); // create a new master for the player
+				connections[--nClients] = new Master(playerId, s, game, broadcastClock); // create
+																							// a
+																							// new
+																							// master
+																							// for
+																							// the
+																							// player
 				connections[nClients].start(); // start the master
-				if (nClients == 0) { // when the expected number of players have joined
+				if (nClients == 0) { // when the expected number of players have
+										// joined
 					System.out.println("ALL CLIENTS ACCEPTED --- GAME BEGINS");
 
 				}
