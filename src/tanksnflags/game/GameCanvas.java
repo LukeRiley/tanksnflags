@@ -32,7 +32,6 @@ public class GameCanvas extends JPanel {
 	private Dir dir = Dir.EAST;
 	private BufferedImage backgroundImage;
 
-
 	public GameCanvas(Game game, IsoLogic isoLogic) {
 		this.game = game;
 		this.isoLogic = isoLogic;
@@ -66,6 +65,7 @@ public class GameCanvas extends JPanel {
 
 	private void renderCollection(Graphics2D g2) {
 		List<Item> itemList = game.itemList;
+		// List<Item> itemList = game.rooms.get(1);
 		Comparator<Item> comp = new DepthComparator(isoLogic);
 		Collections.sort(itemList, comp);
 		for (int i = 0; i < itemList.size(); i++) {

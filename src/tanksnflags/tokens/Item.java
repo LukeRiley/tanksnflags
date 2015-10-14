@@ -101,6 +101,8 @@ public abstract class Item {
 			return Tile.fromInputStream(u, v, din);
 		} else if (type == Game.WALL) {
 			return Wall.fromInputStream(u, v, din);
+		} else if (type ==Game.DOOR) {
+			return Door.fromInputStream(u, v, din);
 		} else {
 			throw new IOException();
 		}
