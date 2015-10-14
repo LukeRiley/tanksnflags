@@ -49,7 +49,7 @@ public class Key extends Item {
 
 	public static Key fromInputStream(double u, double v, DataInputStream din) throws IOException {
 		int kn = din.readInt();
-		Key k = new Key(new Vector(u, v), kn);
+		Key k = new Key(new Vector(u, v), 5);
 		return k;
 	}
 

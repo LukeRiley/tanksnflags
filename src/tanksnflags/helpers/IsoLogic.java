@@ -11,7 +11,7 @@ import tanksnflags.tokens.Item;
  * isometric plane. There is a txt file named axisRepresentation with a diagram
  * of what the axis are like.
  * 
- * @author Haylem
+ * @author 300311206 raynerhayl
  *
  */
 

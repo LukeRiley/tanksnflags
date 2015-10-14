@@ -40,7 +40,7 @@ import tanksnflags.tokens.Wall;
  * Game model. Stores all items present in the game and checks whether their
  * movement is valid.
  * 
- * @author Haylem
+ * @author 300311206 raynerhayl
  *
  */
 public class Game extends JFrame {
@@ -60,7 +60,6 @@ public class Game extends JFrame {
 	public static final int DOOR = 4;
 	public static final int KEY = 5;
 	public int uid;
-	private int numKeys =0;
 
 	public Game(IsoLogic isoLogic, int uid) {
 		this.isoLogic = isoLogic;
@@ -171,13 +170,12 @@ public class Game extends JFrame {
 			getRooms().get(key).remove(toRemove);
 		}
 	}
-	
-	
+
 	/**
-	 * draps a key behind the player. 
+	 * draps a key behind the player.
 	 */
-	public void dropItem(Tank tank){
-		if(tank.getNumKeys()>0){
+	public void dropItem(Tank tank) {
+		if (tank.getNumKeys() > 0) {
 			System.out.println(tank.getNumKeys());
 			Vector v = tank.pos();
 			Key key = new Key(new Vector(v.getQ(), v.getT()));
