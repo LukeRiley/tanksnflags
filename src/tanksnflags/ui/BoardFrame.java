@@ -60,10 +60,7 @@ public class BoardFrame extends JFrame implements KeyListener{
  
 	public BoardFrame(GameCanvas canvas){
 		super("Tanks'n'Flags");
-		//initializeItems();
-		//askJoinOrCreate();
 		createMenus();
-		//canvas = new GameCanvas(game,isoLogic); // create canvas
 		setBounds(300,0,0,0);
 		setLayout(new BorderLayout()); // use border layout
 		add(canvas, BorderLayout.CENTER); // add canvas
