@@ -54,13 +54,6 @@ public final class Slave extends Thread implements KeyListener {
 			this.iStream = new DataInputStream(socket.getInputStream());
 
 			this.playerID = iStream.readInt();
-			// TODO DO WE NEED THIS?? varies based on the setup of the game
-			int width = iStream.readInt();
-			int height = iStream.readInt();
-			int bitWidth = iStream.readInt();
-			int bitSize = iStream.readInt();
-			byte[] wallBytes = new byte[bitSize];
-			iStream.read(wallBytes);
 			System.out.println("Tanks and Flags client! Player: " + this.playerID);
 
 			boolean exit = false;

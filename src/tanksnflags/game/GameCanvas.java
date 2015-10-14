@@ -25,7 +25,8 @@ public class GameCanvas extends JPanel {
 	Point AXIS_INT = new Point(500, 450);
 	int count = 0;
 	IsoLogic isoLogic;
-	//= new IsoLogic(Math.toRadians(30), Math.toRadians(330), AXIS_INT.getX(), AXIS_INT.getY());
+	// = new IsoLogic(Math.toRadians(30), Math.toRadians(330), AXIS_INT.getX(),
+	// AXIS_INT.getY());
 	Dir dir = Dir.EAST;
 
 	public GameCanvas(Game game, IsoLogic isoLogic) {
@@ -48,7 +49,8 @@ public class GameCanvas extends JPanel {
 	}
 
 	private void renderCollection(Graphics2D g2) {
-		List<Item> itemList = game.rooms.get(game.player.room);
+		List<Item> itemList = game.itemList;
+		// List<Item> itemList = game.rooms.get(1);
 		Comparator<Item> comp = new DepthComparator(isoLogic);
 		Collections.sort(itemList, comp);
 		for (int i = 0; i < itemList.size(); i++) {
