@@ -38,7 +38,7 @@ public class HelperTests {
 	public void isoLogicTestRotateAxis(){
 		IsoLogic iL = new IsoLogic(Math.toRadians(30), Math.toRadians(330), 500, 500);
 		iL.rotateAxis();
-		
+		assertTrue(iL.getvAngle() == 150);
 	}
 	
 }
