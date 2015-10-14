@@ -1,6 +1,7 @@
 package tanksnflags.tokens;
 
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -8,45 +9,67 @@ import java.io.IOException;
 import tanksnflags.helpers.IsoLogic;
 import tanksnflags.helpers.IsoLogic.Dir;
 import tanksnflags.helpers.Vector;
+import tanksnflags.ui.ImageLoader;
 
-public class Door extends MovingItem {
+public class Door extends Item {
 
-	private int KEYID;
-	private Wall wall;
-	private int STATE = 0;
+	private int height = 1;
+	private Key key;
+	private boolean locked = false;
+	private int[] rooms = new int[2];
+	
 
-	public Door(Vector pos, IsoLogic iL, int KEYID) {
+	public Door(Vector pos, IsoLogic iL, Key k, int[] rooms) {
 		super(pos, iL);
-		this.KEYID = KEYID;
 		vertical = 29;
-		moveIncrement = 29;
-		wall = new Wall(pos, iL);
+		key = k;
+		this.rooms = rooms;
 	}
 
-	@Override
-	public void toOutputStream(DataOutputStream dout) throws IOException {
-		// TODO Auto-generated method stub
-
-	}
-
-	public Item fromInputStream(DataInputStream din) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected void renderTick(int moveRate) {
-/*		System.out.println(moveRate);
-		if (STATE == 0) {
-			wall.vertical = wall.vertical + moveRate;
-		} else if (STATE == 1) {
-			wall.vertical = wall.vertical - moveRate;
-		}*/
+	public boolean unlock(Key k) {
+		if (k == key) {
+			locked = false;
+			return true;
+		}
+		return false;
 	}
 
 	@Override
 	public void draw(Graphics2D g2, Dir dir) {
-		wall.draw(g2, dir);
+		Vector sPos = iL.isoToScreen(this);
+
+		for (int i = 0; i < height; i++) {
+			if (locked) {
+				g2.drawImage(RED, (int) sPos.getQ(), (int) sPos.getT() - 23 - vertical, null);
+			} else {
+				g2.drawImage(BLUE, (int) sPos.getQ(), (int) sPos.getT() - 23 - vertical, null);
+			}
+		}
 	}
+
+	@Override
+	public void toOutputStream(DataOutputStream dout) throws IOException {
+		dout.writeDouble(iL.screenToIso(pos).getQ());
+		dout.writeDouble(iL.screenToIso(pos).getT());
+		dout.writeBoolean(locked);
+		key.toOutputStream(dout);
+		dout.writeInt(rooms[0]);
+		dout.writeInt(rooms[1]);
+	}
+
+	public static Door fromInputStream(double u, double v, DataInputStream din, IsoLogic iL) throws IOException {
+		Vector vec = new Vector(u, v);
+		boolean l = din.readBoolean();
+		Key k = Key.fromInputStream(u, v, din, iL);
+		int[] rooms = new int[2];
+		rooms[0] = din.readInt();
+		rooms[1] = din.readInt();
+		Door d = new Door(vec, iL, k, rooms);
+		return d;
+	}
+
+	private static final Image RED = ImageLoader.loadImage("tile.png");
+
+	private static final Image BLUE = ImageLoader.loadImage("flag.png");
 
 }

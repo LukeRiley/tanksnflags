@@ -48,7 +48,7 @@ public class GameCanvas extends JPanel {
 	}
 
 	private void renderCollection(Graphics2D g2) {
-		List<Item> itemList = game.itemList;
+		List<Item> itemList = game.rooms.get(game.player.room);
 		Comparator<Item> comp = new DepthComparator(isoLogic);
 		Collections.sort(itemList, comp);
 		for (int i = 0; i < itemList.size(); i++) {
