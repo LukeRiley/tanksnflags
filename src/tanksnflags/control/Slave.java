@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import tanksnflags.game.Game;
 import tanksnflags.game.GameCanvas;
 import tanksnflags.helpers.IsoLogic;
+import tanksnflags.ui.BoardFrame;
 
 /**
  * The slave has a local copy of the game which it updates based on the
@@ -30,7 +31,7 @@ public final class Slave extends Thread implements KeyListener {
 	private DataInputStream iStream;
 	private DataOutputStream oStream;
 	private final Socket socket;
-	JFrame frame = new JFrame();
+	BoardFrame frame;
 	GameCanvas canvas;
 
 	/**
@@ -43,9 +44,7 @@ public final class Slave extends Thread implements KeyListener {
 		IsoLogic iL = new IsoLogic(Math.toRadians(30), Math.toRadians(330), 500, 500);
 		game = new Game(iL);
 		canvas = new GameCanvas(game, iL);
-		frame.setSize(new Dimension(500, 500));
-		frame.setVisible(true);
-		frame.setContentPane(canvas);
+		frame = new BoardFrame(canvas);
 		this.socket = sock;
 	}
 
