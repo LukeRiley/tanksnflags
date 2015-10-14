@@ -60,6 +60,7 @@ public class Game extends JFrame {
 	public static final int DOOR = 4;
 	public static final int KEY = 5;
 	public int uid;
+	private int numKeys = 0;
 
 	public Game(IsoLogic isoLogic, int uid) {
 		this.isoLogic = isoLogic;
@@ -206,108 +207,43 @@ public class Game extends JFrame {
 
 	}
 
-	public boolean canMoveUp(MovingItem character) {
-		Tank tank = (Tank) character;
+	public boolean canMoveUp(Tank character) {
 		if (occupied((int) character.pos().getQ(), (int) character.pos().getT() + 46, character.room)) {
 			return false;
 		}
-		for (Item item : getRooms().get(character.room)) {
-			Vector itemPos = item.pos();
-			if (!item.equals(character)
-					&& itemPos.equalsDelta(new Vector(character.pos().getQ() + 46, character.pos().getT()), 0)
-					&& item.vertical() >= character.vertical()) {
-				if (item instanceof Key) {
-					removeItem(item);
-					tank.addKey();
-					return true;
-				} else if (item instanceof Door) {
-					Door d = (Door) item;
-					if (!d.locked) {
-						rooms.get(character.room).remove(character);
-						enterDoor(character, d);
-						rooms.get(character.room).add(character);
-						return false;
-					}
-				}
-				return false;
-			}
-		}
-		return true;
+		return checkItem(character, new Vector(character.pos().getQ() + 46, character.pos().getT()));
+
 	}
 
-	public boolean canMoveDown(MovingItem character) {
-		Tank tank = (Tank) character;
+	public boolean canMoveDown(Tank character) {
 		if (occupied((int) character.pos().getQ(), (int) character.pos().getT() - 46, character.room)) {
 			return false;
 		}
-		for (Item item : getRooms().get(character.room)) {
-			Vector itemPos = item.pos();
-			if (!item.equals(character)
-					&& itemPos.equalsDelta(new Vector(character.pos().getQ() - 46, character.pos().getT()), 0)
-					&& item.vertical() >= character.vertical()) {
-				if (item instanceof Key) {
-					Key key = (Key) item;
-					System.out.println(key.keyNo);
-					removeItem(item);
-					tank.addKey();
-					return true;
-				} else if (item instanceof Door) {
-					Door d = (Door) item;
-					if (!d.locked) {
-						rooms.get(character.room).remove(character);
-						enterDoor(character, d);
-						rooms.get(character.room).add(character);
-						return false;
-					}
-				}
-				return false;
-			}
-		}
-		return true;
+		return checkItem(character, new Vector(character.pos().getQ() - 46, character.pos().getT()));
+
 	}
 
-	public boolean canMoveRight(MovingItem character) {
-		Tank tank = (Tank) character;
+	public boolean canMoveRight(Tank character) {
 		if (occupied((int) character.pos().getQ() + 46, (int) character.pos().getT(), character.room)) {
 			return false;
 		}
-		for (Item item : getRooms().get(character.room)) {
-			Vector itemPos = item.pos();
-			if (!item.equals(character)
-					&& itemPos.equalsDelta(new Vector(character.pos().getQ(), character.pos().getT() + 46), 0)
-					&& item.vertical() >= character.vertical()) {
-				if (item instanceof Key) {
-					removeItem(item);
-					tank.addKey();
-					return true;
-				} else if (item instanceof Door) {
-					Door d = (Door) item;
-					if (!d.locked) {
-						rooms.get(character.room).remove(character);
-						enterDoor(character, d);
-						rooms.get(character.room).add(character);
-						return false;
-					}
-				}
-				return false;
-			}
-		}
-		return true;
+		return checkItem(character, new Vector((int) character.pos().getQ(), (int) character.pos().getT() + 46));
 	}
 
-	public boolean canMoveLeft(MovingItem character) {
-		Tank tank = (Tank) character;
+	public boolean canMoveLeft(Tank character) {
 		if (occupied((int) character.pos().getQ() - 46, (int) character.pos().getT(), character.room)) {
 			return false;
 		}
+		return checkItem(character, new Vector((int) character.pos().getQ(), (int) character.pos().getT() - 46));
+	}
+
+	public boolean checkItem(Tank character, Vector move) {
 		for (Item item : getRooms().get(character.room)) {
 			Vector itemPos = item.pos();
-			if (!item.equals(character)
-					&& itemPos.equalsDelta(new Vector(character.pos().getQ(), character.pos().getT() - 46), 0)
-					&& item.vertical() >= character.vertical()) {
+			if (!item.equals(character) && itemPos.equalsDelta(move, 0) && item.vertical() >= character.vertical()) {
 				if (item instanceof Key) {
 					removeItem(item);
-					tank.addKey();
+					character.addKey();
 					return true;
 				} else if (item instanceof Door) {
 					Door d = (Door) item;
