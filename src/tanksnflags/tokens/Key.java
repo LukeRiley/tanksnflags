@@ -7,6 +7,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Random;
 
+import tanksnflags.game.Game;
 import tanksnflags.helpers.IsoLogic;
 import tanksnflags.helpers.IsoLogic.Dir;
 import tanksnflags.helpers.Vector;
@@ -22,7 +23,7 @@ public class Key extends Item {
 		Random r = new Random();
 		keyNo = r.nextInt(100);
 	}
-	
+
 	public Key(Vector pos, int kn) {
 		super(pos);
 		vertical = 29;
@@ -33,27 +34,27 @@ public class Key extends Item {
 	public void draw(Graphics2D g2, Dir dir, IsoLogic iL) {
 		Vector sPos = iL.isoToScreen(this);
 
-		for (int i = 0; i < height; i++) {
-			g2.drawImage(RED, (int) sPos.getQ(), (int) sPos.getT() - 23 - vertical, null);
-		}
+		// for (int i = 0; i < height; i++) {
+		g2.drawImage(RED, (int) sPos.getQ(), (int) sPos.getT() - 23 - vertical, null);
+		// }
 	}
 
 	@Override
 	public void toOutputStream(DataOutputStream dout) throws IOException {
+		dout.writeByte(Game.KEY);
 		dout.writeDouble(pos.getQ());
 		dout.writeDouble(pos.getT());
 		dout.writeInt(keyNo);
 	}
 
 	public static Key fromInputStream(double u, double v, DataInputStream din) throws IOException {
-		Vector vec = new Vector(din.readDouble(), din.readDouble());
 		int kn = din.readInt();
-		Key k = new  Key(vec, kn);
+		Key k = new Key(new Vector(u, v), kn);
 		return k;
 	}
 
-	private static final Image RED = ImageLoader.loadImage("tile.png");
+	private static final Image RED = ImageLoader.loadImage("keyYellow.png");
 
-	private static final Image BLUE = ImageLoader.loadImage("flag.png");
+	private static final Image BLUE = ImageLoader.loadImage("tileBlue.png");
 
 }

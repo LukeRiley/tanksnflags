@@ -6,6 +6,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import tanksnflags.game.Game;
 import tanksnflags.helpers.IsoLogic;
 import tanksnflags.helpers.IsoLogic.Dir;
 import tanksnflags.helpers.Vector;
@@ -17,12 +18,10 @@ public class Door extends Item {
 	private Key key;
 	private boolean locked = false;
 	private int[] rooms = new int[2];
-	
 
-	public Door(Vector pos, Key k, int[] rooms) {
+	public Door(Vector pos, int[] rooms) {
 		super(pos);
 		vertical = 29;
-		key = k;
 		this.rooms = rooms;
 	}
 
@@ -49,12 +48,9 @@ public class Door extends Item {
 
 	@Override
 	public void toOutputStream(DataOutputStream dout) throws IOException {
+		dout.write(Game.DOOR);
 		dout.writeDouble(pos.getQ());
 		dout.writeDouble(pos.getT());
-		dout.writeBoolean(locked);
-		key.toOutputStream(dout);
-		dout.writeInt(rooms[0]);
-		dout.writeInt(rooms[1]);
 	}
 
 	public static Door fromInputStream(double u, double v, DataInputStream din) throws IOException {
@@ -64,8 +60,9 @@ public class Door extends Item {
 		int[] rooms = new int[2];
 		rooms[0] = din.readInt();
 		rooms[1] = din.readInt();
-		Door d = new Door(vec, k, rooms);
+		Door d = new Door(vec, rooms);
 		return d;
+		// doesnt need to read in the position, passed through as an argument.
 	}
 
 	private static final Image RED = ImageLoader.loadImage("tile.png");

@@ -22,6 +22,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
 import javax.swing.*;
 import tanksnflags.helpers.IsoLogic;
@@ -57,6 +58,7 @@ public class Game extends JFrame {
 	public static final int TANK = 2;
 	public static final int TILE = 3;
 	public static final int DOOR = 4;
+	public static final int KEY = 5;
 	public int uid;
 
 	public Game(IsoLogic isoLogic, int uid) {
@@ -131,15 +133,42 @@ public class Game extends JFrame {
 			List<Item> itemList = new ArrayList<Item>();
 			for (int u = -size / 2; u < size / 2; u++) {
 				for (int v = -size / 2; v < size / 2; v++) {
-					if (u == -size / 2 || v == -size / 2 || u == size / 2 - 1 || v == size / 2 - 1) {
+					if (u == -size / 2 || v == -size / 2 || u == size / 2 - 1
+							|| v == size / 2 - 1 && (u != 2 && v != 2)) {
 						itemList.add(new Wall(new Vector(u * 46, v * 46)));
 					}
+
+//					if (u == 2 && v == 2) {
+//						itemList.add(new Door(new Vector(u * 46, v * 46), new int[] { 0, 1 }));
+//					}
+
 					itemList.add(new Tile(new Vector(u * 46, v * 46)));
 				}
 			}
 			rooms.put(r, itemList);
 		}
 
+		for (int r = 0; r < nRooms; r++) {
+			Random rnd = new Random();
+			int nKeys = 5;
+			List<Item> itemList = rooms.get(r);
+			for (int i = 0; i < 5; i++) {
+				int u = rnd.nextInt(size / 2);
+				int v = rnd.nextInt(size / 2);
+				if (!occupied(u, v, r)) {
+					itemList.add(new Key(new Vector(u * 46, v * 46)));
+
+				}
+			}
+
+		}
+
+	}
+
+	public void removeItem(Item toRemove) {
+		for (int key : rooms.keySet()) {
+			rooms.get(key).remove(toRemove);
+		}
 	}
 
 	public boolean canMoveUp(MovingItem character) {
@@ -149,8 +178,12 @@ public class Game extends JFrame {
 		for (Item item : rooms.get(character.room)) {
 			Vector itemPos = item.pos();
 			if (!item.equals(character)
-					&& itemPos.equalsDelta(new Vector(character.pos().getQ() + 46, character.pos().getT()), 10)
+					&& itemPos.equalsDelta(new Vector(character.pos().getQ() + 46, character.pos().getT()), 0)
 					&& item.vertical() >= character.vertical()) {
+				if (item instanceof Key) {
+					removeItem(item);
+					return true;
+				}
 				return false;
 			}
 		}
@@ -164,8 +197,14 @@ public class Game extends JFrame {
 		for (Item item : rooms.get(character.room)) {
 			Vector itemPos = item.pos();
 			if (!item.equals(character)
-					&& itemPos.equalsDelta(new Vector(character.pos().getQ() - 46, character.pos().getT()), 10)
+					&& itemPos.equalsDelta(new Vector(character.pos().getQ() - 46, character.pos().getT()), 0)
 					&& item.vertical() >= character.vertical()) {
+				if (item instanceof Key) {
+					Key key = (Key) item;
+					System.out.println(key.keyNo);
+					removeItem(item);
+					return true;
+				}
 				return false;
 			}
 		}
@@ -179,8 +218,12 @@ public class Game extends JFrame {
 		for (Item item : rooms.get(character.room)) {
 			Vector itemPos = item.pos();
 			if (!item.equals(character)
-					&& itemPos.equalsDelta(new Vector(character.pos().getQ(), character.pos().getT() + 46), 10)
+					&& itemPos.equalsDelta(new Vector(character.pos().getQ(), character.pos().getT() + 46), 0)
 					&& item.vertical() >= character.vertical()) {
+				if (item instanceof Key) {
+					removeItem(item);
+					return true;
+				}
 				return false;
 			}
 		}
@@ -194,8 +237,12 @@ public class Game extends JFrame {
 		for (Item item : rooms.get(character.room)) {
 			Vector itemPos = item.pos();
 			if (!item.equals(character)
-					&& itemPos.equalsDelta(new Vector(character.pos().getQ(), character.pos().getT() - 46), 10)
+					&& itemPos.equalsDelta(new Vector(character.pos().getQ(), character.pos().getT() - 46), 0)
 					&& item.vertical() >= character.vertical()) {
+				if (item instanceof Key) {
+					removeItem(item);
+					return true;
+				}
 				return false;
 			}
 		}
