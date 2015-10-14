@@ -33,8 +33,7 @@ public class Key extends Item {
 
 	@Override
 	public void draw(Graphics2D g2, Dir dir, IsoLogic iL) {
-		Vector sPos = iL.isoToScreen(this);
-
+		calculateDrawPos(dir, iL);
 		// for (int i = 0; i < height; i++) {
 		g2.drawImage(RED, (int) sPos.getQ(), (int) sPos.getT() - 23 - vertical, null);
 		// }

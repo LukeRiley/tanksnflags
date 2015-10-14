@@ -57,6 +57,10 @@ public class GameCanvas extends JPanel {
 		return new Dimension(1000, 650);
 	}
 
+	public Dir dir() {
+		return dir;
+	}
+
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
@@ -85,6 +89,14 @@ public class GameCanvas extends JPanel {
 			itemList.get(i).draw(g2, dir, isoLogic);
 			g2.setColor(Color.white);
 		}
+		g2.drawLine((int) isoLogic.isoToScreen(0, 0).getQ(), (int) isoLogic.isoToScreen(0, 0).getT(),
+				(int) isoLogic.isoToScreen(0, 300).getQ(), (int) isoLogic.isoToScreen(0, 300).getT());
+		g2.setColor(Color.yellow);
+		g2.drawLine((int) isoLogic.isoToScreen(0, 0).getQ(), (int) isoLogic.isoToScreen(0, 0).getT(),
+				(int) isoLogic.isoToScreen(300, 0).getQ(), (int) isoLogic.isoToScreen(300, 0).getT());
+		g2.setColor(Color.red);
+		g2.drawLine((int) isoLogic.isoToScreen(0, 0).getQ(), (int) isoLogic.isoToScreen(0, 0).getT(),
+				(int) isoLogic.isoToScreen(0, 0).getQ(), (int) isoLogic.isoToScreen(0, 0).getT() - 300);
 	}
 
 	/**
