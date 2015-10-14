@@ -26,6 +26,8 @@ public abstract class MovingItem extends Item {
 	int count = 0;
 	int state = 1;
 
+	public int room;
+	
 	public MovingItem(Vector pos) {
 		super(pos);
 	}

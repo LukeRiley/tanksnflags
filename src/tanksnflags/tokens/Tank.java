@@ -24,7 +24,6 @@ import tanksnflags.ui.ImageLoader;
 public class Tank extends MovingItem {
 
 	private int uid;
-	public int room = 1;
 
 	TILECOLOR color = TILECOLOR.BLUE;
 

@@ -25,11 +25,12 @@ public class GameCanvas extends JPanel {
 	Point AXIS_INT = new Point(500, 450);
 	int count = 0;
 	IsoLogic isoLogic;
-	// = new IsoLogic(Math.toRadians(30), Math.toRadians(330), AXIS_INT.getX(),
-	// AXIS_INT.getY());
 	Dir dir = Dir.EAST;
 
-	public GameCanvas(Game game, IsoLogic isoLogic) {
+	int uid;
+
+	public GameCanvas(Game game, IsoLogic isoLogic, int uid) {
+		this.uid = uid;
 		this.game = game;
 		this.isoLogic = isoLogic;
 		this.setSize(new Dimension(1000, 1000));
@@ -49,13 +50,15 @@ public class GameCanvas extends JPanel {
 	}
 
 	private void renderCollection(Graphics2D g2) {
-		List<Item> itemList = game.itemList;
-		// List<Item> itemList = game.rooms.get(1);
+
+		List<Item> itemList = game.rooms.get(0);
+		if (itemList == null) {
+			return;
+		}
 		Comparator<Item> comp = new DepthComparator(isoLogic);
 		Collections.sort(itemList, comp);
 		for (int i = 0; i < itemList.size(); i++) {
 			itemList.get(i).draw(g2, dir, isoLogic);
-			Vector sPos = isoLogic.isoToScreen(itemList.get(i));
 			g2.setColor(Color.white);
 		}
 	}

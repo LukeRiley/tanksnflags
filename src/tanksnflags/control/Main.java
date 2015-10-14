@@ -57,7 +57,7 @@ public class Main {
 
 		try {
 			if (server) {
-				Game game = new Game(null);
+				Game game = new Game(null, -1);
 				runServer(port, nClients, gameClock, broadcastClock, game);
 			} else {
 				runClient(url, port);
@@ -95,6 +95,7 @@ public class Main {
 					System.out.println("ALL CLIENTS ACCEPTED --- GAME BEGINS");
 
 				}
+				System.out.println(playerId);
 			}
 		} catch (IOException e) {
 			System.err.println("I/O error: " + e.getMessage());

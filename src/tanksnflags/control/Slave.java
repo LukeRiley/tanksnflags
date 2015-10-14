@@ -41,10 +41,6 @@ public final class Slave extends Thread implements KeyListener {
 	 *            Socket to create a slave for.
 	 */
 	public Slave(Socket sock) {
-		IsoLogic iL = new IsoLogic(Math.toRadians(30), Math.toRadians(330), 500, 500);
-		game = new Game(iL);
-		canvas = new GameCanvas(game, iL);
-		frame = new BoardFrame(canvas);
 		this.socket = sock;
 	}
 
@@ -55,9 +51,14 @@ public final class Slave extends Thread implements KeyListener {
 
 			this.playerID = iStream.readInt();
 			System.out.println("Tanks and Flags client! Player: " + this.playerID);
+			IsoLogic iL = new IsoLogic(Math.toRadians(30), Math.toRadians(330), 500, 500);
+			game = new Game(iL, playerID);
+			canvas = new GameCanvas(game, iL, playerID);
+			frame = new BoardFrame(canvas);
+
+			frame.addKeyListener(this);
 
 			boolean exit = false;
-			long totalReceived = 0;
 
 			while (!exit) {
 				int amount = iStream.readInt();
@@ -65,8 +66,8 @@ public final class Slave extends Thread implements KeyListener {
 				iStream.readFully(data);
 				this.game.fromByteArray(data); // TODO game needs a from byte
 												// array
+				game.tick();
 				frame.repaint();
-				totalReceived += amount;
 
 				// TODO PACMAN PRINTS OUT SOME USEFUL INFO ABOUT DATA
 				// TRANSFERRED HERE
@@ -102,6 +103,8 @@ public final class Slave extends Thread implements KeyListener {
 				oStream.writeInt(3);
 				totalSent += 4;
 			}
+
+			System.out.println("CLICKED");
 
 			oStream.flush();
 		} catch (IOException er) {

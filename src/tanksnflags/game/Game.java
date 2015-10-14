@@ -51,26 +51,23 @@ public class Game extends JFrame {
 	Map<Integer, List<Item>> rooms = new HashMap<Integer, List<Item>>();
 	IsoLogic isoLogic;
 	List<Tank> tanks = new ArrayList<Tank>(); // for easy access to the tanks in
-	List<Item> itemList = new ArrayList<Item>(); // the game.
 	int size = 8;
-	Tank player;
-
 	Dir dir = Dir.EAST;
-
 	public static final int WALL = 1;
 	public static final int TANK = 2;
 	public static final int TILE = 3;
 	public static final int DOOR = 4;
-
 	public int uid;
 
-	public Game(IsoLogic isoLogic) {
-		initializeItems();
+	public Game(IsoLogic isoLogic, int uid) {
 		this.isoLogic = isoLogic;
+		this.uid = uid;
+		initializeItems();
 	}
 
 	public Tank tank(int uid) {
 		for (Tank tank : tanks) {
+			// System.out.println("id: " + tank.uid());
 			if (tank.uid() == uid) {
 				return tank;
 			}
@@ -85,18 +82,19 @@ public class Game extends JFrame {
 	 *            the unique id of the game.
 	 */
 	public synchronized void registerTank(int uid) {
-		for (int u = -size / 2; u < size / 2; u++) {
-			for (int v = -size / 2; v < size / 2; v++) {
-				if (!occupied(u, v)) {
-					Tank newTank = new Tank(new Vector(u * 46, v * 46), uid);
-					tanks.add(newTank);
-					itemList.add(newTank);
-					player = newTank;
-					// rooms.get(player.room).add(newTank);
-					return;
+		for (int r : rooms.keySet()) {
+			for (int u = -size / 2; u < size / 2; u++) {
+				for (int v = -size / 2; v < size / 2; v++) {
+					if (!occupied(u, v, r)) {
+						Tank newTank = new Tank(new Vector(u * 46, v * 46), uid);
+						tanks.add(newTank);
+						rooms.get(r).add(newTank);
+						return;
+					}
 				}
 			}
 		}
+		// should probably throw an exception
 	}
 
 	/**
@@ -106,10 +104,9 @@ public class Game extends JFrame {
 	 * @param v
 	 * @return
 	 */
-	private boolean occupied(int u, int v) {
-		for (Item item : itemList) {
+	private boolean occupied(int u, int v, int rID) {
 
-			// for (Item item : rooms.get(player.room)) {
+		for (Item item : rooms.get(rID)) {
 			if (item.pos().equals(new Vector(u * 46, v * 46)) && item.vertical() == 29) {
 				return true;
 			}
@@ -118,148 +115,103 @@ public class Game extends JFrame {
 	}
 
 	public void tick() {
-		for (Item item : itemList) {
-
-			// for (Item item : rooms.get(player.room)) {
-			if (item instanceof MovingItem) {
-				MovingItem mItem = (MovingItem) item;
-				mItem.tick();
+		for (int r : rooms.keySet()) {
+			for (Item item : rooms.get(r)) {
+				if (item instanceof MovingItem) {
+					MovingItem mItem = (MovingItem) item;
+					mItem.tick();
+				}
 			}
 		}
 	}
 
 	private void initializeItems() {
-		// List<Item> itemList = new ArrayList<Item>();
-		// int[] d = new int[2];
-		// d[0] = 1;
-		// d[1] = 2;
-		//// Key key = new Key(new Vector(0, 0));
-		// for (int u = -size / 2; u < size / 2; u++) {
-		// for (int v = -size / 2; v < size / 2; v++) {
-		//
-		// if (u == -4 || v == -4 || u == 3 || v == 3) {
-		// if (u == -4 && v == 0) {
-		//// Door door = new Door(new Vector(u * 46, v * 46), key, d);
-		//// itemList.add(door);
-		// } else {
-		// Wall wall = new Wall(new Vector(u * 46, v * 46));
-		// itemList.add(wall);
-		// }
-		// Wall wall = new Wall(new Vector(u * 46, v * 46));
-		// itemList.add(wall);
-		// }
-		//
-		// Tile tile = new Tile(new Vector(u * 46, v * 46));
-		// itemList.add(tile);
-		// }
-		// }
-		// rooms.put(1, itemList);
-		// itemList = new ArrayList<Item>();
-		// for (int u = -size / 2; u < size / 2; u++) {
-		// for (int v = -size / 2; v < size / 2; v++) {
-		//
-		// if (u == -4 || v == -4 || u == 3 || v == 3) {
-		// if (u == 0 && v == -4) {
-		//// Door door = new Door(new Vector(u * 46, v * 46), key, d);
-		//// itemList.add(door);
-		// } else {
-		// Wall wall = new Wall(new Vector(u * 46, v * 46));
-		// itemList.add(wall);
-		// }
-		// }
-		//
-		// Tile tile = new Tile(new Vector(u * 46, v * 46));
-		// itemList.add(tile);
-		// }
-		// }
-		// rooms.put(2, itemList);
-		//
-
-		for (int u = -size / 2; u < size / 2; u++) {
-			for (int v = -size / 2; v < size / 2; v++) {
-				Tile tile = new Tile(new Vector(u * 46, v * 46));
-				itemList.add(tile);
+		int nRooms = 1;
+		for (int r = 0; r < nRooms; r++) {
+			List<Item> itemList = new ArrayList<Item>();
+			for (int u = -size / 2; u < size / 2; u++) {
+				for (int v = -size / 2; v < size / 2; v++) {
+					itemList.add(new Tile(new Vector(u * 46, v * 46)));
+				}
 			}
+			rooms.put(r, itemList);
 		}
+
 	}
 
 	public boolean canMoveUp(MovingItem character) {
-		if (occupied((int) character.pos().getQ(), (int) character.pos().getT() + 46)) {
+		if (occupied((int) character.pos().getQ(), (int) character.pos().getT() + 46, character.room)) {
 			return false;
 		}
-		// for (Item item : rooms.get(player.room)) {
-		// Vector itemPos = item.pos();
-		// if (!item.equals(character)
-		// && itemPos.equalsDelta(new Vector(character.pos().getQ() + 46,
-		// character.pos().getT()), 10)
-		// && item.vertical() >= character.vertical()) {
-		// return false;
-		// }
-		// }
+		for (Item item : rooms.get(character.room)) {
+			Vector itemPos = item.pos();
+			if (!item.equals(character)
+					&& itemPos.equalsDelta(new Vector(character.pos().getQ() + 46, character.pos().getT()), 10)
+					&& item.vertical() >= character.vertical()) {
+				return false;
+			}
+		}
 		return true;
 	}
 
 	public boolean canMoveDown(MovingItem character) {
-		if (occupied((int) character.pos().getQ(), (int) character.pos().getT() - 46)) {
+		if (occupied((int) character.pos().getQ(), (int) character.pos().getT() - 46, character.room)) {
 			return false;
 		}
-		// for (Item item : rooms.get(player.room)) {
-		// Vector itemPos = item.pos();
-		// if (!item.equals(character)
-		// && itemPos.equalsDelta(new Vector(character.pos().getQ() - 46,
-		// character.pos().getT()), 10)
-		// && item.vertical() >= character.vertical()) {
-		// return false;
-		// }
-		// }
+		for (Item item : rooms.get(character.room)) {
+			Vector itemPos = item.pos();
+			if (!item.equals(character)
+					&& itemPos.equalsDelta(new Vector(character.pos().getQ() - 46, character.pos().getT()), 10)
+					&& item.vertical() >= character.vertical()) {
+				return false;
+			}
+		}
 		return true;
 	}
 
 	public boolean canMoveRight(MovingItem character) {
-		if (occupied((int) character.pos().getQ() + 46, (int) character.pos().getT())) {
+		if (occupied((int) character.pos().getQ() + 46, (int) character.pos().getT(), character.room)) {
 			return false;
 		}
-		// for (Item item : rooms.get(player.room)) {
-		// Vector itemPos = item.pos();
-		// if (!item.equals(character)
-		// && itemPos.equalsDelta(new Vector(character.pos().getQ(),
-		// character.pos().getT() + 46), 10)
-		// && item.vertical() >= character.vertical()) {
-		// return false;
-		// }
-		// }
+		for (Item item : rooms.get(character.room)) {
+			Vector itemPos = item.pos();
+			if (!item.equals(character)
+					&& itemPos.equalsDelta(new Vector(character.pos().getQ(), character.pos().getT() + 46), 10)
+					&& item.vertical() >= character.vertical()) {
+				return false;
+			}
+		}
 		return true;
 	}
 
 	public boolean canMoveLeft(MovingItem character) {
-		if (occupied((int) character.pos().getQ() - 46, (int) character.pos().getT())) {
+		if (occupied((int) character.pos().getQ() - 46, (int) character.pos().getT(), character.room)) {
 			return false;
 		}
-		// for (Item item : rooms.get(player.room)) {
-		// Vector itemPos = item.pos();
-		// if (!item.equals(character)
-		// && itemPos.equalsDelta(new Vector(character.pos().getQ(),
-		// character.pos().getT() - 46), 10)
-		// && item.vertical() >= character.vertical()) {
-		// return false;
-		// }
-		// }
+		for (Item item : rooms.get(character.room)) {
+			Vector itemPos = item.pos();
+			if (!item.equals(character)
+					&& itemPos.equalsDelta(new Vector(character.pos().getQ(), character.pos().getT() - 46), 10)
+					&& item.vertical() >= character.vertical()) {
+				return false;
+			}
+		}
 		return true;
 	}
 
 	public synchronized byte[] toByteArray() throws IOException {
 		ByteArrayOutputStream bout = new ByteArrayOutputStream();
 		DataOutputStream dout = new DataOutputStream(bout);
-		dout.writeInt(itemList.size());
-		// for (List<Item> itemList : rooms.values()) {
-		// dout.writeInt(itemList.size());
-		for (Item item : itemList) {
-			item.toOutputStream(dout);
-		}
-		// }
-		dout.flush();
 
-		// Finally, return!!
+		dout.writeInt(rooms.size());
+		for (Integer roomID : rooms.keySet()) {
+			dout.writeInt(roomID);
+			dout.writeInt(rooms.get(roomID).size());
+			for (Item item : rooms.get(roomID)) {
+				item.toOutputStream(dout);
+			}
+		}
+		dout.flush();
 		return bout.toByteArray();
 	}
 
@@ -267,15 +219,32 @@ public class Game extends JFrame {
 		ByteArrayInputStream bin = new ByteArrayInputStream(bytes);
 		DataInputStream din = new DataInputStream(bin);
 
-		// for (int j = 1; j <= din.readInt(); j++) {
-		// List<Item> itemList = new ArrayList<Item>();
-		int nItems = din.readInt();
-		itemList.clear();
-		for (int i = 0; i != nItems; ++i) {
-			itemList.add(Item.fromInputStream(din));
-			// }
-			// .put(j, itemList);
+		int nRooms = din.readInt();
+		rooms.clear();
+		tanks.clear();
+		for (int r = 0; r < nRooms; r++) {
+			int roomID = din.readInt();
+			int nItems = din.readInt();
+			List<Item> itemList = new ArrayList<Item>();
+			for (int i = 0; i < nItems; i++) {
+				Item item = Item.fromInputStream(din);
+				if (item instanceof Tank) {
+					tanks.add((Tank) item);
+				}
+				itemList.add(item);
+			}
+			rooms.put(roomID, itemList);
 		}
+
+		// // for (int j = 1; j <= din.readInt(); j++) {
+		// // List<Item> itemList = new ArrayList<Item>();
+		// int nItems = din.readInt();
+		// itemList.clear();
+		// for (int i = 0; i != nItems; ++i) {
+		// itemList.add(Item.fromInputStream(din));
+		// // }
+		// // .put(j, itemList);
+		// }
 	}
 
 	class DepthComparator implements Comparator<Item> {
