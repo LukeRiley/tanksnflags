@@ -115,15 +115,18 @@ public class IsoLogic {
 		return isoToScreen(i.pos());
 	}
 
-	public Vector screenToIso(double x, double y) {
+	/*
+	 * This math doesn't work anymore . IGNORE
+	 */
+	private Vector screenToIso(double x, double y) {
 		return new Vector(Math.round(originY + (x - originX) * Math.tan(uAngle / 2) - y), Math.round((x - originX) * Math.tan(uAngle / 2) + y - originY));
 	}
 
-	public Vector screenToIso(Vector v) {
+	private Vector screenToIso(Vector v) {
 		return screenToIso(v.getQ(), v.getT());
 	}
 
-	public Vector screenToIso(Item i) {
+	private Vector screenToIso(Item i) {
 		return screenToIso(i.pos());
 	}
 

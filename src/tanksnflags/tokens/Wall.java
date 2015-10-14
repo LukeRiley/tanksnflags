@@ -16,14 +16,14 @@ public class Wall extends Item {
 
 	private int height = 1;
 
-	public Wall(Vector pos, IsoLogic iL) {
-		super(pos, iL);
+	public Wall(Vector pos) {
+		super(pos);
 		vertical = 29;
 	}
 
 	@Override
-	public void draw(Graphics2D g2, Dir dir) {
-		calculateDrawPos(dir);
+	public void draw(Graphics2D g2, Dir dir, IsoLogic iL) {
+		calculateDrawPos(dir, iL);
 		for (int i = 0; i < height; i++) {
 			g2.drawImage(RED, (int) sPos.getQ(), (int) sPos.getT() - 23 - vertical, null);
 		}
@@ -36,8 +36,8 @@ public class Wall extends Item {
 		dout.writeDouble(pos.getT());
 	}
 
-	public static Wall fromInputStream(double u, double v, DataInputStream din, IsoLogic iL) throws IOException {
-		return new Wall(new Vector(u, v), iL);
+	public static Wall fromInputStream(double u, double v, DataInputStream din) throws IOException {
+		return new Wall(new Vector(u, v));
 	}
 
 	private static final Image RED = ImageLoader.loadImage("tileRed.png");

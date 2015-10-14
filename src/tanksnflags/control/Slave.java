@@ -1,5 +1,6 @@
 package tanksnflags.control;
 
+import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.DataInputStream;
@@ -7,7 +8,10 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+import javax.swing.JFrame;
+
 import tanksnflags.game.Game;
+import tanksnflags.game.GameCanvas;
 import tanksnflags.helpers.IsoLogic;
 
 /**
@@ -26,6 +30,8 @@ public final class Slave extends Thread implements KeyListener {
 	private DataInputStream iStream;
 	private DataOutputStream oStream;
 	private final Socket socket;
+	JFrame frame = new JFrame();
+	GameCanvas canvas;
 
 	/**
 	 * Construct a slave which connects to a master via the provided socket.
@@ -36,6 +42,10 @@ public final class Slave extends Thread implements KeyListener {
 	public Slave(Socket sock) {
 		IsoLogic iL = new IsoLogic(Math.toRadians(30), Math.toRadians(330), 500, 500);
 		game = new Game(iL);
+		canvas = new GameCanvas(game, iL);
+		frame.setSize(new Dimension(500, 500));
+		frame.setVisible(true);
+		frame.setContentPane(canvas);
 		this.socket = sock;
 	}
 
@@ -63,7 +73,7 @@ public final class Slave extends Thread implements KeyListener {
 				iStream.readFully(data);
 				this.game.fromByteArray(data); // TODO game needs a from byte
 												// array
-				// display.repaint();
+				frame.repaint();
 				totalReceived += amount;
 
 				// TODO PACMAN PRINTS OUT SOME USEFUL INFO ABOUT DATA

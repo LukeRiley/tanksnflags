@@ -1,5 +1,12 @@
 package tanksnflags.helpers;
 
+/**
+ * A class to represent a vector. Used to store positions in the game. Supports
+ * basic vector operations such as adding and scaling.
+ * 
+ * @author Haylem
+ *
+ */
 public class Vector {
 
 	private double q;
@@ -9,10 +16,6 @@ public class Vector {
 		super();
 		this.q = q;
 		this.t = t;
-	}
-
-	public Vector perp() {
-		return new Vector(-t, q);
 	}
 
 	public Vector subtract(Vector v) {
@@ -55,8 +58,6 @@ public class Vector {
 	public String toString() {
 		return "Vector [q=" + q + ", t=" + t + "]";
 	}
-	
-	
 
 	@Override
 	public int hashCode() {
@@ -86,6 +87,12 @@ public class Vector {
 		return true;
 	}
 
+	/**
+	 * Checks whether two vectors are approximately equal within an absoulte tollerance.
+	 * @param obj the object being checked.
+	 * @param delta the absolute tolerance.
+	 * @return
+	 */
 	public boolean equalsDelta(Object obj, double delta) {
 		if (this == obj)
 			return true;
@@ -94,9 +101,9 @@ public class Vector {
 		if (getClass() != obj.getClass())
 			return false;
 		Vector other = (Vector) obj;
-		if (other.q <q-delta || other.q > q+delta)
+		if (other.q < q - delta || other.q > q + delta)
 			return false;
-		if (other.t < t-delta || other.t >t+delta)
+		if (other.t < t - delta || other.t > t + delta)
 			return false;
 		return true;
 	}

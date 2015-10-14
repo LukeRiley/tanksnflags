@@ -25,13 +25,19 @@ import javax.swing.*;
 import tanksnflags.helpers.IsoLogic;
 import tanksnflags.helpers.IsoLogic.Dir;
 import tanksnflags.helpers.Vector;
-import tanksnflags.tokens.Door;
 import tanksnflags.tokens.Item;
 import tanksnflags.tokens.MovingItem;
 import tanksnflags.tokens.Tank;
 import tanksnflags.tokens.Tile;
 import tanksnflags.tokens.Wall;
 
+/**
+ * Game model. Stores all items present in the game and checks whether their
+ * movement is valid.
+ * 
+ * @author Haylem
+ *
+ */
 public class Game extends JFrame {
 
 	public enum TILECOLOR {
@@ -40,7 +46,8 @@ public class Game extends JFrame {
 
 	List<Item> itemList = new ArrayList<Item>();
 	IsoLogic isoLogic;
-	List<Tank> tanks = new ArrayList<Tank>();
+	List<Tank> tanks = new ArrayList<Tank>(); // for easy access to the tanks in
+												// the game.
 	int size = 8;
 
 	Dir dir = Dir.EAST;
@@ -51,7 +58,7 @@ public class Game extends JFrame {
 
 	public int uid;
 
-	public Game(IsoLogic isoLogic ) {
+	public Game(IsoLogic isoLogic) {
 		initializeItems();
 		this.isoLogic = isoLogic;
 	}
@@ -64,12 +71,18 @@ public class Game extends JFrame {
 		}
 		return null;
 	}
-  
+
+	/**
+	 * Add a tank to the game.
+	 * 
+	 * @param uid
+	 *            the unique id of the game.
+	 */
 	public synchronized void registerTank(int uid) {
 		for (int u = -size / 2; u < size / 2; u++) {
 			for (int v = -size / 2; v < size / 2; v++) {
 				if (!occupied(u, v)) {
-					Tank newTank = new Tank(new Vector(u * 46, v * 46), isoLogic, uid);
+					Tank newTank = new Tank(new Vector(u * 46, v * 46), uid);
 					tanks.add(newTank);
 					itemList.add(newTank);
 					return;
@@ -108,11 +121,11 @@ public class Game extends JFrame {
 			for (int v = -size / 2; v < size / 2; v++) {
 
 				if (u == -4 || v == -4 || u == 3 || v == 3) {
-					Wall wall = new Wall(new Vector(u * 46, v * 46), isoLogic);
+					Wall wall = new Wall(new Vector(u * 46, v * 46));
 					itemList.add(wall);
 				}
 
-				Tile tile = new Tile(new Vector(u * 46, v * 46), isoLogic);
+				Tile tile = new Tile(new Vector(u * 46, v * 46));
 				itemList.add(tile);
 			}
 		}
@@ -124,7 +137,9 @@ public class Game extends JFrame {
 		}
 		for (Item item : itemList) {
 			Vector itemPos = item.pos();
-			if (!item.equals(character) && itemPos.equalsDelta(new Vector(character.pos().getQ() + 46, character.pos().getT()), 10) && item.vertical() >= character.vertical()) {
+			if (!item.equals(character)
+					&& itemPos.equalsDelta(new Vector(character.pos().getQ() + 46, character.pos().getT()), 10)
+					&& item.vertical() >= character.vertical()) {
 				return false;
 			}
 		}
@@ -137,7 +152,9 @@ public class Game extends JFrame {
 		}
 		for (Item item : itemList) {
 			Vector itemPos = item.pos();
-			if (!item.equals(character) && itemPos.equalsDelta(new Vector(character.pos().getQ() - 46, character.pos().getT()), 10) && item.vertical() >= character.vertical()) {
+			if (!item.equals(character)
+					&& itemPos.equalsDelta(new Vector(character.pos().getQ() - 46, character.pos().getT()), 10)
+					&& item.vertical() >= character.vertical()) {
 				return false;
 			}
 		}
@@ -150,7 +167,9 @@ public class Game extends JFrame {
 		}
 		for (Item item : itemList) {
 			Vector itemPos = item.pos();
-			if (!item.equals(character) && itemPos.equalsDelta(new Vector(character.pos().getQ(), character.pos().getT() + 46), 10) && item.vertical() >= character.vertical()) {
+			if (!item.equals(character)
+					&& itemPos.equalsDelta(new Vector(character.pos().getQ(), character.pos().getT() + 46), 10)
+					&& item.vertical() >= character.vertical()) {
 				return false;
 			}
 		}
@@ -163,7 +182,9 @@ public class Game extends JFrame {
 		}
 		for (Item item : itemList) {
 			Vector itemPos = item.pos();
-			if (!item.equals(character) && itemPos.equalsDelta(new Vector(character.pos().getQ(), character.pos().getT() - 46), 10) && item.vertical() >= character.vertical()) {
+			if (!item.equals(character)
+					&& itemPos.equalsDelta(new Vector(character.pos().getQ(), character.pos().getT() - 46), 10)
+					&& item.vertical() >= character.vertical()) {
 				return false;
 			}
 		}
@@ -191,8 +212,11 @@ public class Game extends JFrame {
 		// Third, update characters
 		int nItems = din.readInt();
 		itemList.clear();
+		if (isoLogic == null) {
+			System.out.println("NULL");
+		}
 		for (int i = 0; i != nItems; ++i) {
-			itemList.add(Item.fromInputStream(din, isoLogic));
+			itemList.add(Item.fromInputStream(din));
 		}
 	}
 
