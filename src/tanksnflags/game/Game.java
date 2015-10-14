@@ -138,9 +138,9 @@ public class Game extends JFrame {
 						itemList.add(new Wall(new Vector(u * 46, v * 46)));
 					}
 
-//					if (u == 2 && v == 2) {
-//						itemList.add(new Door(new Vector(u * 46, v * 46), new int[] { 0, 1 }));
-//					}
+					if (u == 2 && v == 3) {
+						itemList.add(new Door(new Vector(u * 46, v * 46), new int[] { 0, 1 }));
+					}
 
 					itemList.add(new Tile(new Vector(u * 46, v * 46)));
 				}
@@ -183,6 +183,9 @@ public class Game extends JFrame {
 				if (item instanceof Key) {
 					removeItem(item);
 					return true;
+				} else if (item instanceof Door) {
+					Door d = (Door) item;
+					return !d.locked;
 				}
 				return false;
 			}
@@ -204,6 +207,9 @@ public class Game extends JFrame {
 					System.out.println(key.keyNo);
 					removeItem(item);
 					return true;
+				} else if (item instanceof Door) {
+					Door d = (Door) item;
+					return !d.locked;
 				}
 				return false;
 			}
@@ -223,6 +229,9 @@ public class Game extends JFrame {
 				if (item instanceof Key) {
 					removeItem(item);
 					return true;
+				} else if (item instanceof Door) {
+					Door d = (Door) item;
+					return !d.locked;
 				}
 				return false;
 			}
@@ -242,6 +251,9 @@ public class Game extends JFrame {
 				if (item instanceof Key) {
 					removeItem(item);
 					return true;
+				} else if (item instanceof Door) {
+					Door d = (Door) item;
+					return !d.locked;
 				}
 				return false;
 			}
