@@ -22,12 +22,10 @@ import tanksnflags.helpers.IsoLogic;
 import tanksnflags.helpers.Vector;
 import tanksnflags.helpers.IsoLogic.Dir;
 import tanksnflags.tokens.Item;
-import tanksnflags.tokens.Tank;
 
 public class GameCanvas extends JPanel {
 
 	private Game game;
-	private int count = 0;
 	private IsoLogic isoLogic;
 	private Dir dir = Dir.EAST;
 	private BufferedImage backgroundImage;
@@ -60,7 +58,7 @@ public class GameCanvas extends JPanel {
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		if (this.game != null) {
 			this.renderCollection(g2);
-		}	
+			}	
 		}
 
 	private void renderCollection(Graphics2D g2) {

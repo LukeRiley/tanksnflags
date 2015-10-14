@@ -49,6 +49,7 @@ public final class Slave extends Thread implements KeyListener {
 		canvas = new GameCanvas(game, iL);
 		frame = new BoardFrame(canvas);
 		this.socket = sock;
+		frame.addKeyListener(this);
 	}
 
 	public void run() {
@@ -104,6 +105,9 @@ public final class Slave extends Thread implements KeyListener {
 			else if (btn == KeyEvent.VK_RIGHT || btn == KeyEvent.VK_KP_RIGHT) {
 				oStream.writeInt(3);
 				totalSent += 4;
+			}
+			else if(btn == KeyEvent.VK_9){
+				canvas.rotate();
 			}
 
 			oStream.flush();
