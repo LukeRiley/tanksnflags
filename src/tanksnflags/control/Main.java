@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 import tanksnflags.game.Game;
@@ -13,6 +14,8 @@ public class Main {
 
 	private static final int DEFAULT_CLK_PERIOD = 20;
 	private static final int DEFAULT_BROADCAST_CLK_PERIOD = 5;
+	private static ImageIcon tagIcon = new ImageIcon("src/tanksnflags/ui/images/tag.png");
+
 
 	public static void main(String[] args) {
 
@@ -26,7 +29,7 @@ public class Main {
 		// UI STUFF HERE
 		String[] possibleValues = { "Create Game", "Enter Game" };
 		Object selectedValue = JOptionPane.showInputDialog(null, "Would you like to:", "Game Selection",
-				JOptionPane.INFORMATION_MESSAGE, /* bombIcon */null, possibleValues, possibleValues[0]);
+				JOptionPane.INFORMATION_MESSAGE, tagIcon, possibleValues, possibleValues[0]);
 
 		// convert input from string to int
 		if (selectedValue == null) {
@@ -36,7 +39,7 @@ public class Main {
 			server = true; // this is the server for the game
 			String[] numString = { "One", "Two", "Three" };
 			Object selectedString = JOptionPane.showInputDialog(null, "How many people would you like to play against:",
-					"How Many Players", JOptionPane.INFORMATION_MESSAGE, /* bombIcon */null, numString, numString[0]);
+					"How Many Players", JOptionPane.INFORMATION_MESSAGE, tagIcon, numString, numString[0]);
 			switch ((String) selectedString) {
 			case ("One"):
 				nClients = 1;

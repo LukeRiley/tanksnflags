@@ -1,6 +1,7 @@
 package tanksnflags.control;
 
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.DataInputStream;
@@ -31,8 +32,10 @@ public final class Slave extends Thread implements KeyListener {
 	private DataInputStream iStream;
 	private DataOutputStream oStream;
 	private final Socket socket;
-	BoardFrame frame;
-	GameCanvas canvas;
+	private BoardFrame frame;
+	private GameCanvas canvas;
+	private Point AXIS_INT = new Point(500, 320);
+
 
 	/**
 	 * Construct a slave which connects to a master via the provided socket.
@@ -41,7 +44,7 @@ public final class Slave extends Thread implements KeyListener {
 	 *            Socket to create a slave for.
 	 */
 	public Slave(Socket sock) {
-		IsoLogic iL = new IsoLogic(Math.toRadians(30), Math.toRadians(330), 500, 500);
+		IsoLogic iL = new IsoLogic(Math.toRadians(30), Math.toRadians(330), AXIS_INT.getX(),AXIS_INT.getY());
 		game = new Game(iL);
 		canvas = new GameCanvas(game, iL);
 		frame = new BoardFrame(canvas);

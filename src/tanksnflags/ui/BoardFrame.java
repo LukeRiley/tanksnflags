@@ -52,11 +52,6 @@ public class BoardFrame extends JFrame implements KeyListener{
 	private JMenuItem help;
 	//private ImageIcon bombIcon = new ImageIcon(BoardCanvas.class.getResource("images/bomb.png"));
 
-	//tank and items
-	private Point AXIS_INT = new Point(560, 220);
-	private int count = 0;
-	private IsoLogic isoLogic = new IsoLogic(Math.toRadians(30), Math.toRadians(330), AXIS_INT.getX(), AXIS_INT.getY());	
-
  
 	public BoardFrame(GameCanvas canvas){
 		super("Tanks'n'Flags");
