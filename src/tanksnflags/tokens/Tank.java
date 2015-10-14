@@ -18,13 +18,13 @@ import tanksnflags.ui.ImageLoader;
  * A tank in the game. Assigned a unique id to link it to a player in the game
  * with the same id.
  * 
- * @author Haylem
+ * @author 300311206 raynerhayl
  *
  */
 public class Tank extends MovingItem {
 
 	private int uid;
-	private int numKeys=0;
+	private int numKeys = 0;
 
 	TILECOLOR color = TILECOLOR.BLUE;
 
@@ -37,22 +37,22 @@ public class Tank extends MovingItem {
 	public int uid() {
 		return uid;
 	}
-	
-	public int getNumKeys(){
+
+	public int getNumKeys() {
 		return numKeys;
 	}
-	
+
 	/**
 	 * reduces number of keys held by this player
 	 */
-	public void reduceNumKeys(){
+	public void reduceNumKeys() {
 		numKeys--;
 	}
-	
+
 	/**
 	 * Adds one key to the number held by this player
 	 */
-	public void addKey(){
+	public void addKey() {
 		numKeys++;
 	}
 
@@ -93,6 +93,17 @@ public class Tank extends MovingItem {
 		dout.writeDouble(pos.getT());
 		dout.writeInt(room);
 		dout.writeInt(uid);
+		switch (color) {
+		case RED:
+			dout.writeInt(1);
+			break;
+		case BLUE:
+			dout.writeInt(2);
+			break;
+		case GREY:
+			dout.writeInt(3);
+			break;
+		}
 	}
 
 	public static Tank fromInputStream(double u, double v, DataInputStream din) throws IOException {
@@ -100,13 +111,24 @@ public class Tank extends MovingItem {
 		int uid = din.readInt();
 		Tank newTank = new Tank(new Vector(u, v), uid);
 		newTank.room = room;
+		switch (din.readInt()) {
+		case 1:
+			newTank.setBlue();
+			break;
+		case 2:
+			newTank.setRed();
+			break;
+		case 3:
+			newTank.setGrey();
+			break;
+		}
 		return newTank;
 
 	}
 
 	private static final Image RED = ImageLoader.loadImage("tileRed.png");
 
-	private static final Image BLUE = ImageLoader.loadImage("tileRed.png");
+	private static final Image BLUE = ImageLoader.loadImage("tileBlue.png");
 
 	private static final Image GREY = ImageLoader.loadImage("tileGrey.png");
 

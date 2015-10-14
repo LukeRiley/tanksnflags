@@ -40,7 +40,7 @@ import tanksnflags.tokens.Wall;
  * Game model. Stores all items present in the game and checks whether their
  * movement is valid.
  * 
- * @author Haylem
+ * @author 300311206 raynerhayl
  *
  */
 public class Game extends JFrame {
@@ -79,7 +79,8 @@ public class Game extends JFrame {
 	}
 
 	/**
-	 * Add a tank to the game.
+	 * Add a tank to the game. Used by the master to add tanks to the remote
+	 * game model
 	 * 
 	 * @param uid
 	 *            the unique id of the game.
@@ -157,9 +158,7 @@ public class Game extends JFrame {
 				int u = rnd.nextInt(size) - size / 2;
 				int v = rnd.nextInt(size) - size / 2;
 				if (!occupied(u, v, r)) {
-					System.out.println("ADDING KEY");
 					itemList.add(new Key(new Vector(u * 46, v * 46)));
-
 				}
 			}
 
@@ -174,7 +173,11 @@ public class Game extends JFrame {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * Draps a key behind the player.
+=======
+	 * draps a key behind the player.
+>>>>>>> branch 'main' of ssh://git@github.com/LukeRiley/tanksnflags.git
 	 */
 	public void dropItem(Tank tank) {
 		if (tank.getNumKeys() > 0) {
@@ -359,7 +362,13 @@ public class Game extends JFrame {
 			for (int i = 0; i < nItems; i++) {
 				Item item = Item.fromInputStream(din);
 				if (item instanceof Tank) {
-					tanks.add((Tank) item);
+					Tank nTank = (Tank) item;
+					tanks.add(nTank);
+					if (nTank.uid() == this.uid) {
+						nTank.setRed();
+					} else {
+						nTank.setGrey();
+					}
 				}
 				itemList.add(item);
 			}

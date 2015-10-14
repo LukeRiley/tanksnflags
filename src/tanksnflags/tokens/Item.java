@@ -17,7 +17,7 @@ import tanksnflags.helpers.Vector;
  * of an item is that it is able to create and write it self from/to the data
  * strem.
  * 
- * @author Haylem
+ * @author 300311206 raynerhayl
  *
  */
 public abstract class Item {
@@ -75,10 +75,10 @@ public abstract class Item {
 		return true;
 	}
 
-	public void setPos(Vector pos){
+	public void setPos(Vector pos) {
 		this.pos = pos;
 	}
-	
+
 	public abstract void draw(Graphics2D g2, Dir dir, IsoLogic iL);
 
 	public abstract void toOutputStream(DataOutputStream dout) throws IOException;
@@ -99,15 +99,20 @@ public abstract class Item {
 		double u = din.readDouble();
 		double v = din.readDouble();
 
+		
 		if (type == Game.TANK) {
+			System.out.println("tank");
+
 			return Tank.fromInputStream(u, v, din);
 		} else if (type == Game.TILE) {
+			System.out.println("TILE");
 			return Tile.fromInputStream(u, v, din);
 		} else if (type == Game.WALL) {
 			return Wall.fromInputStream(u, v, din);
 		} else if (type == Game.DOOR) {
 			return Door.fromInputStream(u, v, din);
-		} else if (type == Game.KEY) {
+		} 
+		else if (type == Game.KEY) {
 			return Key.fromInputStream(u, v, din);
 		} else {
 			throw new IOException();

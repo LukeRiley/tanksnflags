@@ -22,7 +22,7 @@ import tanksnflags.ui.GameCanvas;
  *  through which it get input from the user and passes onto it's
  * master.
  * 
- * @author huntdani1
+ * @author huntdani1 , 300311206 raynerhayl
  *
  */
 public final class Slave extends Thread implements KeyListener {
@@ -68,7 +68,7 @@ public final class Slave extends Thread implements KeyListener {
 				byte[] data = new byte[amount]; // create a new array to put game info into
 				iStream.readFully(data);		// read the output from the socket
 				this.game.fromByteArray(data); // update a game from the byte array
-											
+									
 				game.tick();
 				frame.repaint();			//redraw the updated game
 
@@ -108,7 +108,6 @@ public final class Slave extends Thread implements KeyListener {
 				oStream.writeInt(5);
 			}
 
-			System.out.println("CLICKED");
 
 			oStream.flush();
 		} catch (IOException er) {

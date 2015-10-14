@@ -74,10 +74,11 @@ public class GameCanvas extends JPanel {
 	 * @param g2
 	 */
 	private void renderCollection(Graphics2D g2) {
-		List<Item> itemList = game.getRooms().get(game.tank(uid).room);
-		if (itemList == null) {
+		if (game.tank(uid) == null) {
 			return;
 		}
+
+		List<Item> itemList = game.getRooms().get(game.tank(uid).room);
 		Comparator<Item> comp = new DepthComparator(isoLogic);
 		Collections.sort(itemList, comp);
 		for (int i = 0; i < itemList.size(); i++) {
