@@ -16,7 +16,7 @@ public class Door extends Item {
 
 	private int height = 1;
 	private Key key;
-	private boolean locked = false;
+	public boolean locked = false;
 	private int[] rooms = new int[2];
 
 	public Door(Vector pos, int[] rooms) {
@@ -51,22 +51,25 @@ public class Door extends Item {
 		dout.write(Game.DOOR);
 		dout.writeDouble(pos.getQ());
 		dout.writeDouble(pos.getT());
+		dout.writeBoolean(locked);
+		dout.writeInt(rooms[0]);
+		dout.writeInt(rooms[1]);
 	}
 
 	public static Door fromInputStream(double u, double v, DataInputStream din) throws IOException {
 		Vector vec = new Vector(u, v);
 		boolean l = din.readBoolean();
-		Key k = Key.fromInputStream(u, v, din);
 		int[] rooms = new int[2];
 		rooms[0] = din.readInt();
 		rooms[1] = din.readInt();
 		Door d = new Door(vec, rooms);
+		d.locked = l;
 		return d;
 		// doesnt need to read in the position, passed through as an argument.
 	}
 
-	private static final Image RED = ImageLoader.loadImage("tile.png");
+	private static final Image RED = ImageLoader.loadImage("tileRed.png");
 
-	private static final Image BLUE = ImageLoader.loadImage("flag.png");
+	private static final Image BLUE = ImageLoader.loadImage("tileBlue.png");
 
 }
