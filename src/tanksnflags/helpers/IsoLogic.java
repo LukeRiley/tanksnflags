@@ -39,7 +39,7 @@ public class IsoLogic {
 
 	public IsoLogic(double uAngle, double vAngle, double originX, double originY) {
 		this.uAngle = uAngle;
-		this.setvAngle(vAngle);
+		this.vAngle = vAngle;
 		this.originX = originX;
 		this.originY = originY;
 
@@ -74,11 +74,11 @@ public class IsoLogic {
 	public void rotateAxis() {
 		if (swap) {
 			uAngle += Math.toRadians(120);
-			setvAngle(getvAngle() + Math.toRadians(60));
+			vAngle += Math.toRadians(60);
 			swap = false;
 		} else {
 			uAngle += Math.toRadians(60);
-			setvAngle(getvAngle() + Math.toRadians(120));
+			vAngle +=Math.toRadians(120);
 			swap = true;
 		}
 		computeUnitVectors();
