@@ -122,13 +122,7 @@ public class Main {
 				Socket s = ss.accept(); // accept connections from new players
 				System.out.println("ACCEPTED CONNECTION FROM: " + s.getInetAddress());
 				game.registerTank(playerId); // create a new tank
-				connections[--nClients] = new Master(playerId, s, game, broadcastClock); // create
-																							// a
-																							// new
-																							// master
-																							// for
-																							// the
-																							// player
+				connections[--nClients] = new Master(playerId, s, game, broadcastClock);
 				connections[nClients].start(); // start the master
 				if (nClients == 0) { // when the expected number of players have
 										// joined
@@ -136,7 +130,6 @@ public class Main {
 
 				}
 				playerId++;
-				System.out.println(playerId);
 			}
 		} catch (IOException e) {
 			System.err.println("I/O error: " + e.getMessage());

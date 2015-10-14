@@ -60,6 +60,7 @@ public class Game extends JFrame {
 	public static final int DOOR = 4;
 	public static final int KEY = 5;
 	public int uid;
+	private int numKeys =0;
 
 	public Game(IsoLogic isoLogic, int uid) {
 		this.isoLogic = isoLogic;
@@ -78,7 +79,8 @@ public class Game extends JFrame {
 	}
 
 	/**
-	 * Add a tank to the game.
+	 * Add a tank to the game. Used by the master to add tanks to the remote
+	 * game model
 	 * 
 	 * @param uid
 	 *            the unique id of the game.
@@ -156,9 +158,7 @@ public class Game extends JFrame {
 				int u = rnd.nextInt(size) - size / 2;
 				int v = rnd.nextInt(size) - size / 2;
 				if (!occupied(u, v, r)) {
-					System.out.println("ADDING KEY");
 					itemList.add(new Key(new Vector(u * 46, v * 46)));
-
 				}
 			}
 
@@ -169,6 +169,20 @@ public class Game extends JFrame {
 	public void removeItem(Item toRemove) {
 		for (int key : getRooms().keySet()) {
 			getRooms().get(key).remove(toRemove);
+		}
+	}
+	
+	/**
+	 * draps a key behind the player. 
+	 */
+	public void dropItem(Tank tank){
+		if(tank.getNumKeys()>0){
+			System.out.println(tank.getNumKeys());
+			Vector v = tank.pos();
+			Key key = new Key(new Vector(v.getQ(), v.getT()));
+			rooms.get(tank.room).add(key);
+			tank.reduceNumKeys();
+			System.out.println(tank.getNumKeys());
 		}
 	}
 
@@ -183,7 +197,6 @@ public class Game extends JFrame {
 		character.room = room;
 		Random rnd = new Random();
 		while (true) {
-			List<Item> itemList = getRooms().get(character.room);
 			int u = rnd.nextInt(size) - size / 2;
 			int v = rnd.nextInt(size) - size / 2;
 			if (!occupied(u, v, character.room)) {
@@ -195,6 +208,7 @@ public class Game extends JFrame {
 	}
 
 	public boolean canMoveUp(MovingItem character) {
+		Tank tank = (Tank) character;
 		if (occupied((int) character.pos().getQ(), (int) character.pos().getT() + 46, character.room)) {
 			return false;
 		}
@@ -205,6 +219,7 @@ public class Game extends JFrame {
 					&& item.vertical() >= character.vertical()) {
 				if (item instanceof Key) {
 					removeItem(item);
+					tank.addKey();
 					return true;
 				} else if (item instanceof Door) {
 					Door d = (Door) item;
@@ -222,6 +237,7 @@ public class Game extends JFrame {
 	}
 
 	public boolean canMoveDown(MovingItem character) {
+		Tank tank = (Tank) character;
 		if (occupied((int) character.pos().getQ(), (int) character.pos().getT() - 46, character.room)) {
 			return false;
 		}
@@ -234,6 +250,7 @@ public class Game extends JFrame {
 					Key key = (Key) item;
 					System.out.println(key.keyNo);
 					removeItem(item);
+					tank.addKey();
 					return true;
 				} else if (item instanceof Door) {
 					Door d = (Door) item;
@@ -251,6 +268,7 @@ public class Game extends JFrame {
 	}
 
 	public boolean canMoveRight(MovingItem character) {
+		Tank tank = (Tank) character;
 		if (occupied((int) character.pos().getQ() + 46, (int) character.pos().getT(), character.room)) {
 			return false;
 		}
@@ -261,6 +279,7 @@ public class Game extends JFrame {
 					&& item.vertical() >= character.vertical()) {
 				if (item instanceof Key) {
 					removeItem(item);
+					tank.addKey();
 					return true;
 				} else if (item instanceof Door) {
 					Door d = (Door) item;
@@ -278,6 +297,7 @@ public class Game extends JFrame {
 	}
 
 	public boolean canMoveLeft(MovingItem character) {
+		Tank tank = (Tank) character;
 		if (occupied((int) character.pos().getQ() - 46, (int) character.pos().getT(), character.room)) {
 			return false;
 		}
@@ -288,6 +308,7 @@ public class Game extends JFrame {
 					&& item.vertical() >= character.vertical()) {
 				if (item instanceof Key) {
 					removeItem(item);
+					tank.addKey();
 					return true;
 				} else if (item instanceof Door) {
 					Door d = (Door) item;
@@ -334,7 +355,13 @@ public class Game extends JFrame {
 			for (int i = 0; i < nItems; i++) {
 				Item item = Item.fromInputStream(din);
 				if (item instanceof Tank) {
-					tanks.add((Tank) item);
+					Tank nTank = (Tank) item;
+					tanks.add(nTank);
+					if (nTank.uid() == this.uid) {
+						nTank.setRed();
+					} else {
+						nTank.setGrey();
+					}
 				}
 				itemList.add(item);
 			}

@@ -24,6 +24,7 @@ import tanksnflags.ui.ImageLoader;
 public class Tank extends MovingItem {
 
 	private int uid;
+	private int numKeys=0;
 
 	TILECOLOR color = TILECOLOR.BLUE;
 
@@ -35,6 +36,24 @@ public class Tank extends MovingItem {
 
 	public int uid() {
 		return uid;
+	}
+	
+	public int getNumKeys(){
+		return numKeys;
+	}
+	
+	/**
+	 * reduces number of keys held by this player
+	 */
+	public void reduceNumKeys(){
+		numKeys--;
+	}
+	
+	/**
+	 * Adds one key to the number held by this player
+	 */
+	public void addKey(){
+		numKeys++;
 	}
 
 	@Override
@@ -81,13 +100,24 @@ public class Tank extends MovingItem {
 		int uid = din.readInt();
 		Tank newTank = new Tank(new Vector(u, v), uid);
 		newTank.room = room;
+		switch (din.readInt()) {
+		case 1:
+			newTank.setBlue();
+			break;
+		case 2:
+			newTank.setRed();
+			break;
+		case 3:
+			newTank.setGrey();
+			break;
+		}
 		return newTank;
 
 	}
 
 	private static final Image RED = ImageLoader.loadImage("tileRed.png");
 
-	private static final Image BLUE = ImageLoader.loadImage("tileRed.png");
+	private static final Image BLUE = ImageLoader.loadImage("tileBlue.png");
 
 	private static final Image GREY = ImageLoader.loadImage("tileGrey.png");
 
