@@ -131,6 +131,9 @@ public class Game extends JFrame {
 			List<Item> itemList = new ArrayList<Item>();
 			for (int u = -size / 2; u < size / 2; u++) {
 				for (int v = -size / 2; v < size / 2; v++) {
+					if (u == -size / 2 || v == -size / 2 || u == size / 2 - 1 || v == size / 2 - 1) {
+						itemList.add(new Wall(new Vector(u * 46, v * 46)));
+					}
 					itemList.add(new Tile(new Vector(u * 46, v * 46)));
 				}
 			}
@@ -235,16 +238,6 @@ public class Game extends JFrame {
 			}
 			rooms.put(roomID, itemList);
 		}
-
-		// // for (int j = 1; j <= din.readInt(); j++) {
-		// // List<Item> itemList = new ArrayList<Item>();
-		// int nItems = din.readInt();
-		// itemList.clear();
-		// for (int i = 0; i != nItems; ++i) {
-		// itemList.add(Item.fromInputStream(din));
-		// // }
-		// // .put(j, itemList);
-		// }
 	}
 
 	class DepthComparator implements Comparator<Item> {

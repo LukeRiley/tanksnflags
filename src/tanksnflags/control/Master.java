@@ -60,6 +60,7 @@ public class Master extends Thread {
 					oStream.writeInt(state.length);
 					oStream.write(state);
 					oStream.flush();
+					game.tick();
 					Thread.sleep(broadcastClock);
 				} catch (InterruptedException ex) {
 				}

@@ -95,6 +95,7 @@ public class Main {
 					System.out.println("ALL CLIENTS ACCEPTED --- GAME BEGINS");
 
 				}
+				playerId++;
 				System.out.println(playerId);
 			}
 		} catch (IOException e) {
