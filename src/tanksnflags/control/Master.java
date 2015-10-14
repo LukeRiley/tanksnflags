@@ -62,7 +62,10 @@ public class Master extends Thread {
 								game.tank(playerID).moveLeft();
 							}
 							break;
+						case 7:// drop an object
+							//if (game.tank(playerID).)
 						}
+						break;
 					}
 
 					byte[] state = game.toByteArray();
