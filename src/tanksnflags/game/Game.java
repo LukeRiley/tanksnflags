@@ -60,7 +60,7 @@ public class Game extends JFrame {
 	public static final int DOOR = 4;
 	public static final int KEY = 5;
 	public int uid;
-	private int numKeys =0;
+	private int numKeys = 0;
 
 	public Game(IsoLogic isoLogic, int uid) {
 		this.isoLogic = isoLogic;
@@ -172,12 +172,12 @@ public class Game extends JFrame {
 			getRooms().get(key).remove(toRemove);
 		}
 	}
-	
+
 	/**
-	 * draps a key behind the player. 
+	 * Draps a key behind the player.
 	 */
-	public void dropItem(Tank tank){
-		if(tank.getNumKeys()>0){
+	public void dropItem(Tank tank) {
+		if (tank.getNumKeys() > 0) {
 			System.out.println(tank.getNumKeys());
 			Vector v = tank.pos();
 			Key key = new Key(new Vector(v.getQ(), v.getT()));
@@ -188,22 +188,33 @@ public class Game extends JFrame {
 	}
 
 	public void enterDoor(MovingItem character, Door door) {
-		int[] rooms = door.getRooms();
-		int room = character.room;
-		if (room == rooms[0]) {
-			room = rooms[1];
-		} else {
-			room = rooms[0];
+		Tank tank = (Tank) character;
+		if (tank.getNumKeys() > 0 && door.locked) {
+			door.unlock();
+			enterDoor(character, door);
+			tank.reduceNumKeys();
 		}
-		character.room = room;
-		Random rnd = new Random();
-		while (true) {
-			List<Item> itemList = getRooms().get(character.room);
-			int u = rnd.nextInt(size) - size / 2;
-			int v = rnd.nextInt(size) - size / 2;
-			if (!occupied(u, v, character.room)) {
-				character.setPos(new Vector(u * 46, v * 46));
-				return;
+		if (!door.locked) {
+			door.lock();
+			rooms.get(character.room).remove(character);
+			int[] rooms = door.getRooms();
+			int room = character.room;
+			if (room == rooms[0]) {
+				room = rooms[1];
+			} else {
+				room = rooms[0];
+			}
+			character.room = room;
+			Random rnd = new Random();
+			while (true) {
+				List<Item> itemList = getRooms().get(character.room);
+				int u = rnd.nextInt(size) - size / 2;
+				int v = rnd.nextInt(size) - size / 2;
+				if (!occupied(u, v, character.room)) {
+					character.setPos(new Vector(u * 46, v * 46));
+					this.rooms.get(character.room).add(character);
+					return;
+				}
 			}
 		}
 
@@ -225,17 +236,17 @@ public class Game extends JFrame {
 					return true;
 				} else if (item instanceof Door) {
 					Door d = (Door) item;
-					if (!d.locked) {
-						rooms.get(character.room).remove(character);
-						enterDoor(character, d);
-						rooms.get(character.room).add(character);
-						return false;
-					}
+
+					enterDoor(character, d);
+
+					return false;
+
 				}
 				return false;
 			}
 		}
 		return true;
+
 	}
 
 	public boolean canMoveDown(MovingItem character) {
@@ -256,12 +267,9 @@ public class Game extends JFrame {
 					return true;
 				} else if (item instanceof Door) {
 					Door d = (Door) item;
-					if (!d.locked) {
-						rooms.get(character.room).remove(character);
-						enterDoor(character, d);
-						rooms.get(character.room).add(character);
-						return false;
-					}
+					enterDoor(character, d);
+					return false;
+
 				}
 				return false;
 			}
@@ -285,12 +293,9 @@ public class Game extends JFrame {
 					return true;
 				} else if (item instanceof Door) {
 					Door d = (Door) item;
-					if (!d.locked) {
-						rooms.get(character.room).remove(character);
-						enterDoor(character, d);
-						rooms.get(character.room).add(character);
-						return false;
-					}
+					enterDoor(character, d);
+					return false;
+
 				}
 				return false;
 			}
@@ -314,12 +319,9 @@ public class Game extends JFrame {
 					return true;
 				} else if (item instanceof Door) {
 					Door d = (Door) item;
-					if (!d.locked) {
-						rooms.get(character.room).remove(character);
-						enterDoor(character, d);
-						rooms.get(character.room).add(character);
-						return false;
-					}
+					enterDoor(character, d);
+					return false;
+
 				}
 				return false;
 			}
